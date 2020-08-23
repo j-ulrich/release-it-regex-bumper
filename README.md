@@ -24,17 +24,19 @@ To use the RegEx Bumper, configure it in the `plugins` object of the [release-it
 For example:
 
 ```json
-"plugins": {
-	"@j-ulrich/release-it-regex-bumper": {
-		"in": "path/to/versionfile.txt",
-		"out": [
-			"path/to/versionfile.txt",
-			{
-				"file": "README.md",
-				"pattern": "Version \\d+\\.\\d+\\.\\d+",
-				"replace": "Version {{version}}"
-			}
-		]
+{
+	"plugins": {
+		"@j-ulrich/release-it-regex-bumper": {
+			"in": "path/to/versionfile.txt",
+			"out": [
+				"path/to/versionfile.txt",
+				{
+					"file": "README.md",
+					"pattern": "Version \\d+\\.\\d+\\.\\d+",
+					"replace": "Version {{version}}"
+				}
+			]
+		}
 	}
 }
 ```
