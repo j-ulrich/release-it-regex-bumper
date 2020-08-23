@@ -312,7 +312,7 @@ it( 'should report all changes in dry run', async ( testDir ) => {
 	assertLogMessage( container.log.exec, /\+this: 1\.2\.3/ );
 	assertLogMessage( container.log.exec, /-other: 2\.0\.0/ );
 	assertLogMessage( container.log.exec, /\+other: 1\.2\.3/ );
-	assertLogMessage( container.log.exec, /Updating .*\/VERSION/ );
+	assertLogMessage( container.log.info, /Updating .*\/VERSION/ );
 	assertLogMessage( container.log.exec, /-1\.0\.1/ );
 	assertLogMessage( container.log.exec, /\+1\.2\.3/ );
 } );
@@ -337,7 +337,7 @@ it( 'should report all changes in dry run without diff', async ( testDir ) => {
 	assertLogMessage( container.log.exec, /.*line 1[\s\S]*1\.0\.0/ );
 	assertLogMessage( container.log.exec, /.*line 2[\s\S]*1\.0\.1/ );
 	assertLogMessage( container.log.exec, /.*line 3[\s\S]*2\.0\.0/ );
-	assertLogMessage( container.log.exec, /Updating .*\/VERSION/ );
+	assertLogMessage( container.log.info, /Updating .*\/VERSION/ );
 	assertLogMessage( container.log.exec, /.*line 1[\s\S]*1\.0\.1/ );
 } );
 
