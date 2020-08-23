@@ -48,7 +48,7 @@ Since the plugin's configuration is written in JSON format, remember to properly
 
 ## Confuguration Options ##
 
-> `in`
+### `in`
 
 **Type:** `string|object`    
 **Default:** `null`
@@ -60,23 +60,23 @@ If `in` is a string, it is interpreted as the path to the file where the current
 
 If `in` is an object, it takes the following properties:
 
-> `in.file`
+### `in.file`
 
 **Type:** `string`
 
 Path to the file where the current version is read from.
 
-> `in.encoding`
+### `in.encoding`
 
-**Type:** `string`
+**Type:** `string`    
 **Default:** `null`
 
 Encoding to be used when reading `in.file`. The supported encodings are the ones supported by Node's `fs` module.    
 If this option is `null` or not defined, the global `encoding` option is used.
 
-> `in.search`
+### `in.search`
 
-**Type:** `string|object`
+**Type:** `string|object`    
 **Default:** `null`
 
 Defines the regular expression to find the version inside the `in.file`.    
@@ -86,20 +86,20 @@ If `in.search` is a string, it is interpreted as the regular expression pattern.
 
 If `in.search` is an object, it takes the following properties:
 
-> `in.search.pattern`
+### `in.search.pattern`
 
 **Type:** `string`
 
 The regular expression pattern to find the version inside `in.file`.
 
-> `in.search.flags`
+### `in.search.flags`
 
 **Type:** `string`    
 **Default:** `null`
 
 The flags for the regular expression `in.search.pattern`.
 
-> `in.search.versionCaptureGroup`
+### `in.search.versionCaptureGroup`
 
 **Type:** `integer|string`    
 **Default:** `null`
@@ -109,7 +109,7 @@ Defines the capture group from the `in.search.pattern` which matches the version
 If this option is `null` or not defined, the global `search.versionCaptureGroup` is used.
 
 
-> `out`
+### `out`
 
 **Type:** `string|object|array<string|object>`    
 **Default:** `null`
@@ -123,7 +123,7 @@ If `out` is a string, it is interpreted as the path to the file where the new ve
 If `out` is an object, it takes the following properties:
 
 
-> `out.file`
+### `out.file`
 
 **Type:** `string`
 
@@ -143,17 +143,17 @@ The `out.file` option is parsed with [fast-glob](https://github.com/mrmlnc/fast-
 }
 ```
 
-> `out.encoding`
+### `out.encoding`
 
-**Type:** `string`
+**Type:** `string`    
 **Default:** `null`
 
 Encoding to be used when reading and writing `out.file`. The supported encodings are the ones supported by Node's `fs` module.    
 If this option is `null` or not defined, the global `encoding` option is used.
 
-> `out.search`
+### `out.search`
 
-**Type:** `string|object`
+**Type:** `string|object`    
 **Default:** `null`
 
 Defines the regular expression to find the text which is replaced with the new version inside `out.file`.    
@@ -163,22 +163,22 @@ If `out.search` is a string, it is interpreted as the regular expression pattern
 
 If `out.search` is an object, it takes the following properties:
 
-> `out.search.pattern`
+### `out.search.pattern`
 
 **Type:** `string`
 
 The regular expression pattern to find the text to be replaced with the new version inside `out.file`.
 
-> `out.search.flags`
+### `out.search.flags`
 
 **Type:** `string`    
 **Default:** `null`
 
 The flags for the regular expression `out.search.pattern`.
 
-> `out.replace`
+### `out.replace`
 
-**Type:** `string`
+**Type:** `string`    
 **Default:** `null`
 
 The template string which replaces the matches of `out.search` inside `out.file`.
@@ -196,9 +196,9 @@ The template string also supports a set of placeholders:
 
 The placeholders are replaced before the template string is used in the search and replace and thus before the capturing group references are replaced.
 
-> `search`
+### `search`
 
-**Type:** `string|object`
+**Type:** `string|object`    
 **Default:** An object with the default values as described below.
 
 Defines the default regular expression to be used when no `in.search` or `out.search` is given.
@@ -209,21 +209,21 @@ If `search` is a string, it is interpreted as the regular expression pattern.
 
 If `search` is an object, it takes the following properties:
 
-> `search.pattern`
+### `search.pattern`
 
-**Type:** `string`
+**Type:** `string`    
 **Default:** A pattern matching versions according to the semantic version specification.
 
 The default regular expression pattern which is used when `in.search.pattern` or `out.search.pattern` is `null` or not defined.
 
-> `search.flags`
+### `search.flags`
 
 **Type:** `string`    
 **Default:** `null`
 
 The flags for the regular expression `search.pattern`.
 
-> `search.versionCaptureGroup`
+### `search.versionCaptureGroup`
 
 **Type:** `integer|string`    
 **Default:** `1`
@@ -234,9 +234,9 @@ Note that this property applies only when `search` is used for reading the curre
 
 If this option is not defined or set to `null`, the default value is used.
 
-> `replace`
+### `replace`
 
-**Type:** `string`
+**Type:** `string`    
 **Default:** `"{{version}}"`
 
 The default template string used when `out.replace` is `null` or not defined.
