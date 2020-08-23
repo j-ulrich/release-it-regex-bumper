@@ -104,7 +104,7 @@ function parseInOptions( options ) {
 		throw new Error( 'Missing "file" property in "in" options' );
 	}
 	return { file, encoding, searchRegex, versionCaptureGroup };
-};
+}
 
 function parseSearchOptions( options ) {
 	if ( _.isNil( options ) ) {
@@ -254,9 +254,9 @@ function optionalRequire( packageName ) {
 	}
 }
 
-const firstNotNil = ( ...args ) => {
+function firstNotNil( ...args ) {
 	return args.find( ele => !_.isNil( ele ) );
-};
+}
 
 class LineCounter {
 	constructor( text ) {
