@@ -31,7 +31,7 @@ For example:
 			"path/to/versionfile.txt",
 			{
 				"file": "README.md",
-				"pattern": "Version \d+\.\d+\.\d+",
+				"pattern": "Version \\d+\\.\\d+\\.\\d+",
 				"replace": "Version {{version}}"
 			}
 		]
