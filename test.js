@@ -69,7 +69,7 @@ it( 'should throw if version cannot be extracted', async ( testDir ) => {
 	const pluginOptions = { in: testDir+'/unrelated.txt' };
 	const { plugin } = setupPlugin( pluginOptions );
 	await assert.rejects( plugin.getLatestVersion(), err => {
-		assert.match( err.message, /could not extract version/i );
+		assert( /could not extract version/i.test( err.message ) );
 		return true;
 	} );
 } );
