@@ -48,7 +48,7 @@ RegEx bumper uses [XRegExp](http://xregexp.com). This means that the `search` an
 Since the plugin's configuration is written in JSON format, remember to properly escape backslashes inside the regular expression patterns as needed in JSON strings (double the backslashes). So for example, the pattern `\d+` needs to be written as `"\\d+"` inside JSON.
 
 
-## Confuguration Options ##
+## Configuration Options ##
 
 ### `in`
 
