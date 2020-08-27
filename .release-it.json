@@ -1,7 +1,6 @@
 {
 	"hooks": {
-		"before:init": "npm test",
-		"before:git:init": "git reset -- package-lock.json"
+		"before:init": "npm test"
 	},
 	"plugins": {
 		"./index.js": {
