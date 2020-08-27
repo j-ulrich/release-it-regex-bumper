@@ -173,74 +173,64 @@ it( 'should warn if out file did not change', async ( testDir ) => {
 	assertLogMessage( container.log.warn, /\/unrelated\.txt" did not change/, 'warning regarding unchanged file was not logged' );
 } );
 
-it( 'should write version to file using custom pattern', async ( testDir ) => {
-	const pluginOptions = { out: { file: testDir+'/versions.txt', search: '(?<=this: )([0-9.]+)' } };
+const testBump = async ( testDir, pluginOptions, expectedContent ) => {
 	const { plugin } = setupPlugin( pluginOptions );
 	await plugin.bump( '1.2.3' );
-	assert.equal( readFile( testDir+'/versions.txt' ), 'some: 1.0.0\nthis: 1.2.3\nother: 2.0.0\n' );
+	assert.equal( readFile( testDir+'/versions.txt' ), expectedContent );
+};
+
+const testBumpThisVersion = async ( testDir, pluginOptions ) => {
+	return testBump( testDir, pluginOptions, 'some: 1.0.0\nthis: 1.2.3\nother: 2.0.0\n' );
+};
+
+it( 'should write version to file using custom pattern', async ( testDir ) => {
+	const pluginOptions = { out: { file: testDir+'/versions.txt', search: '(?<=this: )([0-9.]+)' } };
+	return testBumpThisVersion( testDir, pluginOptions );
 } );
 
 it( 'should write version to file using custom pattern with flags', async ( testDir ) => {
 	const pluginOptions = { out: { file: testDir+'/versions.txt', search: { pattern: '(?<=THIS: )([0-9.]+)', flags: 'i' } } };
-	const { plugin } = setupPlugin( pluginOptions );
-	await plugin.bump( '1.2.3' );
-	assert.equal( readFile( testDir+'/versions.txt' ), 'some: 1.0.0\nthis: 1.2.3\nother: 2.0.0\n' );
+	return testBumpThisVersion( testDir, pluginOptions );
 } );
 
 it( 'should write version to file using global pattern', async ( testDir ) => {
 	const pluginOptions = { search: '(?<=this: )([0-9.]+)', out: { file: testDir+'/versions.txt' } };
-	const { plugin } = setupPlugin( pluginOptions );
-	await plugin.bump( '1.2.3' );
-	assert.equal( readFile( testDir+'/versions.txt' ), 'some: 1.0.0\nthis: 1.2.3\nother: 2.0.0\n' );
+	return testBumpThisVersion( testDir, pluginOptions );
 } );
 
 it( 'should write version to file using global pattern with flags', async ( testDir ) => {
 	const pluginOptions = { search: { pattern: '(?<=THIS: )([0-9.]+)', flags: 'i' }, out: testDir+'/versions.txt' };
-	const { plugin } = setupPlugin( pluginOptions );
-	await plugin.bump( '1.2.3' );
-	assert.equal( readFile( testDir+'/versions.txt' ), 'some: 1.0.0\nthis: 1.2.3\nother: 2.0.0\n' );
+	return testBumpThisVersion( testDir, pluginOptions );
 } );
 
 it( 'should write version to file using global pattern and global replace', async ( testDir ) => {
 	const pluginOptions = { search: '(this:) ([0-9.]+)', replace: '$1 {{version}}', out: testDir+'/versions.txt' };
-	const { plugin } = setupPlugin( pluginOptions );
-	await plugin.bump( '1.2.3' );
-	assert.equal( readFile( testDir+'/versions.txt' ), 'some: 1.0.0\nthis: 1.2.3\nother: 2.0.0\n' );
+	return testBumpThisVersion( testDir, pluginOptions );
 } );
 
 it( 'should write version to file using custom pattern and custom replace', async ( testDir ) => {
 	const pluginOptions = { out: { file: testDir+'/versions.txt', search: 'this: [0-9.]+', replace: 'this: {{version}}' } };
-	const { plugin } = setupPlugin( pluginOptions );
-	await plugin.bump( '1.2.3' );
-	assert.equal( readFile( testDir+'/versions.txt' ), 'some: 1.0.0\nthis: 1.2.3\nother: 2.0.0\n' );
+	return testBumpThisVersion( testDir, pluginOptions );
 } );
 
 it( 'should write version to file using custom pattern and custom replace with capturing group', async ( testDir ) => {
 	const pluginOptions = { out: { file: testDir+'/versions.txt', search: '(this:) [0-9.]+', replace: '$1 {{version}}' } };
-	const { plugin } = setupPlugin( pluginOptions );
-	await plugin.bump( '1.2.3' );
-	assert.equal( readFile( testDir+'/versions.txt' ), 'some: 1.0.0\nthis: 1.2.3\nother: 2.0.0\n' );
+	return testBumpThisVersion( testDir, pluginOptions );
 } );
 
 it( 'should write version to file using custom pattern and custom replace with named capturing group', async ( testDir ) => {
 	const pluginOptions = { out: { file: testDir+'/versions.txt', search: '(?<prefix>this:) [0-9.]+', replace: '${prefix} {{version}}' } };
-	const { plugin } = setupPlugin( pluginOptions );
-	await plugin.bump( '1.2.3' );
-	assert.equal( readFile( testDir+'/versions.txt' ), 'some: 1.0.0\nthis: 1.2.3\nother: 2.0.0\n' );
+	return testBumpThisVersion( testDir, pluginOptions );
 } );
 
 it( 'should write version to all matches in file', async ( testDir ) => {
 	const pluginOptions = { out: { file: testDir+'/versions.txt', search: { pattern: '([0-9.]+)', flags: 'g' } } };
-	const { plugin } = setupPlugin( pluginOptions );
-	await plugin.bump( '1.2.3' );
-	assert.equal( readFile( testDir+'/versions.txt' ), 'some: 1.2.3\nthis: 1.2.3\nother: 1.2.3\n' );
+	return testBump( testDir, pluginOptions, 'some: 1.2.3\nthis: 1.2.3\nother: 1.2.3\n' );
 } );
 
 it( 'should write version to different matches in same file', async ( testDir ) => {
 	const pluginOptions = { out: [ { file: testDir+'/versions.txt', search: '(?<=this: )([0-9.]+)' }, { file: testDir+'/versions.txt', search: '(?<=other: )([0-9.]+)' } ] };
-	const { plugin } = setupPlugin( pluginOptions );
-	await plugin.bump( '1.2.3' );
-	assert.equal( readFile( testDir+'/versions.txt' ), 'some: 1.0.0\nthis: 1.2.3\nother: 1.2.3\n' );
+	return testBump( testDir, pluginOptions, 'some: 1.0.0\nthis: 1.2.3\nother: 1.2.3\n' );
 } );
 
 it( 'should write version to multiple files', async ( testDir ) => {
