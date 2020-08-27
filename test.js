@@ -274,7 +274,7 @@ it( 'should write date to file', async ( testDir ) => {
 	const { plugin } = setupPlugin( pluginOptions );
 	await plugin.bump( '1.2.3' );
 	const fileContent = await readFile( testDir+'/copyright.txt' );
-	const fileContentMatch = /^Copyright \(c\) (.+) Foo Bar$/.exec( fileContent )
+	const fileContentMatch = /^Copyright \(c\) (.+) Foo Bar$/.exec( fileContent );
 	assert( fileContentMatch );
 	assert( fileContentMatch[ 1 ] );
 	const date = moment( fileContentMatch[ 1 ] );
@@ -364,13 +364,13 @@ it( 'should warn in dry run without diff if out file would not change', async ( 
 //####### End-to-End Tests #######
 
 it( 'should not throw if nothing is configured', async () => {
-	const pluginOptions = {}
+	const pluginOptions = {};
 	const { plugin } = setupPlugin( pluginOptions );
 	await assert.doesNotReject( runTasks( plugin ) );
 } );
 
 it( 'should not throw if in and out is null', async () => {
-	const pluginOptions = { in: null, out: null }
+	const pluginOptions = { in: null, out: null };
 	const { plugin } = setupPlugin( pluginOptions );
 	await assert.doesNotReject( runTasks( plugin ) );
 } );

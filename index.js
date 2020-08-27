@@ -83,8 +83,10 @@ class RegExBumper extends Plugin {
 			
 			if ( processedFileContent == fileContent ) {
 				warnNoFileChange.call( this, file );
-			} 
-			await writeFile( file, processedFileContent, effectiveEncoding );
+			}
+			else {
+				await writeFile( file, processedFileContent, effectiveEncoding );
+			}
 		}
 	}
 	
@@ -118,7 +120,7 @@ function parseSearchOptions( options ) {
 	const { pattern, flags, versionCaptureGroup } = options;
 	const searchRegex = XRegExp( pattern, _.isNull( flags ) ? undefined : flags );
 	return { searchRegex, versionCaptureGroup };
-};
+}
 
 function extractVersion( content, versionRegex, versionCaptureGroup ) {
 	const match = XRegExp.exec( content, versionRegex );
@@ -241,7 +243,7 @@ function prepareReplacement( replace, context ) {
 		}
 	};
 	return XRegExp.replace( replace, placeholderRegex, ( match, placeholder, format ) => {
-		const placeholderReplace = placeholderMap[ placeholder ];
+		const placeholderReplace = placeholderMap.hasOwnProperty( placeholder) ? placeholderMap[ placeholder ] : undefined;
 		if ( _.isFunction( placeholderReplace ) ) {
 			if ( _.isString( format ) ) {
 				return placeholderReplace( format );
@@ -284,7 +286,7 @@ class LineCounter {
 	columnOfIndex( index ) {
 		const line = this.lineOfIndex( index );
 		assert( line >= 1 );
-		if ( line == 1 ) {
+		if ( line === 1 ) {
 			return index;
 		}
 		const previousLineEndIndex = this.lineEndIndex[ line - 2 ];
