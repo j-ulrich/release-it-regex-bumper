@@ -20,6 +20,9 @@
 		"manifest"
 	],
 	"license": "MIT",
+	"publishConfig": {
+		"access": "public"
+	},
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/j-ulrich/release-it-regex-bumper.git"
