@@ -142,7 +142,7 @@ function extractVersion( content, versionRegex, versionCaptureGroup ) {
 	}
 	
 	return match[ 0 ];
-};
+}
 
 function parseOutOptions( options ) {
 	return _.castArray( options ).map( options => {
@@ -158,7 +158,7 @@ function parseOutOptions( options ) {
 		const { searchRegex } = parseSearchOptions( options.search );
 		return { file, encoding, searchRegex, replace };
 	} );
-};
+}
 
 async function expandOutOptions( options ) {
 	const expandedOptions = [];
@@ -174,7 +174,7 @@ async function expandOutOptions( options ) {
 		}
 	}
 	return expandedOptions;
-};
+}
 
 function loadDiff() {
 	if ( !diff || diff instanceof Error ) {
@@ -204,7 +204,7 @@ function diffAndReport( oldContent, newContent, filePath ) {
 		} ).join( '\n' ), { isDryRun } );
 	} );
 	
-};
+}
 
 function searchAndReport( content, searchRegex, filePath ) {
 	const { isDryRun } = this.global;
@@ -219,7 +219,7 @@ function searchAndReport( content, searchRegex, filePath ) {
 	if ( !foundMatch ) {
 		warnNoFileChange.call( this, filePath );
 	}
-};
+}
 
 function warnNoFileChange( filePath ) {
 	this.log.warn( `File "${filePath}" did not change!` );
@@ -229,7 +229,7 @@ function replaceVersion( content, searchRegex, replace, context ) {
 	const processedReplace = prepareReplacement.call( this, replace, context );
 	const processedContent = XRegExp.replace( content, searchRegex, processedReplace );
 	return processedContent;
-};
+}
 
 function prepareReplacement( replace, context ) {
 	const placeholderRegex = XRegExp( /\{\{(?<placeholder>[a-z][a-z0-9_]*)(?::(?<format>.*))?\}\}/ig );
@@ -252,7 +252,7 @@ function prepareReplacement( replace, context ) {
 		}
 		return placeholderReplace;
 	} );
-};
+}
 
 
 function optionalRequire( packageName ) {
