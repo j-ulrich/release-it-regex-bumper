@@ -1,0 +1,14 @@
+{
+	"hooks": {
+		"before:init": "npm test"
+	},
+	"plugins": {
+		"./index.js": {
+			"out": {
+				"file": "README.md",
+				"search": "Copyright (.*) \\d{4}",
+				"replace": "Copyright $1 {{now:YYYY}}"
+			}
+		}
+	}
+}

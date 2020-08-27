@@ -2,5 +2,6 @@ coverage/
 .*
 !.github
 !.gitignore
+!.release-it.json
 node_modules/
 package-lock.json
