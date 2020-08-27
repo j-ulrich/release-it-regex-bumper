@@ -6,8 +6,8 @@
 		"./index.js": {
 			"out": {
 				"file": "README.md",
-				"search": "Copyright (.*) \\d{4}",
-				"replace": "Copyright $1 {{now:YYYY}}"
+				"search": "Copyright (.*) (\\d{4}-)?\\d{4}",
+				"replace": "Copyright $1 $2{{now:YYYY}}"
 			}
 		}
 	}
