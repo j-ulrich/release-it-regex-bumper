@@ -16,7 +16,7 @@ const writeFile = util.promisify( fs.writeFile );
 
 const defaultEncoding = 'utf-8';
 const defaultSearchRegex = XRegExp( /(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:-(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(?:\+[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*)?/ );
-const defaultVersionCaptureGroup = 1;
+const defaultVersionCaptureGroup = null;
 const defaultReplace = '{{version}}';
 
 
@@ -125,12 +125,20 @@ function extractVersion( content, versionRegex, versionCaptureGroup ) {
 	if ( !match ) {
 		throw new Error( 'Could not extract version from file' );
 	}
-	if ( match.hasOwnProperty( 'version' ) ) {
-		return match[ 'version' ];
+	if ( !_.isNil( versionCaptureGroup ) ) {
+		if( match.hasOwnProperty( versionCaptureGroup ) ) {
+			return match[ versionCaptureGroup ];
+		}
 	}
-	if ( match.hasOwnProperty( versionCaptureGroup ) ) {
-		return match[ versionCaptureGroup ];
+	else {
+		if ( match.hasOwnProperty( 'version' ) ) {
+			return match[ 'version' ];
+		}
+		if ( match.hasOwnProperty( 1 ) ) {
+			return match[ 1 ];
+		}
 	}
+	
 	return match[ 0 ];
 };
 

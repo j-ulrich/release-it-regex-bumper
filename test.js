@@ -95,6 +95,11 @@ it( 'should return latest version from file using custom pattern with null versi
 	return testGetLatestVersion( options, '1.0.1' );
 });
 
+it( 'should return latest version from file using custom pattern with null flags', async ( testDir ) => {
+	const options = { in: { file: testDir+'/versions.txt', search: { pattern: 'this: ([0-9.]+)', flags: null } } };
+	return testGetLatestVersion( options, '1.0.1' );
+});
+
 it( 'should return latest version from file using null search', async ( testDir ) => {
 	const options = { in: { file: testDir+'/versions.txt', search: null } };
 	return testGetLatestVersion( options, '1.0.0' );
@@ -113,6 +118,11 @@ it( 'should return latest version from file using custom pattern with multiple c
 it( 'should return latest version from file using custom pattern and versionCaptureGroup 0', async ( testDir ) => {
 	const options = { in: { file: testDir+'/versions.txt', search: { pattern: '([0-9]+)\.([0-9]+)\.([0-9]+)', versionCaptureGroup: 0 } } };
 	return testGetLatestVersion( options, '1.0.0' );
+});
+
+it( 'should return latest version from file using custom pattern and named versionCaptureGroup', async ( testDir ) => {
+	const options = { in: { file: testDir+'/versions.txt', search: { pattern: '(this): (?<special>[0-9.]+)', versionCaptureGroup: 'special' } } };
+	return testGetLatestVersion( options, '1.0.1' );
 });
 
 it( 'should return latest version from file using custom pattern with flags', async ( testDir ) => {

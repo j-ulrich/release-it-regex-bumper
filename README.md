@@ -28,19 +28,19 @@ For example:
 
 ```json
 {
-	"plugins": {
-		"@j-ulrich/release-it-regex-bumper": {
-			"in": "path/to/versionfile.txt",
-			"out": [
-				"path/to/versionfile.txt",
-				{
-					"file": "README.md",
-					"pattern": "Version \\d+\\.\\d+\\.\\d+",
-					"replace": "Version {{version}}"
-				}
-			]
-		}
-	}
+    "plugins": {
+        "@j-ulrich/release-it-regex-bumper": {
+            "in": "path/to/versionfile.txt",
+            "out": [
+                "path/to/versionfile.txt",
+                {
+                    "file": "README.md",
+                    "pattern": "Version \\d+\\.\\d+\\.\\d+",
+                    "replace": "Version {{version}}"
+                }
+            ]
+        }
+    }
 }
 ```
 
@@ -106,6 +106,10 @@ If `in.search` is an object, it takes the following properties:
 
 The regular expression pattern to find the version inside `in.file`.
 
+Capturing groups can be used to extract the version from a part of the whole match. See the
+documentation of the configuration option `in.search.versionCaptureGroup` for a description of the
+handling of capturing groups.
+
 ### `in.search.flags`
 
 **Type:** `string`    
@@ -118,9 +122,16 @@ The flags for the regular expression `in.search.pattern`.
 **Type:** `integer|string`    
 **Default:** `null`
 
-Defines the capture group from the `in.search.pattern` which matches the version. If the `in.search.pattern` contains multiple (named) capturing groups, use this property to define which group should be used as version. If `in.search.pattern` does not contain any capturing groups, this property is ignored and the whole match is used as version.
+Defines the capture group from the `in.search.pattern` which matches the version. If the
+`in.search.pattern` contains (named) capturing groups, use this option to define which
+group matches the version. If `in.search.pattern` does not contain a capturing group with the
+name or index defined by this option, this option is ignored and the whole match is used as version.
 
 If this option is `null` or not defined, the global `search.versionCaptureGroup` is used.
+
+If both, this option and the global `search.versionCaptureGroup` are `null` (the default), then the
+capturing group with name `version` is used if it exists. Else the capturing group with index 1 is
+used if it exists. Else the whole match is used.
 
 
 ### `out`
@@ -153,13 +164,13 @@ patterns can be used to match multiple files to write to:
 
 ```json
 "plugins": {
-	"@j-ulrich/release-it-regex-bumper": {
-		"out": {
-			"file": "dist/*.json",
-			"search": "\"version\":\\s*\"([0-9.]+)\"",
-			"replace": "\"version\": \"{{version}}\""
-		}
-	}
+    "@j-ulrich/release-it-regex-bumper": {
+        "out": {
+            "file": "dist/*.json",
+            "search": "\"version\":\\s*\"([0-9.]+)\"",
+            "replace": "\"version\": \"{{version}}\""
+        }
+    }
 }
 ```
 
@@ -191,6 +202,9 @@ If `out.search` is an object, it takes the following properties:
 
 The regular expression pattern to find the text to be replaced with the new version inside
 `out.file`.
+
+In contrast to `in.search.pattern`, capturing groups are not treated special in this pattern. So
+`out.replace` always replaces the *whole* match.
 
 ### `out.search.flags`
 
