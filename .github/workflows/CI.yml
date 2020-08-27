@@ -29,9 +29,10 @@ jobs:
         steps:
         - uses: actions/checkout@v2
         - uses: actions/setup-node@v1
+          with:
+              node-version: 14.x
         - run: npm ci
         - run: npm run build --if-present
-        - run: mkdir -p "coverage/tmp"
         - run: npm run test+coverage
         - run: npx c8 report --reporter lcov
     
