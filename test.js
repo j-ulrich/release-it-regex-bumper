@@ -247,6 +247,36 @@ it( 'should write version to multiple files using glob pattern', async ( testDir
 	assert.equal( readFile( testDir+'/VERSION' ), '1.2.3' );
 } );
 
+it( 'should write version to multiple files using same options', async ( testDir ) => {
+	const pluginOptions = { out: { files: [ testDir+'/versions.txt', testDir+'/VERSION' ], replace: "{{version}}-dev" } };
+	await testBump( testDir, pluginOptions, 'some: 1.2.3-dev\nthis: 1.0.1\nother: 2.0.0\n' );
+	assert.equal( readFile( testDir+'/VERSION' ), '1.2.3-dev' );
+} );
+
+it( 'should write version to multiple files using glob pattern and same options', async ( testDir ) => {
+	writeFile( testDir + '/version.txt', '1.0.1' );
+	const pluginOptions = { out: { files: [ testDir+'/version*.txt', testDir+'/VERSION' ], replace: "{{version}}-dev" } };
+	await testBump( testDir, pluginOptions, 'some: 1.2.3-dev\nthis: 1.0.1\nother: 2.0.0\n' );
+	assert.equal( readFile( testDir+'/version.txt' ), '1.2.3-dev' );
+	assert.equal( readFile( testDir+'/VERSION' ), '1.2.3-dev' );
+} );
+
+it( 'should write version to out.file and out.files', async ( testDir ) => {
+	const pluginOptions = { out: { file: testDir+'/versions.txt', files: testDir+'/VERSION' } };
+	await testBump( testDir, pluginOptions, 'some: 1.2.3\nthis: 1.0.1\nother: 2.0.0\n' );
+	assert.equal( readFile( testDir+'/VERSION' ), '1.2.3' );
+} );
+
+it( 'should write version to out.file if out.files is null', async ( testDir ) => {
+	const pluginOptions = { out: { file: testDir+'/versions.txt', files: null } };
+	await testBump( testDir, pluginOptions, 'some: 1.2.3\nthis: 1.0.1\nother: 2.0.0\n' );
+} );
+
+it( 'should write version to out.files if out.file is null', async ( testDir ) => {
+	const pluginOptions = { out: { file: null, files: testDir+'/versions.txt' } };
+	await testBump( testDir, pluginOptions, 'some: 1.2.3\nthis: 1.0.1\nother: 2.0.0\n' );
+} );
+
 it( 'should write version to multiple files using different patterns', async ( testDir ) => {
 	const pluginOptions = { out: [ { file: testDir+'/versions.txt', search: '(?<=this: )([0-9.]+)' }, testDir+'/VERSION' ] };
 	await testBump( testDir, pluginOptions, 'some: 1.0.0\nthis: 1.2.3\nother: 2.0.0\n' );

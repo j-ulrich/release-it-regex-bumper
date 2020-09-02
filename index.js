@@ -54,38 +54,41 @@ class RegExBumper extends Plugin {
 		}
 
 		const { searchRegex: globalSearchRegex } = parseSearchOptions.call( this, globalSearchOptions );
-		const expandedOutOptions = await expandOutOptions.call( this, parseOutOptions.call( this, outOptions ) );
+		const expandedOutOptions = await expandOutOptionFiles.call( this, parseOutOptions.call( this, outOptions ) );
 	
 		for ( const outOptions of expandedOutOptions ) {
 			
-			const { file, encoding, searchRegex, replace } = outOptions;
-			
-			this.log.info( `Updating version in ${file}` );
+			const { files, encoding, searchRegex, replace } = outOptions;
 			
 			const effectiveEncoding = firstNotNil( encoding, globalEncoding, defaultEncoding );
 			const effectiveSearchRegex = firstNotNil( searchRegex, globalSearchRegex, defaultSearchRegex );
 			const effectiveReplacement = firstNotNil( replace, globalReplace, defaultReplace );
 			
-			const fileContent = await readFile( file, { encoding: effectiveEncoding } );
-			
-			if ( isDryRun ) {
-				loadDiff.call( this );
-				if ( this.diff ) {
-					const processedFileContent = replaceVersion.call( this, fileContent, effectiveSearchRegex, effectiveReplacement, context );
-					await diffAndReport.call( this, fileContent, processedFileContent, file );
+			for ( const file of files ) {
+
+				this.log.info( `Updating version in ${file}` );
+
+				const fileContent = await readFile( file, { encoding: effectiveEncoding } );
+				
+				if ( isDryRun ) {
+					loadDiff.call( this );
+					if ( this.diff ) {
+						const processedFileContent = replaceVersion.call( this, fileContent, effectiveSearchRegex, effectiveReplacement, context );
+						await diffAndReport.call( this, fileContent, processedFileContent, file );
+						continue;
+					}
+					await searchAndReport.call( this, fileContent, effectiveSearchRegex, file );
 					continue;
 				}
-				await searchAndReport.call( this, fileContent, effectiveSearchRegex, file );
-				continue;
-			}
-			
-			const processedFileContent = replaceVersion.call( this, fileContent, effectiveSearchRegex, effectiveReplacement, context );
-			
-			if ( processedFileContent == fileContent ) {
-				warnNoFileChange.call( this, file );
-			}
-			else {
-				await writeFile( file, processedFileContent, effectiveEncoding );
+				
+				const processedFileContent = replaceVersion.call( this, fileContent, effectiveSearchRegex, effectiveReplacement, context );
+				
+				if ( processedFileContent == fileContent ) {
+					warnNoFileChange.call( this, file );
+				}
+				else {
+					await writeFile( file, processedFileContent, effectiveEncoding );
+				}
 			}
 		}
 	}
@@ -148,32 +151,37 @@ function parseOutOptions( options ) {
 	return _.castArray( options ).map( options => {
 		if ( _.isString( options ) ) {
 			return {
-				file: options,
+				files: [ options ],
 				encoding: null,
 				searchRegex: null,
 				replace: null,
 			};
 		}
-		const { file, encoding, replace } = options;
+		const { encoding, replace } = options;
 		const { searchRegex } = parseSearchOptions( options.search );
-		return { file, encoding, searchRegex, replace };
+		const files = options.files ? _.castArray( options.files ) : [];
+		if( options.file ) {
+			files.unshift( options.file );
+		}
+		return { files, encoding, searchRegex, replace };
 	} );
 }
 
-async function expandOutOptions( options ) {
-	const expandedOptions = [];
+async function expandOutOptionFiles( options ) {
 	for ( const option of options ) {
-		if ( glob.isDynamicPattern( option.file ) ) {
-			const files = glob.sync( option.file, { onlyFiles: true, unique: true } );
-			for ( const file of files ) {
-				expandedOptions.push( Object.assign( {}, option, { file } ) );
+		let expandedFiles = [];
+		for ( const file of option.files ) {
+			if ( glob.isDynamicPattern( file ) ) {
+				expandedFiles = expandedFiles.concat( glob.sync( file, { onlyFiles: true, unique: true } ) );
+			}
+			else {
+				expandedFiles.push( file );
 			}
 		}
-		else {
-			expandedOptions.push( option );
-		}
+		option.files = expandedFiles;
 	}
-	return expandedOptions;
+
+	return options;
 }
 
 function loadDiff() {

@@ -159,7 +159,8 @@ If `out` is an object, it takes the following properties:
 
 ### `out.file` ###
 
-**Type:** `string`
+**Type:** `string`    
+**Default:** `null` but either this option or `out.files` (or both) must contain a value
 
 The path to the file where the new version is written to.
 
@@ -177,6 +178,31 @@ patterns can be used to match multiple files to write to:
     }
 }
 ```
+
+If both, this option and `out.files` are given, both are processed.
+
+### `out.files` ###
+
+**Type:** `string|array<string>`    
+**Default:** `null` but either this option or `out.file` (or both) must contain a value
+
+A path or an array of paths to files where the new version is written to. This option behaves the
+same as the `out.file` option but allows specifing multiple files or patterns. Accordingly, the
+entries are also parsed with [fast-glob](https://github.com/mrmlnc/fast-glob):
+
+```json
+"plugins": {
+    "@j-ulrich/release-it-regex-bumper": {
+        "out": {
+            "files": [ "**/*.json", "**/*.yml" ],
+            "search": "\"version\":\\s*\"([0-9.]+)\"",
+            "replace": "\"version\": \"{{version}}\""
+        }
+    }
+}
+```
+
+If both, this option and `out.file` are given, both are processed.
 
 ### `out.encoding` ###
 
