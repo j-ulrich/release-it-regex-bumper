@@ -248,14 +248,14 @@ it( 'should write version to multiple files using glob pattern', async ( testDir
 } );
 
 it( 'should write version to multiple files using same options', async ( testDir ) => {
-	const pluginOptions = { out: { files: [ testDir+'/versions.txt', testDir+'/VERSION' ], replace: "{{version}}-dev" } };
+	const pluginOptions = { out: { files: [ testDir+'/versions.txt', testDir+'/VERSION' ], replace: '{{version}}-dev' } };
 	await testBump( testDir, pluginOptions, 'some: 1.2.3-dev\nthis: 1.0.1\nother: 2.0.0\n' );
 	assert.equal( readFile( testDir+'/VERSION' ), '1.2.3-dev' );
 } );
 
 it( 'should write version to multiple files using glob pattern and same options', async ( testDir ) => {
 	writeFile( testDir + '/version.txt', '1.0.1' );
-	const pluginOptions = { out: { files: [ testDir+'/version*.txt', testDir+'/VERSION' ], replace: "{{version}}-dev" } };
+	const pluginOptions = { out: { files: [ testDir+'/version*.txt', testDir+'/VERSION' ], replace: '{{version}}-dev' } };
 	await testBump( testDir, pluginOptions, 'some: 1.2.3-dev\nthis: 1.0.1\nother: 2.0.0\n' );
 	assert.equal( readFile( testDir+'/version.txt' ), '1.2.3-dev' );
 	assert.equal( readFile( testDir+'/VERSION' ), '1.2.3-dev' );
@@ -379,46 +379,44 @@ it( 'should warn in dry run without diff if out file would not change', async ( 
 
 //####### End-to-End Tests #######
 
+const runPlugin = pluginOptions => {
+	const { plugin } = setupPlugin( pluginOptions );
+	return runTasks( plugin );
+};
+
 it( 'should not throw if nothing is configured', async () => {
 	const pluginOptions = {};
-	const { plugin } = setupPlugin( pluginOptions );
-	await assert.doesNotReject( runTasks( plugin ) );
+	await assert.doesNotReject( runPlugin( pluginOptions ) );
 } );
 
 it( 'should not throw if in and out is null', async () => {
 	const pluginOptions = { in: null, out: null };
-	const { plugin } = setupPlugin( pluginOptions );
-	await assert.doesNotReject( runTasks( plugin ) );
+	await assert.doesNotReject( runPlugin( pluginOptions ) );
 } );
 
 it( 'should read and write same file', async ( testDir ) => {
 	const pluginOptions = { in: testDir+'/VERSION', out: testDir+'/VERSION' };
-	const { plugin } = setupPlugin( pluginOptions );
-	await runTasks( plugin );
+	await runPlugin( pluginOptions );
 	assert.equal( readFile( testDir+'/VERSION' ), '1.0.2' );
 } );
 
 it( 'should read and write different files', async ( testDir ) => {
 	const pluginOptions = { in: testDir+'/VERSION', out: testDir+'/versions.txt' };
-	const { plugin } = setupPlugin( pluginOptions );
-	await runTasks( plugin );
+	await runPlugin( pluginOptions );
 	assert.equal( readFile( testDir+'/VERSION' ), '1.0.1' );
 	assert.equal( readFile( testDir+'/versions.txt' ), 'some: 1.0.2\nthis: 1.0.1\nother: 2.0.0\n' );
 } );
 
 it( 'should read and write multiple files', async ( testDir ) => {
 	const pluginOptions = { in: testDir+'/VERSION', out: [ testDir+'/VERSION', { file: testDir+'/versions.txt', search: 'this: [0-9.]+', replace: 'this: {{version}}' } ] };
-	const { plugin } = setupPlugin( pluginOptions );
-	await runTasks( plugin );
+	await runPlugin( pluginOptions );
 	assert.equal( readFile( testDir+'/VERSION' ), '1.0.2' );
 	assert.equal( readFile( testDir+'/versions.txt' ), 'some: 1.0.0\nthis: 1.0.2\nother: 2.0.0\n' );
 } );
 
 it( 'should write latest version to file', async ( testDir ) => {
 	const pluginOptions = { in: testDir+'/VERSION', out: { file: testDir+'/versions.txt', replace: '{{latestVersion}}' } };
-	const { plugin } = setupPlugin( pluginOptions );
-	await runTasks( plugin );
+	await runPlugin( pluginOptions );
 	assert.equal( readFile( testDir+'/VERSION' ), '1.0.1' );
 	assert.equal( readFile( testDir+'/versions.txt' ), 'some: 1.0.1\nthis: 1.0.1\nother: 2.0.0\n' );
 } );
-
