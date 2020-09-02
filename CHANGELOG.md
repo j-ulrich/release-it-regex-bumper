@@ -22,5 +22,5 @@ Initial release.
 
 
 
-[1.1.0] - https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/1.1.0
-[1.0.0] - https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/1.0.0
+[1.1.0]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/1.1.0
+[1.0.0]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/1.0.0
