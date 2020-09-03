@@ -44,7 +44,7 @@ class RegExBumper extends Plugin {
 	async bump( version ) {
 		
 		const { out: outOptions, search: globalSearchOptions, replace: globalReplace, encoding: globalEncoding } = this.options;
-		const { isDryRun } = this.global;
+		const { isDryRun } = this.config;
 		if ( _.isNil( outOptions ) ) {
 			return;
 		}
@@ -193,7 +193,7 @@ function loadDiff() {
 }
 
 function diffAndReport( oldContent, newContent, filePath ) {
-	const { isDryRun } = this.global;
+	const { isDryRun } = this.config;
 	const diffResult = this.diff.structuredPatch( filePath, filePath, oldContent, newContent, undefined, undefined, { context: 0 } );
 	
 	if ( _.isEmpty( diffResult.hunks ) ) {
@@ -215,7 +215,7 @@ function diffAndReport( oldContent, newContent, filePath ) {
 }
 
 function searchAndReport( content, searchRegex, filePath ) {
-	const { isDryRun } = this.global;
+	const { isDryRun } = this.config;
 	let foundMatch = false;
 	const lineCounter = new LineCounter( content );
 	XRegExp.forEach( content, searchRegex, ( match ) => {

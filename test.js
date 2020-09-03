@@ -39,10 +39,10 @@ const it = ( description, testFunc ) => {
 };
 
 
-const setupPlugin = ( pluginOptions, globalOptions, pluginModule = Plugin ) => {
-	const options = { [namespace]: pluginOptions };
+const setupPlugin = ( pluginOptions, generalOptions, pluginModule = Plugin ) => {
+	const options = Object.assign( { [namespace]: pluginOptions }, generalOptions );
 	let container = {};
-	const plugin = factory( pluginModule, { namespace, options, global: globalOptions, container } );
+	const plugin = factory( pluginModule, { namespace, options, container } );
 	return { plugin, container };
 };
 
@@ -312,7 +312,7 @@ it( 'should write version to file with given encoding', async ( testDir ) => {
 } );
 
 const testDryRunBump = async ( testDir, pluginOptions ) => {
-	const { plugin, container } = setupPlugin( pluginOptions , { isDryRun: true } );
+	const { plugin, container } = setupPlugin( pluginOptions, { 'dry-run': true } );
 	await assert.doesNotReject( plugin.bump( '1.2.3' ) );
 	assert.equal( readFile( testDir+'/versions.txt' ), 'some: 1.0.0\nthis: 1.0.1\nother: 2.0.0\n' );
 	assert.equal( readFile( testDir+'/VERSION' ), '1.0.1' );
@@ -354,7 +354,7 @@ it( 'should warn in dry run if out file would not change', async ( testDir ) => 
 
 it( 'should report all changes in dry run without diff', async ( testDir ) => {
 	const pluginOptions = { search: { pattern: '([0-9.]+)', flags: 'g' }, out: [ testDir+'/versions.txt', testDir+'/VERSION' ] };
-	const { plugin, container } = setupPlugin( pluginOptions, { isDryRun: true }, PluginWithoutDiff );
+	const { plugin, container } = setupPlugin( pluginOptions, { 'dry-run': true }, PluginWithoutDiff );
 	await plugin.bump( '1.2.3' );
 	assert.equal( readFile( testDir+'/versions.txt' ), 'some: 1.0.0\nthis: 1.0.1\nother: 2.0.0\n' );
 	assert.equal( readFile( testDir+'/VERSION' ), '1.0.1' );
@@ -369,7 +369,7 @@ it( 'should report all changes in dry run without diff', async ( testDir ) => {
 
 it( 'should warn in dry run without diff if out file would not change', async ( testDir ) => {
 	const pluginOptions = { out: testDir+'/unrelated.txt' };
-	const { plugin, container } = setupPlugin( pluginOptions, { isDryRun: true }, PluginWithoutDiff );
+	const { plugin, container } = setupPlugin( pluginOptions, { 'dry-run': true }, PluginWithoutDiff );
 	await assert.doesNotReject( plugin.bump( '1.2.3' ) );
 	assert.equal( readFile( testDir+'/unrelated.txt' ), 'nothing to see here.' );
 	assert( container.log.warn.called, 'no warnings were logged' );
