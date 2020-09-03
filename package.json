@@ -38,7 +38,7 @@
 		"fast-glob": "^3.2.0",
 		"lodash": "^4.4.0",
 		"moment": "^2.8.4",
-		"release-it": ">=11.0.0",
+		"release-it": ">=11.0.0 <15.0.0",
 		"xregexp": "^4.0.0"
 	},
 	"optionalDependencies": {
