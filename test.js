@@ -42,7 +42,7 @@ const it = ( description, testFunc ) => {
 		catch( e ) {
 			if ( e instanceof SkipException ) {
 				console.warn( `⚠️  Skipped test '${description}'\n   Reason: ${e.message}\n   ${e.stack}` );
-				return;
+				return null;
 			}
 			throw e;
 		}
@@ -52,12 +52,12 @@ const it = ( description, testFunc ) => {
 const skip = ( message ) => {
 	const stackEntry = new Error().stack.split( '\n' )[ 2 ];
 	throw new SkipException( message, stackEntry );
-}
+};
 
 class SkipException {
 	constructor( message, stack ) {
 		this.message = message;
-		this.stack = stack
+		this.stack = stack;
 	}
 }
 
