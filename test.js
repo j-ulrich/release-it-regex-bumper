@@ -33,12 +33,33 @@ const setupTestDir = () => {
 };
 
 const it = ( description, testFunc ) => {
-	test( description, () => {
+	test( description, async () => {
 		const testDir = setupTestDir();
-		const result = testFunc( testDir );
-		return result;
+		try {
+			const result = await testFunc( testDir );
+			return result;
+		}
+		catch( e ) {
+			if ( e instanceof SkipException ) {
+				console.warn( `⚠️  Skipped test '${description}'\n   Reason: ${e.message}\n   ${e.stack}` );
+				return;
+			}
+			throw e;
+		}
 	} );
 };
+
+const skip = ( message ) => {
+	const stackEntry = new Error().stack.split( '\n' )[ 2 ];
+	throw new SkipException( message, stackEntry );
+}
+
+class SkipException {
+	constructor( message, stack ) {
+		this.message = message;
+		this.stack = stack
+	}
+}
 
 
 const setupPlugin = ( pluginOptions, generalOptions, pluginModule = Plugin ) => {
@@ -449,7 +470,7 @@ it( 'should write latest version to file', async ( testDir ) => {
 
 it( 'should write latest tag to file', async ( testDir ) => {
 	if( semver.lt( releaseItVersion, '13.5.8' ) ) {
-		return 'Skipped because `latestTag` is not available in tests before release-it 13.5.8';
+		skip( '`latestTag` is not available in tests before release-it 13.5.8' );
 	}
 	const pluginOptions = { in: testDir+'/VERSION', out: { file: testDir+'/versions.txt', replace: '{{latestTag}}' } };
 	await runPlugin( pluginOptions );
