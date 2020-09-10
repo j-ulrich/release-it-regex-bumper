@@ -6,6 +6,8 @@ const test = require( 'bron' );
 const mockFs = require( 'mock-fs' );
 const rewiremock = require( 'rewiremock/node' );
 const { factory, runTasks } = require( 'release-it/test/util' );
+const semver = require( 'semver' );
+const releaseItVersion = semver.parse( require( 'release-it/package.json' ).version );
 const PluginWithoutDiff = rewiremock.proxy ( () => require( '.' ), mock => {
 	return {
 		'diff': mock.with( null )
@@ -173,9 +175,9 @@ it( 'should warn if out file did not change', async ( testDir ) => {
 	assertLogMessage( container.log.warn, /\/unrelated\.txt" did not change/, 'warning regarding unchanged file was not logged' );
 } );
 
-const testBump = async ( testDir, pluginOptions, expectedContent ) => {
+const testBump = async ( testDir, pluginOptions, expectedContent, newVersion='1.2.3' ) => {
 	const { plugin } = setupPlugin( pluginOptions );
-	await plugin.bump( '1.2.3' );
+	await plugin.bump( newVersion );
 	assert.equal( readFile( testDir+'/versions.txt' ), expectedContent );
 };
 
@@ -303,6 +305,31 @@ it( 'should write date to file using format', async ( testDir ) => {
 	assert.equal( readFile( testDir+'/copyright.txt' ), `Copyright (c) ${moment().format( 'YYYY' )} Foo Bar` );
 } );
 
+it( 'should write main version placeholders to file', async ( testDir ) => {
+	const pluginOptions = { out: { file: testDir+'/versions.txt', replace: '{{major}}.{{minor}}.{{patch}}' } };
+	await testBump( testDir, pluginOptions, 'some: 1.2.3\nthis: 1.0.1\nother: 2.0.0\n', '1.2.3-alpha.1+build.17' );
+} );
+
+it( 'should write secondary version placeholders to file', async ( testDir ) => {
+	const pluginOptions = { out: { file: testDir+'/versions.txt', replace: '-{{prerelease}}+{{build}}' } };
+	await testBump( testDir, pluginOptions, 'some: -alpha.1+build.17\nthis: 1.0.1\nother: 2.0.0\n', '1.2.3-alpha.1+build.17' );
+} );
+
+it( 'should write custom version placeholders to file', async ( testDir ) => {
+	const pluginOptions = { out: { file: testDir+'/versions.txt', replace: '{{versionWithoutPrerelease}}/{{versionWithoutBuild}}' } };
+	await testBump( testDir, pluginOptions, 'some: 1.2.3/1.2.3-alpha.1\nthis: 1.0.1\nother: 2.0.0\n', '1.2.3-alpha.1+build.17' );
+} );
+
+it( 'should write literal curly brace to file', async ( testDir ) => {
+	const pluginOptions = { out: { file: testDir+'/versions.txt', replace: '{{{}}{foo}}' } };
+	await testBump( testDir, pluginOptions, 'some: {{foo}}\nthis: 1.0.1\nother: 2.0.0\n', '1.2.3-alpha.1+build.17' );
+} );
+
+it( 'should write literal curly brace to file', async ( testDir ) => {
+	const pluginOptions = { out: { file: testDir+'/versions.txt', replace: '{{{}}{foo}}' } };
+	await testBump( testDir, pluginOptions, 'some: {{foo}}\nthis: 1.0.1\nother: 2.0.0\n', '1.2.3-alpha.1+build.17' );
+} );
+
 it( 'should write version to file with given encoding', async ( testDir ) => {
 	writeFile( testDir+'/version.txt', '1.0.1', 'ucs2' );
 	const pluginOptions = { out: { file: testDir+'/version.txt', encoding: 'ucs2' } };
@@ -417,6 +444,14 @@ it( 'should read and write multiple files', async ( testDir ) => {
 it( 'should write latest version to file', async ( testDir ) => {
 	const pluginOptions = { in: testDir+'/VERSION', out: { file: testDir+'/versions.txt', replace: '{{latestVersion}}' } };
 	await runPlugin( pluginOptions );
-	assert.equal( readFile( testDir+'/VERSION' ), '1.0.1' );
+	assert.equal( readFile( testDir+'/versions.txt' ), 'some: 1.0.1\nthis: 1.0.1\nother: 2.0.0\n' );
+} );
+
+it( 'should write latest tag to file', async ( testDir ) => {
+	if( semver.lt( releaseItVersion, '13.5.8' ) ) {
+		return 'Skipped because `latestTag` is not available in tests before release-it 13.5.8';
+	}
+	const pluginOptions = { in: testDir+'/VERSION', out: { file: testDir+'/versions.txt', replace: '{{latestTag}}' } };
+	await runPlugin( pluginOptions );
 	assert.equal( readFile( testDir+'/versions.txt' ), 'some: 1.0.1\nthis: 1.0.1\nother: 2.0.0\n' );
 } );

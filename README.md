@@ -184,7 +184,8 @@ If both, this option and `out.files` are given, both are processed.
 ### `out.files` ###
 
 **Type:** `string|array<string>`    
-**Default:** `null` but either this option or `out.file` (or both) must contain a value
+**Default:** `null` but either this option or `out.file` (or both) must contain a value    
+**Since:** 1.1.0
 
 A path or an array of paths to files where the new version is written to. This option behaves the
 same as the `out.file` option but allows specifing multiple files or patterns. Accordingly, the
@@ -259,6 +260,21 @@ XRegExp](http://xregexp.com/syntax/#replacementText).
 The template string also supports a set of placeholders:
 
 - `{{version}}` is replaced with the new version.
+- `{{major}}` is replaced with the major part of the new version.    
+  Since: 1.2.0
+- `{{minor}}` is replaced with the minor part of the new version.    
+  Since: 1.2.0
+- `{{patch}}` is replaced with the patch part of the new version.    
+  Since: 1.2.0
+- `{{prerelease}}` is replaced with the prerelease part of the new version.    
+  Since: 1.2.0
+- `{{build}}` is replaced with the build part of the new version.    
+  Since: 1.2.0
+- `{{versionWithoutBuild}}` is replaced with the new version without the build part.    
+  Since: 1.2.0
+- `{{versionWithoutPrerelease}}` is replaced with the new version without the prelease and build
+  parts.    
+  Since: 1.2.0
 - `{{latestVersion}}` is replaced with the current version, that is the version before the increase.
 - `{{latestTag}}` is replaced with the current VCS tag.
 - `{{now}}` is replaced with the current timestamp in ISO 8601 format.
@@ -266,6 +282,9 @@ The template string also supports a set of placeholders:
   parameter. The supported format syntax can be found in the [moment.js
   format](https://momentjs.com/docs/#/displaying/) documentation.    
   Example: `{{now:YYYY-MM-DD}}`
+- `{{{}}` is replaced with a literal `{`. This can be used to write a literal placeholder.    
+  For example: `{{{}}{foo}}` is replaced with `{{foo}}`    
+  Since: 1.2.0
 
 The placeholders are replaced before the template string is used in the search and replace and thus
 before the capturing group references are replaced.

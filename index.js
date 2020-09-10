@@ -5,6 +5,7 @@ const glob = require( 'fast-glob' );
 const chalk = require( 'chalk' );
 const _ = require( 'lodash' );
 const XRegExp = require( 'xregexp' );
+const semver = require( 'semver' );
 const { Plugin } = require( 'release-it' );
 const moment = require( 'moment' );
 const diff = optionalRequire( 'diff' );
@@ -240,10 +241,19 @@ function replaceVersion( content, searchRegex, replace, context ) {
 }
 
 function prepareReplacement( replace, context ) {
-	const placeholderRegex = XRegExp( /\{\{(?<placeholder>[a-z][a-z0-9_]*)(?::(?<format>.*))?\}\}/ig );
+	const placeholderRegex = XRegExp( /\{\{(?<placeholder>(?:[a-z][a-z0-9_]*|\{))(?::(?<format>.*))?\}\}/ig );
 	const now = moment();
+	const parsedVer = semver.parse( context.version );
 	const placeholderMap = {
-		'version': context.version,
+		'{': '{',
+		'version': parsedVer.raw,
+		'major': parsedVer.major,
+		'minor': parsedVer.minor,
+		'patch': parsedVer.patch,
+		'prerelease': parsedVer.prerelease.join( '.' ),
+		'build': parsedVer.build.join( '.' ),
+		'versionWithoutBuild': parsedVer.version,
+		'versionWithoutPrerelease': `${parsedVer.major}.${parsedVer.minor}.${parsedVer.patch}`,
 		'latestVersion': context.latestVersion,
 		'latestTag': context.latestTag,
 		'now': ( format ) => {
