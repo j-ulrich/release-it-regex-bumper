@@ -8,6 +8,19 @@ This changelog follows the [Keep a Changelog](https://keepachangelog.com) format
 ---
 
 
+## [1.2.1] - 2020-01-29 ##
+
+### Fixed ###
+- Missing documentation of global `encoding` option.
+- Error in the example in the documentation.
+
+### Security ###
+- Updated depedencies to remove low severity vulnerability CVE-2020-7788.
+
+
+---
+
+
 ## [1.2.0] - 2020-09-10 ##
 
 ### Added ###
@@ -16,6 +29,7 @@ This changelog follows the [Keep a Changelog](https://keepachangelog.com) format
 
 ### Fixed ###
 - Set maximum supported release-it version.
+
 
 ---
 
@@ -43,6 +57,7 @@ Initial release.
 
 
 
+[1.2.1]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/1.2.1
 [1.2.0]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/1.2.0
 [1.1.1]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/1.1.1
 [1.1.0]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/1.1.0
