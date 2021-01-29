@@ -15,7 +15,7 @@ This changelog follows the [Keep a Changelog](https://keepachangelog.com) format
 - Error in the example in the documentation.
 
 ### Security ###
-- Updated depedencies to remove low severity vulnerability CVE-2020-7788.
+- Updated dependencies to remove low severity vulnerability CVE-2020-7788.
 
 
 ---
