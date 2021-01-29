@@ -39,7 +39,7 @@ For example:
                 "path/to/versionfile.txt",
                 {
                     "file": "README.md",
-                    "pattern": "Version \\d+\\.\\d+\\.\\d+",
+                    "search": "Version \\d+\\.\\d+\\.\\d+",
                     "replace": "Version {{version}}"
                 }
             ]
@@ -47,6 +47,9 @@ For example:
     }
 }
 ```
+
+For a more complex example, see [here](https://gitlab.com/julrich/MockNetworkAccessManager/-/blob/b31fd6d956ab0f61c1017432265e9e1c99a17bee/.release-it.json).
+
 
 ## Regular Expressions ##
 
@@ -65,7 +68,7 @@ example, the pattern `\d+` needs to be written as `"\\d+"` inside JSON.
 
 ### `in` ###
 
-**Type:** `string|object`    
+**Type:** `string|object`
 **Default:** `null`
 
 The `in` option defines where and how to read the current version. If this option is defined and not
@@ -73,7 +76,7 @@ The `in` option defines where and how to read the current version. If this optio
 the latest Git tag (which release-it uses by default).
 
 If `in` is a string, it is interpreted as the path to the file where the current version is read
-from. The global `search` pattern is then used to find the version in the file.
+from. The [global `search`](#search) pattern is then used to find the version in the file.
 
 If `in` is an object, it takes the following properties:
 
@@ -85,20 +88,20 @@ Path to the file where the current version is read from.
 
 ### `in.encoding` ###
 
-**Type:** `string`    
+**Type:** `string`
 **Default:** `null`
 
 Encoding to be used when reading `in.file`. The supported encodings are the ones supported by Node's
-`fs` module.    
-If this option is `null` or not defined, the global `encoding` option is used.
+`fs` module.
+If this option is `null` or not defined, the [global `encoding`](#encoding) option is used.
 
 ### `in.search` ###
 
-**Type:** `string|object`    
+**Type:** `string|object`
 **Default:** `null`
 
-Defines the regular expression to find the version inside the `in.file`.    
-If this option is `null` or not defined, the global `search` option is used.
+Defines the regular expression to find the version inside the `in.file`.
+If this option is `null` or not defined, the [global `search`](#search) option is used.
 
 If `in.search` is a string, it is interpreted as the regular expression pattern.
 
@@ -116,14 +119,14 @@ handling of capturing groups.
 
 ### `in.search.flags` ###
 
-**Type:** `string`    
+**Type:** `string`
 **Default:** `null`
 
 The flags for the regular expression `in.search.pattern`.
 
 ### `in.search.versionCaptureGroup` ###
 
-**Type:** `integer|string`    
+**Type:** `integer|string`
 **Default:** `null`
 
 Defines the capture group from the `in.search.pattern` which matches the version. If the
@@ -131,16 +134,17 @@ Defines the capture group from the `in.search.pattern` which matches the version
 group matches the version. If `in.search.pattern` does not contain a capturing group with the
 name or index defined by this option, this option is ignored and the whole match is used as version.
 
-If this option is `null` or not defined, the global `search.versionCaptureGroup` is used.
+If this option is `null` or not defined, the
+[global `search.versionCaptureGroup`](#searchversioncapturegroup) is used.
 
-If both, this option and the global `search.versionCaptureGroup` are `null` (the default), then the
-capturing group with name `version` is used if it exists. Else the capturing group with index 1 is
-used if it exists. Else the whole match is used.
+If both, this option and the [global `search.versionCaptureGroup`](#searchversioncapturegroup) are
+`null` (the default), then the capturing group with name `version` is used if it exists. Else the
+capturing group with index 1 is used if it exists. Else the whole match is used.
 
 
 ### `out` ###
 
-**Type:** `string|object|array<string|object>`    
+**Type:** `string|object|array<string|object>`
 **Default:** `null`
 
 The `out` option defines where and how to write the new version. If defined and not `null`, the
@@ -151,15 +155,15 @@ If `out` is an array, the entries are processed one after another and each entry
 described below when `out` itself is a string or an object.
 
 If `out` is a string, it is interpreted as the path to the file where the new version is written to.
-The global `search` and `replace` options are used in this case to find and replace the version
-information.
+The [global `search`](#search) and [`replace`](#replace) options are used in this case to find and
+replace the version information.
 
 If `out` is an object, it takes the following properties:
 
 
 ### `out.file` ###
 
-**Type:** `string`    
+**Type:** `string`
 **Default:** `null` but either this option or `out.files` (or both) must contain a value
 
 The path to the file where the new version is written to.
@@ -183,8 +187,8 @@ If both, this option and `out.files` are given, both are processed.
 
 ### `out.files` ###
 
-**Type:** `string|array<string>`    
-**Default:** `null` but either this option or `out.file` (or both) must contain a value    
+**Type:** `string|array<string>`
+**Default:** `null` but either this option or `out.file` (or both) must contain a value
 **Since:** 1.1.0
 
 A path or an array of paths to files where the new version is written to. This option behaves the
@@ -207,21 +211,21 @@ If both, this option and `out.file` are given, both are processed.
 
 ### `out.encoding` ###
 
-**Type:** `string`    
+**Type:** `string`
 **Default:** `null`
 
 Encoding to be used when reading and writing `out.file`. The supported encodings are the ones
-supported by Node's `fs` module.    
-If this option is `null` or not defined, the global `encoding` option is used.
+supported by Node's `fs` module.
+If this option is `null` or not defined, the [global `encoding`](#encoding) option is used.
 
 ### `out.search` ###
 
-**Type:** `string|object`    
+**Type:** `string|object`
 **Default:** `null`
 
 Defines the regular expression to find the text which is replaced with the new version inside
-`out.file`.    
-If this option is `null` or not defined, the global `search` option is used.
+`out.file`.
+If this option is `null` or not defined, the [global `search`](#search) option is used.
 
 If `out.search` is a string, it is interpreted as the regular expression pattern.
 
@@ -239,18 +243,18 @@ In contrast to `in.search.pattern`, capturing groups are not treated special in 
 
 ### `out.search.flags` ###
 
-**Type:** `string`    
+**Type:** `string`
 **Default:** `null`
 
 The flags for the regular expression `out.search.pattern`.
 
 ### `out.replace` ###
 
-**Type:** `string`    
+**Type:** `string`
 **Default:** `null`
 
 The template string which replaces the matches of `out.search` inside `out.file`. If this option is
-`null` or not defined, the global `replace` option is used.
+`null` or not defined, the [global `replace`](#replace) option is used.
 
 The template string can reference capturing groups from `out.search` with the syntax `$n` where `n`
 is the number of the referenced capturing group or with `${n}` where `n` is the name or number of a
@@ -260,30 +264,30 @@ XRegExp](http://xregexp.com/syntax/#replacementText).
 The template string also supports a set of placeholders:
 
 - `{{version}}` is replaced with the new version.
-- `{{major}}` is replaced with the major part of the new version.    
+- `{{major}}` is replaced with the major part of the new version.
   Since: 1.2.0
-- `{{minor}}` is replaced with the minor part of the new version.    
+- `{{minor}}` is replaced with the minor part of the new version.
   Since: 1.2.0
-- `{{patch}}` is replaced with the patch part of the new version.    
+- `{{patch}}` is replaced with the patch part of the new version.
   Since: 1.2.0
-- `{{prerelease}}` is replaced with the prerelease part of the new version.    
+- `{{prerelease}}` is replaced with the prerelease part of the new version.
   Since: 1.2.0
-- `{{build}}` is replaced with the build part of the new version.    
+- `{{build}}` is replaced with the build part of the new version.
   Since: 1.2.0
-- `{{versionWithoutBuild}}` is replaced with the new version without the build part.    
+- `{{versionWithoutBuild}}` is replaced with the new version without the build part.
   Since: 1.2.0
 - `{{versionWithoutPrerelease}}` is replaced with the new version without the prelease and build
-  parts.    
+  parts.
   Since: 1.2.0
 - `{{latestVersion}}` is replaced with the current version, that is the version before the increase.
 - `{{latestTag}}` is replaced with the current VCS tag.
 - `{{now}}` is replaced with the current timestamp in ISO 8601 format.
 - `{{now:<format>}}` is replaced with the current timestamp in a format specified by the `<format>`
   parameter. The supported format syntax can be found in the [moment.js
-  format](https://momentjs.com/docs/#/displaying/) documentation.    
+  format](https://momentjs.com/docs/#/displaying/) documentation.
   Example: `{{now:YYYY-MM-DD}}`
-- `{{{}}` is replaced with a literal `{`. This can be used to write a literal placeholder.    
-  For example: `{{{}}{foo}}` is replaced with `{{foo}}`    
+- `{{{}}` is replaced with a literal `{`. This can be used to write a literal placeholder.
+  For example: `{{{}}{foo}}` is replaced with `{{foo}}`
   Since: 1.2.0
 
 The placeholders are replaced before the template string is used in the search and replace and thus
@@ -291,7 +295,7 @@ before the capturing group references are replaced.
 
 ### `search` ###
 
-**Type:** `string|object`    
+**Type:** `string|object`
 **Default:** An object with the default values as described below.
 
 Defines the default regular expression to be used when no `in.search` or `out.search` is given.
@@ -304,7 +308,7 @@ If `search` is an object, it takes the following properties:
 
 ### `search.pattern` ###
 
-**Type:** `string`    
+**Type:** `string`
 **Default:** A pattern matching versions according to the semantic version specification.
 
 The default regular expression pattern which is used when `in.search.pattern` or
@@ -312,14 +316,14 @@ The default regular expression pattern which is used when `in.search.pattern` or
 
 ### `search.flags` ###
 
-**Type:** `string`    
+**Type:** `string`
 **Default:** `null`
 
 The flags for the regular expression `search.pattern`.
 
 ### `search.versionCaptureGroup` ###
 
-**Type:** `integer|string`    
+**Type:** `integer|string`
 **Default:** `null`
 
 Defines the default capture group which is used when `in.search.versionCaptureGroup` is `null` or
@@ -330,11 +334,21 @@ no effect when writing the new version.
 
 ### `replace` ###
 
-**Type:** `string`    
+**Type:** `string`
 **Default:** `"{{version}}"`
 
 The default template string used when `out.replace` is `null` or not defined. See `out.replace` for
 more information.
+
+If this option is not defined or set to `null`, the default value is used.
+
+### `encoding` ###
+
+**Type:** `string`
+**Default:** `"utf-8"`
+
+The default encoding used when `in.encoding` or `out.encoding` is `null` or not defined. The supported
+encodings are the ones supported by Node's `fs` module.
 
 If this option is not defined or set to `null`, the default value is used.
 
