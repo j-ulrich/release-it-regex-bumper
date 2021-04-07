@@ -39,7 +39,7 @@ For example:
                 "path/to/versionfile.txt",
                 {
                     "file": "README.md",
-                    "pattern": "Version \\d+\\.\\d+\\.\\d+",
+                    "search": "Version \\d+\\.\\d+\\.\\d+",
                     "replace": "Version {{version}}"
                 }
             ]
@@ -47,6 +47,9 @@ For example:
     }
 }
 ```
+
+For a more complex example, see [here](https://gitlab.com/julrich/MockNetworkAccessManager/-/blob/b31fd6d956ab0f61c1017432265e9e1c99a17bee/.release-it.json).
+
 
 ## Regular Expressions ##
 
@@ -73,7 +76,7 @@ The `in` option defines where and how to read the current version. If this optio
 the latest Git tag (which release-it uses by default).
 
 If `in` is a string, it is interpreted as the path to the file where the current version is read
-from. The global `search` pattern is then used to find the version in the file.
+from. The [global `search`](#search) pattern is then used to find the version in the file.
 
 If `in` is an object, it takes the following properties:
 
@@ -89,16 +92,16 @@ Path to the file where the current version is read from.
 **Default:** `null`
 
 Encoding to be used when reading `in.file`. The supported encodings are the ones supported by Node's
-`fs` module.    
-If this option is `null` or not defined, the global `encoding` option is used.
+`fs` module.
+If this option is `null` or not defined, the [global `encoding`](#encoding) option is used.
 
 ### `in.search` ###
 
 **Type:** `string|object`    
 **Default:** `null`
 
-Defines the regular expression to find the version inside the `in.file`.    
-If this option is `null` or not defined, the global `search` option is used.
+Defines the regular expression to find the version inside the `in.file`.
+If this option is `null` or not defined, the [global `search`](#search) option is used.
 
 If `in.search` is a string, it is interpreted as the regular expression pattern.
 
@@ -131,11 +134,12 @@ Defines the capture group from the `in.search.pattern` which matches the version
 group matches the version. If `in.search.pattern` does not contain a capturing group with the
 name or index defined by this option, this option is ignored and the whole match is used as version.
 
-If this option is `null` or not defined, the global `search.versionCaptureGroup` is used.
+If this option is `null` or not defined, the
+[global `search.versionCaptureGroup`](#searchversioncapturegroup) is used.
 
-If both, this option and the global `search.versionCaptureGroup` are `null` (the default), then the
-capturing group with name `version` is used if it exists. Else the capturing group with index 1 is
-used if it exists. Else the whole match is used.
+If both, this option and the [global `search.versionCaptureGroup`](#searchversioncapturegroup) are
+`null` (the default), then the capturing group with name `version` is used if it exists. Else the
+capturing group with index 1 is used if it exists. Else the whole match is used.
 
 
 ### `out` ###
@@ -151,8 +155,8 @@ If `out` is an array, the entries are processed one after another and each entry
 described below when `out` itself is a string or an object.
 
 If `out` is a string, it is interpreted as the path to the file where the new version is written to.
-The global `search` and `replace` options are used in this case to find and replace the version
-information.
+The [global `search`](#search) and [`replace`](#replace) options are used in this case to find and
+replace the version information.
 
 If `out` is an object, it takes the following properties:
 
@@ -211,8 +215,8 @@ If both, this option and `out.file` are given, both are processed.
 **Default:** `null`
 
 Encoding to be used when reading and writing `out.file`. The supported encodings are the ones
-supported by Node's `fs` module.    
-If this option is `null` or not defined, the global `encoding` option is used.
+supported by Node's `fs` module.
+If this option is `null` or not defined, the [global `encoding`](#encoding) option is used.
 
 ### `out.search` ###
 
@@ -220,8 +224,8 @@ If this option is `null` or not defined, the global `encoding` option is used.
 **Default:** `null`
 
 Defines the regular expression to find the text which is replaced with the new version inside
-`out.file`.    
-If this option is `null` or not defined, the global `search` option is used.
+`out.file`.
+If this option is `null` or not defined, the [global `search`](#search) option is used.
 
 If `out.search` is a string, it is interpreted as the regular expression pattern.
 
@@ -250,7 +254,7 @@ The flags for the regular expression `out.search.pattern`.
 **Default:** `null`
 
 The template string which replaces the matches of `out.search` inside `out.file`. If this option is
-`null` or not defined, the global `replace` option is used.
+`null` or not defined, the [global `replace`](#replace) option is used.
 
 The template string can reference capturing groups from `out.search` with the syntax `$n` where `n`
 is the number of the referenced capturing group or with `${n}` where `n` is the name or number of a
@@ -338,9 +342,19 @@ more information.
 
 If this option is not defined or set to `null`, the default value is used.
 
+### `encoding` ###
+
+**Type:** `string`    
+**Default:** `"utf-8"`
+
+The default encoding used when `in.encoding` or `out.encoding` is `null` or not defined. The supported
+encodings are the ones supported by Node's `fs` module.
+
+If this option is not defined or set to `null`, the default value is used.
+
 
 # License #
 
-Copyright (c) 2020 Jochen Ulrich
+Copyright (c) 2021 Jochen Ulrich
 
 Licensed under [MIT license](LICENSE).
