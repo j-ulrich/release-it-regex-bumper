@@ -1,6 +1,6 @@
 {
 	"name": "@j-ulrich/release-it-regex-bumper",
-	"version": "1.2.1",
+	"version": "1.2.2",
 	"description": "Regular expression based version read/write plugin for release-it",
 	"main": "index.js",
 	"scripts": {
