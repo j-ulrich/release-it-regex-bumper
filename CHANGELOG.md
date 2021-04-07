@@ -8,10 +8,19 @@ This changelog follows the [Keep a Changelog](https://keepachangelog.com) format
 ---
 
 
+## [1.2.3] - 2021-04-07 ##
+
+### Security ###
+- Updated dependencies to remove vulnerability CVE-2020-28498.
+
+
+---
+
+
 ## [1.2.2] - 2021-04-07 ##
 
 ### Security ###
-- Updated dependencies to remove vulnerabilities CVE-2020-7774 and CVE-2020-28498.
+- Updated dependencies to remove vulnerability CVE-2020-7774.
 
 
 ---
@@ -66,6 +75,7 @@ Initial release.
 
 
 
+[1.2.3]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/1.2.3
 [1.2.2]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/1.2.2
 [1.2.1]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/1.2.1
 [1.2.0]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/1.2.0
