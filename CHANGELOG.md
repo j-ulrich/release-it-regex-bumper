@@ -8,6 +8,15 @@ This changelog follows the [Keep a Changelog](https://keepachangelog.com) format
 ---
 
 
+## [1.2.4] - 2021-04-07 ##
+
+### Fixed ###
+- Reverted unnecessary increase of dependency requirements in package.json.
+
+
+---
+
+
 ## [1.2.3] - 2021-04-07 ##
 
 ### Security ###
