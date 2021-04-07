@@ -355,6 +355,6 @@ If this option is not defined or set to `null`, the default value is used.
 
 # License #
 
-Copyright (c) 2021 Jochen Ulrich
+Copyright (c) 2020-2021 Jochen Ulrich
 
 Licensed under [MIT license](LICENSE).
