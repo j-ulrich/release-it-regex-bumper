@@ -38,9 +38,11 @@
 		"fast-glob": "^3.2.0",
 		"lodash": "^4.17.20",
 		"moment": "^2.8.4",
-		"release-it": "^14.0.2",
 		"semver": "^7.3.2",
 		"xregexp": "^4.3.0"
+	},
+	"peerDependencies": {
+		"release-it": "^14.0.2"
 	},
 	"optionalDependencies": {
 		"diff": "^3.0.0 || ^4.0.0"
