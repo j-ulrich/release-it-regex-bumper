@@ -21,6 +21,7 @@ jobs:
           with:
               node-version: ${{ matrix.node-version }}
         - run: npm ci
+        - run: npm install release-it
         - run: npm run build --if-present
         - run: npm run test
 
@@ -52,11 +53,15 @@ jobs:
           with:
               node-version: 14.x
         - run: npm ci
+        - run: npm install release-it
         - run: npm run build --if-present
         - run: npm run test+coverage
         - run: npx c8 report --reporter lcov
         - name: Upload coverage to Codacy
-          uses: codacy/codacy-coverage-reporter-action@master
+          # Change back to
+          # uses: codacy/codacy-coverage-reporter-action@master
+          # when https://github.com/codacy/codacy-coverage-reporter-action/issues/36 is fixed
+          uses: codacy/codacy-coverage-reporter-action@5409fccf86ceb72547bb9fe6673ea2d3b4f62e6f
           with:
               project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
               coverage-reports: coverage/lcov.info
