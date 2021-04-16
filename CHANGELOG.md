@@ -8,7 +8,7 @@ This changelog follows the [Keep a Changelog](https://keepachangelog.com) format
 ---
 
 
-## Unreleased ##
+## [1.2.5] - 2021-04-16 ##
 
 ### Fixed ###
 - [[#2]] Declares release-it as a peerDependency instead of a regular dependency.
@@ -93,6 +93,7 @@ Initial release.
 
 
 
+[1.2.5]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/1.2.5
 [1.2.4]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/1.2.4
 [1.2.3]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/1.2.3
 [1.2.2]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/1.2.2
