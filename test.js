@@ -1,5 +1,5 @@
 const fs = require( 'fs' );
-const moment = require( 'moment' );
+const dateFns = require( 'date-fns' );
 const crypto = require( 'crypto' );
 const assert = require( 'assert' ).strict;
 const test = require( 'bron' );
@@ -314,16 +314,16 @@ it( 'should write date to file', async ( testDir ) => {
 	const fileContentMatch = /^Copyright \(c\) (.+) Foo Bar$/.exec( fileContent );
 	assert( fileContentMatch );
 	assert( fileContentMatch[ 1 ] );
-	const date = moment( fileContentMatch[ 1 ] );
-	assert( date.isValid() );
-	assert( moment().diff( date, 'seconds' ) < 5 );
+	const date = dateFns.parseISO( fileContentMatch[ 1 ] );
+	assert( dateFns.isValid( date ) );
+	assert( dateFns.differenceInSeconds( new Date(), date ) < 5 );
 } );
 
 it( 'should write date to file using format', async ( testDir ) => {
-	const pluginOptions = { out: { file: testDir+'/copyright.txt', search: '\\d{4}', replace: '{{now:YYYY}}' } };
+	const pluginOptions = { out: { file: testDir+'/copyright.txt', search: '\\d{4}', replace: '{{now:yyyy}}' } };
 	const { plugin } = setupPlugin( pluginOptions );
 	await plugin.bump( '1.2.3' );
-	assert.equal( readFile( testDir+'/copyright.txt' ), `Copyright (c) ${moment().format( 'YYYY' )} Foo Bar` );
+	assert.equal( readFile( testDir+'/copyright.txt' ), `Copyright (c) ${dateFns.format( new Date(), 'yyyy' )} Foo Bar` );
 } );
 
 it( 'should write main version placeholders to file', async ( testDir ) => {
