@@ -326,6 +326,12 @@ it( 'should write date to file using format', async ( testDir ) => {
 	assert.equal( readFile( testDir+'/copyright.txt' ), `Copyright (c) ${dateFns.format( new Date(), 'yyyy' )} Foo Bar` );
 } );
 
+it( 'should throw when using Moment.js date format', async ( testDir ) => {
+	const pluginOptions = { out: { file: testDir+'/copyright.txt', search: '\\d{4}', replace: '{{now:YYYY}}' } };
+	const { plugin } = setupPlugin( pluginOptions );
+	await assert.rejects( plugin.bump( '1.2.3' ), RangeError );
+} );
+
 it( 'should write main version placeholders to file', async ( testDir ) => {
 	const pluginOptions = { out: { file: testDir+'/versions.txt', replace: '{{major}}.{{minor}}.{{patch}}' } };
 	await testBump( testDir, pluginOptions, 'some: 1.2.3\nthis: 1.0.1\nother: 2.0.0\n', '1.2.3-alpha.1+build.17' );
