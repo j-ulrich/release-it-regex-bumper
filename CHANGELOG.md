@@ -8,7 +8,7 @@ This changelog follows the [Keep a Changelog](https://keepachangelog.com) format
 ---
 
 
-## Unreleased ##
+## [2.0.0] - 2021-04-22 ##
 
 ### Changed ###
 
@@ -116,6 +116,7 @@ Initial release.
 
 
 
+[2.0.0]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/2.0.0
 [1.2.6]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/1.2.6
 [1.2.5]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/1.2.5
 [1.2.4]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/1.2.4
