@@ -284,7 +284,7 @@ The template string also supports a set of placeholders:
 - `{{now}}` is replaced with the current timestamp in ISO 8601 format.
 - `{{now:<format>}}` is replaced with the current timestamp in a format specified by the `<format>`
   parameter. The supported format syntax can be found in the [date-fns
-  format](https://date-fns.org/v2.0.0/docs/format) documentation.    
+  format](https://date-fns.org/v2.8.0/docs/format) documentation.    
   Example: `{{now:yyyy-MM-dd}}`
 - `{{{}}` is replaced with a literal `{`. This can be used to write a literal placeholder.    
   For example: `{{{}}{foo}}` is replaced with `{{foo}}`    

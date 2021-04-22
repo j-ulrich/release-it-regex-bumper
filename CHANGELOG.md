@@ -8,10 +8,24 @@ This changelog follows the [Keep a Changelog](https://keepachangelog.com) format
 ---
 
 
+## Unreleased ##
+
+### Changed ###
+
+#### Breaking Changes ####
+- [[#1]] Replaced Moment.js with date-fns. This means the format syntax for the date/time formatting has changed.
+  See https://date-fns.org/v2.8.0/docs/format for the new syntax.    
+  ⚠️ Especially note that the year and day patterns now use lower case letters (for example `yyyy` and `dd`).
+  See also https://git.io/fxCyr.
+
+
+---
+
+
 ## [1.2.5] - 2021-04-16 ##
 
 ### Fixed ###
-- [[#2]] Declares release-it as a peerDependency instead of a regular dependency.
+- [[#2]] Declared release-it as a peerDependency instead of a regular dependency.
 
 
 ---
@@ -103,4 +117,5 @@ Initial release.
 [1.1.0]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/1.1.0
 [1.0.0]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/1.0.0
 
+[#1]: https://github.com/j-ulrich/release-it-regex-bumper/issues/1
 [#2]: https://github.com/j-ulrich/release-it-regex-bumper/issues/2
