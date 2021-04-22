@@ -1,6 +1,6 @@
 {
 	"name": "@j-ulrich/release-it-regex-bumper",
-	"version": "1.2.5",
+	"version": "1.2.6",
 	"description": "Regular expression based version read/write plugin for release-it",
 	"main": "index.js",
 	"scripts": {
@@ -42,7 +42,7 @@
 		"xregexp": "^4.3.0"
 	},
 	"peerDependencies": {
-		"release-it": "^14.0.2"
+		"release-it": "11 - 15"
 	},
 	"optionalDependencies": {
 		"diff": "^3.0.0 || ^4.0.0"
@@ -51,7 +51,7 @@
 		"bron": "^1.1.0",
 		"c8": "^7.3.0",
 		"mock-fs": "^4.13.0",
-		"release-it": "^14.0.2",
+		"release-it": "^14.0.0",
 		"rewiremock": "^3.14.3",
 		"sinon": "^9.0.3"
 	},

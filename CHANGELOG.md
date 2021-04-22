@@ -22,6 +22,15 @@ This changelog follows the [Keep a Changelog](https://keepachangelog.com) format
 ---
 
 
+## [1.2.6] - 2021-04-22 ##
+
+### Fixed ###
+- Version declaration of release-it peerDependency was too strict since older versions are supported as well.
+
+
+---
+
+
 ## [1.2.5] - 2021-04-16 ##
 
 ### Fixed ###
@@ -107,6 +116,7 @@ Initial release.
 
 
 
+[1.2.6]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/1.2.6
 [1.2.5]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/1.2.5
 [1.2.4]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/1.2.4
 [1.2.3]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/1.2.3
@@ -117,5 +127,5 @@ Initial release.
 [1.1.0]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/1.1.0
 [1.0.0]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/1.0.0
 
-[#1]: https://github.com/j-ulrich/release-it-regex-bumper/issues/1
 [#2]: https://github.com/j-ulrich/release-it-regex-bumper/issues/2
+[#1]: https://github.com/j-ulrich/release-it-regex-bumper/issues/1
