@@ -35,10 +35,10 @@
 	},
 	"dependencies": {
 		"chalk": "^4.0.0",
+		"date-fns": "^2.8.0",
 		"fast-glob": "^3.2.0",
 		"lodash": "^4.17.20",
-		"moment": "^2.8.4",
-		"semver": "^7.3.2",
+		"semver": "^7.3.0",
 		"xregexp": "^4.3.0"
 	},
 	"peerDependencies": {

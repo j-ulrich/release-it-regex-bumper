@@ -7,7 +7,8 @@ const _ = require( 'lodash' );
 const XRegExp = require( 'xregexp' );
 const semver = require( 'semver' );
 const { Plugin } = require( 'release-it' );
-const moment = require( 'moment' );
+const dateFormat = require( 'date-fns/format' );
+const dateFormatIso = require( 'date-fns/formatISO' );
 const diff = optionalRequire( 'diff' );
 
 
@@ -23,17 +24,17 @@ const defaultReplace = '{{version}}';
 
 
 class RegExBumper extends Plugin {
-	
+
 	async getLatestVersion() {
 
 		const { in: inOptions, search: globalSearchOptions, encoding: globalEncoding } = this.options;
 		if ( _.isNil( inOptions ) ) {
 			return;
 		}
-		
+
 		const { searchRegex: globalSearchRegex, versionCaptureGroup: globalVersionCaptureGroup } = parseSearchOptions.call( this, globalSearchOptions );
 		const { file, encoding, searchRegex, versionCaptureGroup } = parseInOptions.call( this, inOptions );
-		
+
 		const effectiveEncoding = firstNotNil( encoding, globalEncoding, defaultEncoding );
 		const fileContent = await readFile( file, { encoding: effectiveEncoding } );
 		const version = await extractVersion.call( this, fileContent, firstNotNil( searchRegex, globalSearchRegex, defaultSearchRegex ),
@@ -43,7 +44,7 @@ class RegExBumper extends Plugin {
 
 
 	async bump( version ) {
-		
+
 		const { out: outOptions, search: globalSearchOptions, replace: globalReplace, encoding: globalEncoding } = this.options;
 		const { isDryRun } = this.config;
 		if ( _.isNil( outOptions ) ) {
@@ -56,21 +57,21 @@ class RegExBumper extends Plugin {
 
 		const { searchRegex: globalSearchRegex } = parseSearchOptions.call( this, globalSearchOptions );
 		const expandedOutOptions = await expandOutOptionFiles.call( this, parseOutOptions.call( this, outOptions ) );
-	
+
 		for ( const outOptions of expandedOutOptions ) {
-			
+
 			const { files, encoding, searchRegex, replace } = outOptions;
-			
+
 			const effectiveEncoding = firstNotNil( encoding, globalEncoding, defaultEncoding );
 			const effectiveSearchRegex = firstNotNil( searchRegex, globalSearchRegex, defaultSearchRegex );
 			const effectiveReplacement = firstNotNil( replace, globalReplace, defaultReplace );
-			
+
 			for ( const file of files ) {
 
 				this.log.info( `Updating version in ${file}` );
 
 				const fileContent = await readFile( file, { encoding: effectiveEncoding } );
-				
+
 				if ( isDryRun ) {
 					loadDiff.call( this );
 					if ( this.diff ) {
@@ -81,9 +82,9 @@ class RegExBumper extends Plugin {
 					await searchAndReport.call( this, fileContent, effectiveSearchRegex, file );
 					continue;
 				}
-				
+
 				const processedFileContent = replaceVersion.call( this, fileContent, effectiveSearchRegex, effectiveReplacement, context );
-				
+
 				if ( processedFileContent == fileContent ) {
 					warnNoFileChange.call( this, file );
 				}
@@ -93,7 +94,7 @@ class RegExBumper extends Plugin {
 			}
 		}
 	}
-	
+
 }
 
 function parseInOptions( options ) {
@@ -144,7 +145,7 @@ function extractVersion( content, versionRegex, versionCaptureGroup ) {
 			return match[ 1 ];
 		}
 	}
-	
+
 	return match[ 0 ];
 }
 
@@ -196,7 +197,7 @@ function loadDiff() {
 function diffAndReport( oldContent, newContent, filePath ) {
 	const { isDryRun } = this.config;
 	const diffResult = this.diff.structuredPatch( filePath, filePath, oldContent, newContent, undefined, undefined, { context: 0 } );
-	
+
 	if ( _.isEmpty( diffResult.hunks ) ) {
 		warnNoFileChange.call( this, filePath );
 	}
@@ -212,7 +213,7 @@ function diffAndReport( oldContent, newContent, filePath ) {
 			return lineText;
 		} ).join( '\n' ), { isDryRun } );
 	} );
-	
+
 }
 
 function searchAndReport( content, searchRegex, filePath ) {
@@ -242,7 +243,7 @@ function replaceVersion( content, searchRegex, replace, context ) {
 
 function prepareReplacement( replace, context ) {
 	const placeholderRegex = XRegExp( /\{\{(?<placeholder>(?:[a-z][a-z0-9_]*|\{))(?::(?<format>.*))?\}\}/ig );
-	const now = moment();
+	const now = new Date();
 	const parsedVer = semver.parse( context.version );
 	const placeholderMap = {
 		'{': '{',
@@ -257,7 +258,10 @@ function prepareReplacement( replace, context ) {
 		'latestVersion': context.latestVersion,
 		'latestTag': context.latestTag,
 		'now': ( format ) => {
-			return now.format( format );
+			if( _.isNil( format ) ) {
+				return dateFormatIso( now );
+			}
+			return dateFormat( now, format );
 		}
 	};
 	return XRegExp.replace( replace, placeholderRegex, ( match, placeholder, format ) => {
@@ -294,13 +298,13 @@ class LineCounter {
 			return index;
 		} );
 	}
-	
+
 	lineOfIndex( index ) {
 		const arrayIndex = this.lineEndIndex.findIndex( lineEndIndex => ( index <= lineEndIndex ) );
 		assert( arrayIndex >= 0 );
 		return arrayIndex + 1;
 	}
-	
+
 	columnOfIndex( index ) {
 		const line = this.lineOfIndex( index );
 		assert( line >= 1 );
