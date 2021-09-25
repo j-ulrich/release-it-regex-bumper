@@ -167,18 +167,20 @@ it( 'should return latest version from file with given encoding', async ( testDi
 
 //####### Bump (Output) Tests #######
 
+const testBump = async ( testDir, pluginOptions, expectedContent, newVersion='1.2.3' ) => {
+	const { plugin } = setupPlugin( pluginOptions );
+	await plugin.bump( newVersion );
+	assert.equal( readFile( testDir+'/versions.txt' ), expectedContent );
+};
+
 it( 'should write version to file', async ( testDir ) => {
 	const pluginOptions = { out: testDir+'/versions.txt' };
-	const { plugin } = setupPlugin( pluginOptions );
-	await plugin.bump( '1.2.3' );
-	assert.equal( readFile( testDir+'/versions.txt' ), 'some: 1.2.3\nthis: 1.0.1\nother: 2.0.0\n' );
+	await testBump( testDir, pluginOptions, 'some: 1.2.3\nthis: 1.0.1\nother: 2.0.0\n' );
 } );
 
 it( 'should write version to file using null search and replace', async ( testDir ) => {
 	const pluginOptions = { out: { file: testDir+'/versions.txt', search: null, replace: null } };
-	const { plugin } = setupPlugin( pluginOptions );
-	await plugin.bump( '1.2.3' );
-	assert.equal( readFile( testDir+'/versions.txt' ), 'some: 1.2.3\nthis: 1.0.1\nother: 2.0.0\n' );
+	await testBump( testDir, pluginOptions, 'some: 1.2.3\nthis: 1.0.1\nother: 2.0.0\n' );
 } );
 
 it( 'should throw if out file cannot be read', async () => {
@@ -196,11 +198,6 @@ it( 'should warn if out file did not change', async ( testDir ) => {
 	assertLogMessage( container.log.warn, /\/unrelated\.txt" did not change/, 'warning regarding unchanged file was not logged' );
 } );
 
-const testBump = async ( testDir, pluginOptions, expectedContent, newVersion='1.2.3' ) => {
-	const { plugin } = setupPlugin( pluginOptions );
-	await plugin.bump( newVersion );
-	assert.equal( readFile( testDir+'/versions.txt' ), expectedContent );
-};
 
 const testBumpThisVersion = async ( testDir, pluginOptions ) => {
 	await testBump( testDir, pluginOptions, 'some: 1.0.0\nthis: 1.2.3\nother: 2.0.0\n' );
