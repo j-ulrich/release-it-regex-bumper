@@ -117,7 +117,7 @@ Capturing groups can be used to extract the version from a part of the whole mat
 documentation of the configuration option `in.search.versionCaptureGroup` for a description of the
 handling of capturing groups.
 
-The `in.search.pattern` also supports a set of placeholders (since version 2.1.0):
+The `in.search.pattern` also supports a set of placeholders (since version 3.0.0):
 
 - `{{semver}}` is matching any version string complying to the semantic versioning specification (meaning at least
   "major.minor.patch").
@@ -258,7 +258,7 @@ In contrast to `in.search.pattern`, capturing groups are not treated special in 
 If this option is `null` or not defined, the [global `search`](#search) resp.
 [global `search.pattern`](#searchpattern) is used.
 
-The `out.search.pattern` also supports a set of placeholders (since version 2.1.0):
+The `out.search.pattern` also supports a set of placeholders (since version 3.0.0):
 
 - `{{version}}` is matching the current version (before the increment).
 - `{{major}}` is matching the major part of the current version.
@@ -322,13 +322,13 @@ The template string also supports a set of placeholders:
   Since: 1.2.0
 - `{{prefixedPrerelease}}` is replaced by a dash ('-') followed by the prerelease part of the new version or and empty
   string if the version does not have a prerelease part.    
-  Since: 2.1.0
+  Since: 3.0.0
 - `{{build}}` is replaced by the build part of the new version or an empty string if the version does not have a
   build part.    
   Since: 1.2.0
 - `{{prefixedBuild}}` is replaced by a plus ('+') followed by the build part of the new version or an empty string
   if the version does not have a build part.    
-  Since: 2.1.0
+  Since: 3.0.0
 - `{{versionWithoutBuild}}` is replaced by the new version without the build part.    
   Since: 1.2.0
 - `{{versionWithoutPrerelease}}` is replaced by the new version without the prerelease and build
