@@ -40,7 +40,7 @@ For example:
                 {
                     "file": "README.md",
                     "search": "Version \\d+\\.\\d+\\.\\d+",
-                    "replace": "Version {{version}}"
+                    "replace": "Version {{versionWithoutPrerelease}}"
                 }
             ]
         }
