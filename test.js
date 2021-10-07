@@ -628,9 +628,9 @@ describe( "End-to-End", () => {
 	} );
 
 	it( 'should replace the current version', async ( testDir ) => {
-		const pluginOptions = { in: testDir+'/VERSION', increment: 'minor', out: { file: testDir+'/versions.txt', search: '{{version}}' } };
+		const pluginOptions = { in: testDir+'/VERSION', out: { file: testDir+'/versions.txt', search: '{{version}}' } };
 		await runPlugin( pluginOptions );
-		assert.equal( readFile( testDir+'/versions.txt' ), 'some: 1.0.0\nthis: 1.1.0\nother: 2.0.0\n' );
+		assert.equal( readFile( testDir+'/versions.txt' ), 'some: 1.0.0\nthis: 1.0.2\nother: 2.0.0\n' );
 	} );
 
 } );
