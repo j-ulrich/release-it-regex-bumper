@@ -20,7 +20,7 @@
 				},
 				{
 					"file": "CHANGELOG.md",
-					"search": "(\\[{{versionWithoutPrerelease}}]: http)",
+					"search": "(\\[{{version}}\\]: http)",
 					"replace": "[{{version}}]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/{{version}}\n$1"
 				}
 			]
