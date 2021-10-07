@@ -21,10 +21,19 @@ const semanticVersionRegex = XRegExp( /(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9
 const defaultSearchRegex = semanticVersionRegex;
 const defaultVersionCaptureGroup = null;
 const defaultReplace = '{{version}}';
+const placeholderRegex = XRegExp( /\{\{(?<placeholder>(?:[a-z][a-z0-9_]*|\{))(?::(?<format>.*))?\}\}/ig );
 
+
+const prereleasePrefix = '-';
+const buildPrefix = '+';
 
 
 class RegExBumper extends Plugin {
+
+	constructor(...args) {
+		super(...args);
+		this.setContext({executionTime: new Date()});
+	}
 
 	async getLatestVersion() {
 
@@ -71,6 +80,8 @@ class RegExBumper extends Plugin {
 			const effectiveSearchRegex = mergeSearchRegExes( [searchRegex, globalSearchRegex, defaultSearchRegex], [searchFlags, globalSearchFlags] );
 			const effectiveReplacement = firstNotNil( replace, globalReplace, defaultReplace );
 
+			const replacedSearchRegex = prepareSearch( effectiveSearchRegex, context );
+
 			for ( const file of files ) {
 
 				this.log.info( `Updating version in ${file}` );
@@ -80,15 +91,15 @@ class RegExBumper extends Plugin {
 				if ( isDryRun ) {
 					loadDiff.call( this );
 					if ( this.diff ) {
-						const processedFileContent = replaceVersion.call( this, fileContent, effectiveSearchRegex, effectiveReplacement, context );
+						const processedFileContent = replaceVersion.call( this, fileContent, replacedSearchRegex, effectiveReplacement, context );
 						await diffAndReport.call( this, fileContent, processedFileContent, file );
 						continue;
 					}
-					await searchAndReport.call( this, fileContent, effectiveSearchRegex, file );
+					await searchAndReport.call( this, fileContent, replacedSearchRegex, file );
 					continue;
 				}
 
-				const processedFileContent = replaceVersion.call( this, fileContent, effectiveSearchRegex, effectiveReplacement, context );
+				const processedFileContent = replaceVersion.call( this, fileContent, replacedSearchRegex, effectiveReplacement, context );
 
 				if ( processedFileContent == fileContent ) {
 					warnNoFileChange.call( this, file );
@@ -246,6 +257,59 @@ function mergeSearchRegExes( regExCandidates, flagCandidates ) {
 	return XRegExp( searchRegEx.xregexp.source || searchRegEx.source, flags );
 }
 
+function prepareSearch( searchRegEx, context ) {
+	const pattern = searchRegEx.xregexp.source || searchRegEx.source;
+	const placeholderMap = {
+		'now': ( format ) => {
+			if( _.isNil( format ) ) {
+				throw new Error( 'Missing required parameter "format" for placeholder {{now}}' );
+			}
+			return XRegExp.escape( dateFormat( context.executionTime, format ) );
+		},
+		'semver': `${semanticVersionRegex.xregexp.source || semanticVersionRegex.source}`
+	};
+	const parsedVer = semver.parse( context.latestVersion );
+	if( parsedVer ) {
+		Object.assign( placeholderMap, {
+			'version': XRegExp.escape( parsedVer.raw ),
+			'major': parsedVer.major,
+			'minor': parsedVer.minor,
+			'patch': parsedVer.patch,
+			'prerelease': XRegExp.escape( parsedVer.prerelease.join( '.' ) ),
+			'prefixedPrerelease': parsedVer.prerelease.length > 0 ? XRegExp.escape( prereleasePrefix + parsedVer.prerelease.join( '.' ) ) : "",
+			'build': XRegExp.escape( parsedVer.build.join( '.' ) ),
+			'prefixedBuild': parsedVer.build.length > 0 ? XRegExp.escape( buildPrefix + parsedVer.build.join( '.' ) ) : "",
+			'versionWithoutBuild': XRegExp.escape( parsedVer.version ),
+			'versionWithoutPrerelease': XRegExp.escape( `${parsedVer.major}.${parsedVer.minor}.${parsedVer.patch}` ),
+
+		} );
+	}
+	if ( context.latestTag ) {
+		Object.assign( placeholderMap, { 'tag': XRegExp.escape( context.latestTag ) } );
+	}
+
+	if ( context.version ) {
+		Object.assign( placeholderMap, { 'newVersion': XRegExp.escape( context.version ) } );
+	}
+
+	for( const placeholder of Object.keys( placeholderMap ) ) {
+		const replacement = placeholderMap[ placeholder ];
+		if( _.isFunction( replacement ) ) {
+			placeholderMap[ placeholder ] = ( ...args ) => {
+				return wrapInRegexGroup( replacement( ...args ) );
+			};
+			continue;
+		}
+		placeholderMap[ placeholder ] = wrapInRegexGroup( replacement );
+	}
+	const replacedPattern = replacePlaceholders( pattern, placeholderMap );
+	return XRegExp( replacedPattern, searchRegEx.xregexp.flags || undefined );
+}
+
+function wrapInRegexGroup( pattern ) {
+	return  `(?:${pattern})`;
+}
+
 function replaceVersion( content, searchRegex, replace, context ) {
 	const processedReplace = prepareReplacement.call( this, replace, context );
 	const processedContent = XRegExp.replace( content, searchRegex, processedReplace );
@@ -253,37 +317,44 @@ function replaceVersion( content, searchRegex, replace, context ) {
 }
 
 function prepareReplacement( replace, context ) {
-	const placeholderRegex = XRegExp( /\{\{(?<placeholder>(?:[a-z][a-z0-9_]*|\{))(?::(?<format>.*))?\}\}/ig );
-	const now = new Date();
 	const parsedVer = semver.parse( context.version );
 	const placeholderMap = {
-		'{': '{',
 		'version': parsedVer.raw,
 		'major': parsedVer.major,
 		'minor': parsedVer.minor,
 		'patch': parsedVer.patch,
 		'prerelease': parsedVer.prerelease.join( '.' ),
+		'prefixedPrerelease': parsedVer.prerelease.length > 0 ? prereleasePrefix + parsedVer.prerelease.join( '.' ) : '',
 		'build': parsedVer.build.join( '.' ),
+		'prefixedBuild': parsedVer.build.length > 0 ? buildPrefix + parsedVer.build.join( '.' ) : '',
 		'versionWithoutBuild': parsedVer.version,
 		'versionWithoutPrerelease': `${parsedVer.major}.${parsedVer.minor}.${parsedVer.patch}`,
-		'latestVersion': context.latestVersion,
-		'latestTag': context.latestTag,
+		'latestVersion': context.latestVersion || '',
+		'latestTag': context.latestTag || '',
 		'now': ( format ) => {
 			if( _.isNil( format ) ) {
-				return dateFormatIso( now );
+				return dateFormatIso( context.executionTime );
 			}
-			return dateFormat( now, format );
+			return dateFormat( context.executionTime, format );
 		}
 	};
-	return XRegExp.replace( replace, placeholderRegex, ( match, placeholder, format ) => {
-		const placeholderReplace = placeholderMap.hasOwnProperty( placeholder) ? placeholderMap[ placeholder ] : undefined;
-		if ( _.isFunction( placeholderReplace ) ) {
-			if ( _.isString( format ) ) {
-				return placeholderReplace( format );
-			}
-			return placeholderReplace();
+	return replacePlaceholders( replace, placeholderMap );
+}
+
+function replacePlaceholders( template, placeholderMap ) {
+	placeholderMap = Object.assign( {}, placeholderMap, { '{': '{' } );
+	return XRegExp.replace( template, placeholderRegex, ( match, placeholder, format ) => {
+		if ( !placeholderMap.hasOwnProperty( placeholder ) ) {
+			throw new Error( `Unknown placeholder encountered: '${placeholder}'` );
 		}
-		return placeholderReplace;
+		const replacement = placeholderMap[ placeholder ];
+		if ( _.isFunction( replacement ) ) {
+			if ( _.isString( format ) ) {
+				return replacement( format );
+			}
+			return replacement();
+		}
+		return replacement;
 	} );
 }
 

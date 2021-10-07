@@ -64,7 +64,7 @@ example, the pattern `\d+` needs to be written as `"\\d+"` inside JSON.
 
 ## Configuration Options ##
 
-> **Note:** Options without a default value are required.
+> ℹ️ **Note:** Options without a default value are required.
 
 ### `in` ###
 
@@ -235,11 +235,42 @@ If `out.search` is an object, it takes the following properties:
 
 **Type:** `string`
 
-The regular expression pattern to find the text to be replaced with the new version inside
+The regular expression pattern template to find the text to be replaced with the new version inside
 `out.file`.
 
 In contrast to `in.search.pattern`, capturing groups are not treated special in this pattern. So
 `out.replace` always replaces the *whole* match.
+
+If this option is `null` or not defined, the [global `search`](#search) resp.
+[global `search.pattern`](#searchpattern) is used.
+
+The `out.search.pattern` also supports a set of placeholders (since version 2.1.0):
+
+- `{{version}}` is matching the current version (before the increment).
+- `{{major}}` is matching the major part of the current version.
+- `{{minor}}` is matching the minor part of the current version.
+- `{{patch}}` is matching the patch part of the current version.
+- `{{prerelease}}` is matching the prerelease part of the current version. If the version does
+  not have a prerelease part, it is omitted (matching empty string).
+- `{{prefixedPrerelease}}` is matching a dash ('-') followed by the prerelease part of the current version. If the
+  version does not have a prerelease part, it is omitted (matching empty string).
+- `{{build}}` is matching the build part of the current version. If the version does not have a
+  build part, it is omitted (matching empty string).
+- `{{prefixedBuild}}` is matching a plus ('+') followed by the build part of the current version. If the version
+  does not have a build part, it is omitted (matching empty string).
+- `{{versionWithoutBuild}}` is matching the current version without the build part.
+- `{{versionWithoutPrerelease}}` is matching the current version without the prerelease and build parts.
+- `{{semver}}` is matching any version string complying to the semantic versioning specification (meaning at least
+  "major.minor.patch").
+- `{{now:<format>}}` is matching the current timestamp in a format specified by the `<format>` parameter.
+  The supported format syntax can be found in the [date-fns format](https://date-fns.org/v2.8.0/docs/format)
+  documentation.    
+  Example: `{{now:yyyy-MM-dd}}`
+- `{{{}}` is matching a literal `{`. This can be used to match a literal placeholder.    
+  For example: `{{{}}{foo}}` is matching `{{foo}}`
+
+> ℹ️ **Note:** All the placeholders are contained in a non-capturing group (`(?:...)`) so they behave like "atomic"
+  constructs.
 
 ### `out.search.flags` ###
 
@@ -265,31 +296,39 @@ XRegExp](http://xregexp.com/syntax/#replacementText).
 
 The template string also supports a set of placeholders:
 
-- `{{version}}` is replaced with the new version.
-- `{{major}}` is replaced with the major part of the new version.    
+- `{{version}}` is replaced by the new version.
+- `{{major}}` is replaced by the major part of the new version.    
   Since: 1.2.0
-- `{{minor}}` is replaced with the minor part of the new version.    
+- `{{minor}}` is replaced by the minor part of the new version.    
   Since: 1.2.0
-- `{{patch}}` is replaced with the patch part of the new version.    
+- `{{patch}}` is replaced by the patch part of the new version.    
   Since: 1.2.0
-- `{{prerelease}}` is replaced with the prerelease part of the new version.    
+- `{{prerelease}}` is replaced by the prerelease part of the new version or an empty string if the version does not
+  have a prerelease part.    
   Since: 1.2.0
-- `{{build}}` is replaced with the build part of the new version.    
+- `{{prefixedPrerelease}}` is replaced by a dash ('-') followed by the prerelease part of the new version or and empty
+  string if the version does not have a prerelease part.    
+  Since: 2.1.0
+- `{{build}}` is replaced by the build part of the new version or an empty string if the version does not have a
+  build part.    
   Since: 1.2.0
-- `{{versionWithoutBuild}}` is replaced with the new version without the build part.    
+- `{{prefixedBuild}}` is replaced by a plus ('+') followed by the build part of the new version or an empty string
+  if the version does not have a build part.    
+  Since: 2.1.0
+- `{{versionWithoutBuild}}` is replaced by the new version without the build part.    
   Since: 1.2.0
-- `{{versionWithoutPrerelease}}` is replaced with the new version without the prelease and build
+- `{{versionWithoutPrerelease}}` is replaced by the new version without the prelease and build
   parts.    
   Since: 1.2.0
-- `{{latestVersion}}` is replaced with the current version, that is the version before the increase.
-- `{{latestTag}}` is replaced with the current VCS tag.
-- `{{now}}` is replaced with the current timestamp in ISO 8601 format.
-- `{{now:<format>}}` is replaced with the current timestamp in a format specified by the `<format>`
+- `{{latestVersion}}` is replaced by the current version, that is the version before the increase.
+- `{{latestTag}}` is replaced by the current VCS tag.
+- `{{now}}` is replaced by the current timestamp in ISO 8601 format.
+- `{{now:<format>}}` is replaced by the current timestamp in a format specified by the `<format>`
   parameter. The supported format syntax can be found in the [date-fns
   format](https://date-fns.org/v2.8.0/docs/format) documentation.    
   Example: `{{now:yyyy-MM-dd}}`
-- `{{{}}` is replaced with a literal `{`. This can be used to write a literal placeholder.    
-  For example: `{{{}}{foo}}` is replaced with `{{foo}}`    
+- `{{{}}` is replaced by a literal `{`. This can be used to write a literal placeholder.    
+  For example: `{{{}}{foo}}` is replaced by `{{foo}}`    
   Since: 1.2.0
 
 The placeholders are replaced before the template string is used in the search and replace and thus
@@ -311,10 +350,12 @@ If `search` is an object, it takes the following properties:
 ### `search.pattern` ###
 
 **Type:** `string`    
-**Default:** A pattern matching versions according to the semantic version specification.
+**Default:** `"{{semver}}"`
 
-The default regular expression pattern which is used when `in.search.pattern` or
-`out.search.pattern` is `null` or not defined.
+The default regular expression pattern template which is used when `in.search.pattern` or
+`out.search.pattern` is `null` or not defined. See `out.search.pattern` for more information.
+
+If this option is not defined or set to `null`, the default value is used.
 
 ### `search.flags` ###
 

@@ -10,6 +10,9 @@ This changelog follows the [Keep a Changelog](https://keepachangelog.com) format
 
 ## Unreleased ##
 
+### Added ###
+- Support for placeholders in the `search.pattern`.
+
 ### Changed ###
 - It is now possible to set just the `search.flags` or `search.pattern` both in the global `search` options and in
   `out.search` options.
