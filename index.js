@@ -15,17 +15,17 @@ const diff = optionalRequire( 'diff' );
 const readFile = util.promisify( fs.readFile );
 const writeFile = util.promisify( fs.writeFile );
 
-
-const defaultEncoding = 'utf-8';
 const semanticVersionRegex = XRegExp( /(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:-(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(?:\+[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*)?/ );
-const defaultSearchRegex = XRegExp( '{{semver}}' );
-const defaultVersionCaptureGroup = null;
-const defaultReplace = '{{version}}';
 const placeholderRegex = XRegExp( /\{\{(?<placeholder>(?:[a-z][a-z0-9_]*|\{))(?::(?<format>.*))?\}\}/ig );
-
 
 const prereleasePrefix = '-';
 const buildPrefix = '+';
+
+const defaultEncoding = 'utf-8';
+const defaultSearchRegex = XRegExp( '{{semver}}' );
+const defaultVersionCaptureGroup = null;
+const defaultReplace = '{{version}}';
+
 
 
 class RegExBumper extends Plugin {
@@ -254,11 +254,11 @@ function warnNoFileChange( filePath ) {
 function mergeSearchRegExes( regExCandidates, flagCandidates ) {
 	const searchRegEx = firstNotNil( ...regExCandidates );
 	const flags = firstNotNil( ...flagCandidates );
-	return XRegExp( searchRegEx.xregexp.source || searchRegEx.source, flags );
+	return XRegExp( searchRegEx.xregexp.source, flags );
 }
 
 function prepareSearch( searchRegEx, context ) {
-	const pattern = searchRegEx.xregexp.source || searchRegEx.source;
+	const pattern = searchRegEx.xregexp.source;
 	const placeholderMap = {
 		'now': ( format ) => {
 			if( _.isNil( format ) ) {
@@ -363,8 +363,9 @@ function optionalRequire( packageName ) {
 	try {
 		return require( packageName );
 	}
+	/* c8 ignore next 4 */
+	/* rewiremock can't simulate the absence of a package so we can't test this case */
 	catch ( ex ) {
-		/* c8 ignore next */
 		return ex;
 	}
 }
