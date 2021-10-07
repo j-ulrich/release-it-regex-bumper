@@ -204,6 +204,18 @@ describe( "GetLatestVersion (Input)", () => {
 			await testGetLatestVersion( options, '1.0.1' );
 		} );
 
+		it( 'should throw if there are unknown placeholders', async ( testDir ) => {
+			const options = { in: { file: testDir+'/versions.txt', search: '{{version}}' } };
+			await assert.rejects( testGetLatestVersion( options, '1.0.1' ),
+			                      new Error( "Unknown placeholder encountered: {{version}}" ) );
+		} );
+
+		it( 'should throw if the format is missing in "now" placeholder', async ( testDir ) => {
+			const options = { in: { file: testDir+'/versions.txt', search: '{{now}}' } };
+			await assert.rejects( testGetLatestVersion( options, '1.0.1' ),
+			                      new Error( "Missing required parameter 'format' for placeholder {{now}}" ) );
+		} );
+
 	} );
 
 } );
