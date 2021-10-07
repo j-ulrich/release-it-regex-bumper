@@ -34,9 +34,9 @@ For example:
 {
     "plugins": {
         "@j-ulrich/release-it-regex-bumper": {
-            "in": "path/to/versionfile.txt",
+            "in": "path/to/version_file.txt",
             "out": [
-                "path/to/versionfile.txt",
+                "path/to/version_file.txt",
                 {
                     "file": "README.md",
                     "search": "Version \\d+\\.\\d+\\.\\d+",
@@ -111,11 +111,25 @@ If `in.search` is an object, it takes the following properties:
 
 **Type:** `string`
 
-The regular expression pattern to find the version inside `in.file`.
+The regular expression pattern template to find the version inside `in.file`.
 
 Capturing groups can be used to extract the version from a part of the whole match. See the
 documentation of the configuration option `in.search.versionCaptureGroup` for a description of the
 handling of capturing groups.
+
+The `in.search.pattern` also supports a set of placeholders (since version 2.1.0):
+
+- `{{semver}}` is matching any version string complying to the semantic versioning specification (meaning at least
+  "major.minor.patch").
+- `{{now:<format>}}` is matching the current timestamp in a format specified by the `<format>` parameter.
+  The supported format syntax can be found in the [date-fns format](https://date-fns.org/v2.8.0/docs/format)
+  documentation.    
+  Example: `{{now:yyyy-MM-dd}}`
+- `{{{}}` is matching a literal `{`. This can be used to match a literal placeholder.    
+  For example: `{{{}}{foo}}` is matching `{{foo}}`
+
+> ℹ️ **Note:** All the placeholders are contained in a non-capturing group (`(?:...)`) so they behave like "atomic"
+  constructs.
 
 ### `in.search.flags` ###
 
@@ -192,7 +206,7 @@ If both, this option and `out.files` are given, both are processed.
 **Since:** 1.1.0
 
 A path or an array of paths to files where the new version is written to. This option behaves the
-same as the `out.file` option but allows specifing multiple files or patterns. Accordingly, the
+same as the `out.file` option but allows specifying multiple files or patterns. Accordingly, the
 entries are also parsed with [fast-glob](https://github.com/mrmlnc/fast-glob):
 
 ```json
@@ -317,7 +331,7 @@ The template string also supports a set of placeholders:
   Since: 2.1.0
 - `{{versionWithoutBuild}}` is replaced by the new version without the build part.    
   Since: 1.2.0
-- `{{versionWithoutPrerelease}}` is replaced by the new version without the prelease and build
+- `{{versionWithoutPrerelease}}` is replaced by the new version without the prerelease and build
   parts.    
   Since: 1.2.0
 - `{{latestVersion}}` is replaced by the current version, that is the version before the increase.
