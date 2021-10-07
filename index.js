@@ -18,7 +18,7 @@ const writeFile = util.promisify( fs.writeFile );
 
 const defaultEncoding = 'utf-8';
 const semanticVersionRegex = XRegExp( /(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:-(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(?:\+[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*)?/ );
-const defaultSearchRegex = semanticVersionRegex;
+const defaultSearchRegex = XRegExp( '{{semver}}' );
 const defaultVersionCaptureGroup = null;
 const defaultReplace = '{{version}}';
 const placeholderRegex = XRegExp( /\{\{(?<placeholder>(?:[a-z][a-z0-9_]*|\{))(?::(?<format>.*))?\}\}/ig );

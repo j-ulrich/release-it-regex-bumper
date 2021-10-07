@@ -184,6 +184,28 @@ describe( "GetLatestVersion (Input)", () => {
 		await testGetLatestVersion( options, '1.0.1' );
 	} );
 
+	describe( 'search placeholders', () => {
+
+		it( 'should find the current date', async ( testDir ) => {
+			writeFile( testDir+'/version.txt', `1.0.1 - [${dateFns.format( new Date(), 'yyyy-MM-dd' )}]` );
+			const options = { in: { file: testDir+'/version.txt', search: '([0-9.]+) - \\[{{now:yyyy-MM-dd}}\\]' } };
+			await testGetLatestVersion( options, '1.0.1' );
+		} );
+
+		it( 'should find a semantic version', async ( testDir ) => {
+			writeFile( testDir+'/version.txt', `2.2 - 1.0.1` );
+			const options = { in: { file: testDir+'/version.txt', search: '{{semver}}' } };
+			await testGetLatestVersion( options, '1.0.1' );
+		} );
+
+		it( 'should find a literal placeholder', async ( testDir ) => {
+			writeFile( testDir+'/version.txt', `{{foo}} - 1.0.1` );
+			const options = { in: { file: testDir+'/version.txt', search: '{{{}}{foo}} - ([0-9.]+)' } };
+			await testGetLatestVersion( options, '1.0.1' );
+		} );
+
+	} );
+
 } );
 
 
@@ -393,8 +415,8 @@ describe( "Bump (Output)", () => {
 
 		it( 'should find the current date', async ( testDir ) => {
 			const pluginOptions = { latestVersion: '1.0.1', out: { file: testDir+'/versions.txt',
-				search: '{{now:yyyy}}' } };
-			writeFile( testDir + '/versions.txt', `some: 1.0.0\nthis: ${dateFns.format( new Date(), 'yyyy' )}\nother: 2.0.0\n` );
+				search: '{{now:yyyy-MM-dd}}' } };
+			writeFile( testDir + '/versions.txt', `some: 1.0.0\nthis: ${dateFns.format( new Date(), 'yyyy-MM-dd' )}\nother: 2.0.0\n` );
 			await testBumpThisVersion( testDir, pluginOptions );
 		} );
 
