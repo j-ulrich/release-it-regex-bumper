@@ -225,7 +225,7 @@ If this option is `null` or not defined, the [global `encoding`](#encoding) opti
 
 Defines the regular expression to find the text which is replaced with the new version inside
 `out.file`.
-If this option is `null` or not defined, the [global `search`](#search) option is used.
+If this option is `null` or not defined, the [global `search`](#search) is used.
 
 If `out.search` is a string, it is interpreted as the regular expression pattern.
 
@@ -247,6 +247,8 @@ In contrast to `in.search.pattern`, capturing groups are not treated special in 
 **Default:** `null`
 
 The flags for the regular expression `out.search.pattern`.
+
+If this option is `null` or not defined, the [global `search.flags`](#searchflags) are used.
 
 ### `out.replace` ###
 

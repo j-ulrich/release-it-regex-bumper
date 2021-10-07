@@ -17,7 +17,8 @@ const writeFile = util.promisify( fs.writeFile );
 
 
 const defaultEncoding = 'utf-8';
-const defaultSearchRegex = XRegExp( /(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:-(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(?:\+[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*)?/ );
+const semanticVersionRegex = XRegExp( /(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:-(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(?:\+[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*)?/ );
+const defaultSearchRegex = semanticVersionRegex;
 const defaultVersionCaptureGroup = null;
 const defaultReplace = '{{version}}';
 
@@ -32,12 +33,16 @@ class RegExBumper extends Plugin {
 			return;
 		}
 
-		const { searchRegex: globalSearchRegex, versionCaptureGroup: globalVersionCaptureGroup } = parseSearchOptions.call( this, globalSearchOptions );
-		const { file, encoding, searchRegex, versionCaptureGroup } = parseInOptions.call( this, inOptions );
+		const context = Object.assign( {}, this.getContext(), this.config.contextOptions );
+
+		const { searchRegex: globalSearchRegex, flags: globalSearchFlags, versionCaptureGroup: globalVersionCaptureGroup } = parseSearchOptions.call( this, globalSearchOptions );
+		const { file, encoding, searchRegex, flags: searchFlags, versionCaptureGroup } = parseInOptions.call( this, inOptions );
 
 		const effectiveEncoding = firstNotNil( encoding, globalEncoding, defaultEncoding );
 		const fileContent = await readFile( file, { encoding: effectiveEncoding } );
-		const version = await extractVersion.call( this, fileContent, firstNotNil( searchRegex, globalSearchRegex, defaultSearchRegex ),
+		const effectiveSearchRegex = mergeSearchRegExes( [searchRegex, globalSearchRegex, defaultSearchRegex], [searchFlags, globalSearchFlags] );
+		const replacedSearchRegex = prepareSearch( effectiveSearchRegex, context );
+		const version = await extractVersion.call( this, fileContent, replacedSearchRegex,
 			firstNotNil( versionCaptureGroup, globalVersionCaptureGroup, defaultVersionCaptureGroup ) );
 		return version;
 	}
@@ -50,20 +55,20 @@ class RegExBumper extends Plugin {
 		if ( _.isNil( outOptions ) ) {
 			return;
 		}
-		const context = Object.assign( {}, this.config.contextOptions );
+		const context = Object.assign( {}, this.getContext(), this.config.contextOptions );
 		if ( !context.version ) {
 			context.version = version;
 		}
 
-		const { searchRegex: globalSearchRegex } = parseSearchOptions.call( this, globalSearchOptions );
+		const { searchRegex: globalSearchRegex, flags: globalSearchFlags } = parseSearchOptions.call( this, globalSearchOptions );
 		const expandedOutOptions = await expandOutOptionFiles.call( this, parseOutOptions.call( this, outOptions ) );
 
 		for ( const outOptions of expandedOutOptions ) {
 
-			const { files, encoding, searchRegex, replace } = outOptions;
+			const { files, encoding, searchRegex, flags: searchFlags, replace } = outOptions;
 
 			const effectiveEncoding = firstNotNil( encoding, globalEncoding, defaultEncoding );
-			const effectiveSearchRegex = firstNotNil( searchRegex, globalSearchRegex, defaultSearchRegex );
+			const effectiveSearchRegex = mergeSearchRegExes( [searchRegex, globalSearchRegex, defaultSearchRegex], [searchFlags, globalSearchFlags] );
 			const effectiveReplacement = firstNotNil( replace, globalReplace, defaultReplace );
 
 			for ( const file of files ) {
@@ -106,11 +111,11 @@ function parseInOptions( options ) {
 		return { file, encoding, searchRegex, versionCaptureGroup };
 	}
 	const { file, encoding } = options;
-	const { searchRegex, versionCaptureGroup } = parseSearchOptions( options.search );
+	const { searchRegex, flags, versionCaptureGroup } = parseSearchOptions( options.search );
 	if ( !file ) {
 		throw new Error( 'Missing "file" property in "in" options' );
 	}
-	return { file, encoding, searchRegex, versionCaptureGroup };
+	return { file, encoding, searchRegex, flags, versionCaptureGroup };
 }
 
 function parseSearchOptions( options ) {
@@ -123,8 +128,8 @@ function parseSearchOptions( options ) {
 		return { searchRegex, versionCaptureGroup };
 	}
 	const { pattern, flags, versionCaptureGroup } = options;
-	const searchRegex = XRegExp( pattern, _.isNull( flags ) ? undefined : flags );
-	return { searchRegex, versionCaptureGroup };
+	const searchRegex = _.isNil(pattern) ? pattern : XRegExp( pattern, _.isNull( flags ) ? undefined : flags );
+	return { searchRegex, flags, versionCaptureGroup };
 }
 
 function extractVersion( content, versionRegex, versionCaptureGroup ) {
@@ -160,12 +165,12 @@ function parseOutOptions( options ) {
 			};
 		}
 		const { encoding, replace } = options;
-		const { searchRegex } = parseSearchOptions( options.search );
+		const { searchRegex, flags } = parseSearchOptions( options.search );
 		const files = options.files ? _.castArray( options.files ) : [];
 		if( options.file ) {
 			files.unshift( options.file );
 		}
-		return { files, encoding, searchRegex, replace };
+		return { files, encoding, searchRegex, flags, replace };
 	} );
 }
 
@@ -233,6 +238,12 @@ function searchAndReport( content, searchRegex, filePath ) {
 
 function warnNoFileChange( filePath ) {
 	this.log.warn( `File "${filePath}" did not change!` );
+}
+
+function mergeSearchRegExes( regExCandidates, flagCandidates ) {
+	const searchRegEx = firstNotNil( ...regExCandidates );
+	const flags = firstNotNil( ...flagCandidates );
+	return XRegExp( searchRegEx.xregexp.source || searchRegEx.source, flags );
 }
 
 function replaceVersion( content, searchRegex, replace, context ) {

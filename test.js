@@ -230,15 +230,20 @@ describe( "Bump (Output)", () => {
 
 	describe( "global options", () => {
 
-it( 'should write version to file using custom pattern', async ( testDir ) => {
-	const pluginOptions = { out: { file: testDir+'/versions.txt', search: '(?<=this: )([0-9.]+)' } };
-	await testBumpThisVersion( testDir, pluginOptions );
-} );
+		it( 'should replace matches using global search pattern and overridden search flags', async ( testDir ) => {
+			const pluginOptions = { out: { file: testDir+'/versions.txt', search: { flags: 'g' } } };
+			await testBump( testDir, pluginOptions, 'some: 1.2.3\nthis: 1.2.3\nother: 1.2.3\n' );
+		} );
 
-it( 'should write version to file using custom pattern with flags', async ( testDir ) => {
-	const pluginOptions = { out: { file: testDir+'/versions.txt', search: { pattern: '(?<=THIS: )([0-9.]+)', flags: 'i' } } };
-	await testBumpThisVersion( testDir, pluginOptions );
-} );
+		it( 'should replace matches using global search flags', async ( testDir ) => {
+			const pluginOptions = { out: { file: testDir+'/versions.txt' }, search: { flags: 'g' } };
+			await testBump( testDir, pluginOptions, 'some: 1.2.3\nthis: 1.2.3\nother: 1.2.3\n' );
+		} );
+
+		it( 'should replace matches using overridden search flags', async ( testDir ) => {
+			const pluginOptions = { out: { file: testDir+'/versions.txt', search: { flags: '' } }, search: { flags: 'g' } };
+			await testBump( testDir, pluginOptions, 'some: 1.2.3\nthis: 1.0.1\nother: 2.0.0\n' );
+		} );
 
 		it( 'should write version to file using global pattern', async ( testDir ) => {
 			const pluginOptions = { search: '(?<=this: )([0-9.]+)', out: { file: testDir+'/versions.txt' } };

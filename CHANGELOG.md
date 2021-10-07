@@ -8,6 +8,16 @@ This changelog follows the [Keep a Changelog](https://keepachangelog.com) format
 ---
 
 
+## Unreleased ##
+
+### Changed ###
+- It is now possible to set just the `search.flags` or `search.pattern` both in the global `search` options and in
+  `out.search` options.
+
+
+---
+
+
 ## [2.0.0] - 2021-04-22 ##
 
 ### Changed ###
