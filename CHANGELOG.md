@@ -15,8 +15,8 @@ This changelog follows the [Keep a Changelog](https://keepachangelog.com) format
   ⚠️ Note that this is a potential **breaking change**. See below for details.
 
 ### Changed ###
-- It is now possible to set just the `search.flags` or `search.pattern` both in the global `search` options and in
-  `out.search` options.
+- It is now possible to set just the `search.flags` or `search.pattern` in the global `search` options, in
+  `out.search` options and `in.search` options.
 
 #### Breaking Changes ####
 - Patterns like `{{version}}` in the search pattern were previously matching literally but now they have a special
