@@ -11,12 +11,18 @@ This changelog follows the [Keep a Changelog](https://keepachangelog.com) format
 ## Unreleased ##
 
 ### Added ###
-- Support for placeholders in the `search.pattern`.
+- Support for placeholders in the search patterns.
+  ⚠️ Note that this is a potential **breaking change**. See below for details.
 
 ### Changed ###
 - It is now possible to set just the `search.flags` or `search.pattern` both in the global `search` options and in
   `out.search` options.
 
+#### Breaking Changes ####
+- Patterns like `{{version}}` in the search pattern were previously matching literally but now they have a special
+  meaning (see documentation of `in.search.pattern` and `out.search.pattern`). Use `{{{}}` to insert a curly brace in
+  the pattern to avoid the interpretation as placeholder. For example, use `{{{}}{version}}` to match `{{version}}`
+  literally.
 
 ---
 
