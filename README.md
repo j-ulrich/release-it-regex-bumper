@@ -64,7 +64,8 @@ example, the pattern `\d+` needs to be written as `"\\d+"` inside JSON.
 
 ## Configuration Options ##
 
-> ℹ️ **Note:** Options without a default value are required.
+> ℹ️ **Note:**    
+> Options without a default value are required.
 
 ### `in` ###
 
@@ -128,8 +129,8 @@ The `in.search.pattern` also supports a set of placeholders (since version 3.0.0
 - `{{{}}` is matching a literal `{`. This can be used to match a literal placeholder.    
   For example: `{{{}}{foo}}` is matching `{{foo}}`
 
-> ℹ️ **Note:** All the placeholders are contained in a non-capturing group (`(?:...)`) so they behave like "atomic"
-  constructs.
+> ℹ️ **Note:**    
+> All the placeholders are contained in a non-capturing group (`(?:...)`) so they behave like "atomic" constructs.
 
 ### `in.search.flags` ###
 
@@ -285,8 +286,8 @@ The `out.search.pattern` also supports a set of placeholders (since version 3.0.
 - `{{{}}` is matching a literal `{`. This can be used to match a literal placeholder.    
   For example: `{{{}}{foo}}` is matching `{{foo}}`
 
-> ℹ️ **Note:** All the placeholders are contained in a non-capturing group (`(?:...)`) so they behave like "atomic"
-  constructs.
+> ℹ️ **Note:**    
+> All the placeholders are contained in a non-capturing group (`(?:...)`) so they behave like "atomic" constructs.
 
 ### `out.search.flags` ###
 
@@ -369,7 +370,13 @@ If `search` is an object, it takes the following properties:
 **Default:** `"{{semver}}"`
 
 The default regular expression pattern template which is used when `in.search.pattern` or
-`out.search.pattern` is `null` or not defined. See `out.search.pattern` for more information.
+`out.search.pattern` is `null` or not defined. See [`in.search.pattern`](#insearchpattern) and
+[`out.search.pattern`](#outsearchpattern) for more information.
+
+> ⚠️ **Warning:**    
+> Note that the global `search.pattern` is used for both `in.search.pattern` and `out.search.pattern` unless
+> overridden explicitly. But `in.search.pattern` does not support all the placeholders of `out.search.pattern` and
+> using unsupported placeholders raises an error.
 
 If this option is not defined or set to `null`, the default value is used.
 
