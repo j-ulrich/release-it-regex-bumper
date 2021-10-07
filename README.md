@@ -385,7 +385,8 @@ If this option is not defined or set to `null`, the default value is used.
 **Type:** `string`    
 **Default:** `null`
 
-The flags for the regular expression `search.pattern`.
+The default flags for the search pattern which are used when `in.search.flags` or
+`out.search.flags` are `null` or not defined.
 
 ### `search.versionCaptureGroup` ###
 
