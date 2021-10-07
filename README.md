@@ -138,6 +138,8 @@ The `in.search.pattern` also supports a set of placeholders (since version 3.0.0
 
 The flags for the regular expression `in.search.pattern`.
 
+If this option is `null` or not defined, the [global `search.flags`](#searchflags) are used.
+
 ### `in.search.versionCaptureGroup` ###
 
 **Type:** `integer|string`    
