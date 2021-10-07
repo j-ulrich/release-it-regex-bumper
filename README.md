@@ -48,7 +48,7 @@ For example:
 }
 ```
 
-For a more complex example, see [here](https://gitlab.com/julrich/MockNetworkAccessManager/-/blob/b31fd6d956ab0f61c1017432265e9e1c99a17bee/.release-it.json).
+For a more complex example, see [.release-it.json](.release-it.json).
 
 
 ## Regular Expressions ##
