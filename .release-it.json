@@ -6,9 +6,12 @@
 		"./index.js": {
 			"out": [
 				{
-					"file": "README.md",
-					"search": "Copyright (.*) (\\d{4}-)?\\d{4}",
-					"replace": "Copyright $1 ${2}{{now:yyyy}}"
+					"files": [ "README.md", "LICENSE" ],
+					"search": {
+						"pattern": "((?:\\\\)?[Cc])opyright (.*?)(\\d+-)?(\\d+)",
+						"flags": "g"
+					},
+					"replace": "$1opyright $2${3}{{now:yyyy}}"
 				},
 				{
 					"file": "CHANGELOG.md",
