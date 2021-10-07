@@ -4,11 +4,23 @@
 	},
 	"plugins": {
 		"./index.js": {
-			"out": {
-				"file": "README.md",
-				"search": "Copyright (.*) (\\d{4}-)?\\d{4}",
-				"replace": "Copyright $1 ${2}{{now:yyyy}}"
-			}
+			"out": [
+				{
+					"file": "README.md",
+					"search": "Copyright (.*) (\\d{4}-)?\\d{4}",
+					"replace": "Copyright $1 ${2}{{now:yyyy}}"
+				},
+				{
+					"file": "CHANGELOG.md",
+					"search": "Unreleased",
+					"replace": "[{{version}}] - {{now:yyyy-MM-dd}}"
+				},
+				{
+					"file": "CHANGELOG.md",
+					"search": "(\\[{{versionWithoutPrerelease}}]: http)",
+					"replace": "[{{version}}]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/{{version}}\n$1"
+				}
+			]
 		}
 	}
 }
