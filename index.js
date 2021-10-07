@@ -124,7 +124,7 @@ function parseInOptions( options ) {
 	const { file, encoding } = options;
 	const { searchRegex, flags, versionCaptureGroup } = parseSearchOptions( options.search );
 	if ( !file ) {
-		throw new Error( 'Missing "file" property in "in" options' );
+		throw new Error( `Missing 'file' property in 'in' options` );
 	}
 	return { file, encoding, searchRegex, flags, versionCaptureGroup };
 }
@@ -262,7 +262,7 @@ function prepareSearch( searchRegEx, context ) {
 	const placeholderMap = {
 		'now': ( format ) => {
 			if( _.isNil( format ) ) {
-				throw new Error( 'Missing required parameter "format" for placeholder {{now}}' );
+				throw new Error( `Missing required parameter 'format' for placeholder {{now}}` );
 			}
 			return XRegExp.escape( dateFormat( context.executionTime, format ) );
 		},
@@ -345,7 +345,7 @@ function replacePlaceholders( template, placeholderMap ) {
 	placeholderMap = Object.assign( {}, placeholderMap, { '{': '{' } );
 	return XRegExp.replace( template, placeholderRegex, ( match, placeholder, format ) => {
 		if ( !placeholderMap.hasOwnProperty( placeholder ) ) {
-			throw new Error( `Unknown placeholder encountered: '${placeholder}'` );
+			throw new Error( `Unknown placeholder encountered: {{${placeholder}}}` );
 		}
 		const replacement = placeholderMap[ placeholder ];
 		if ( _.isFunction( replacement ) ) {
@@ -364,6 +364,7 @@ function optionalRequire( packageName ) {
 		return require( packageName );
 	}
 	catch ( ex ) {
+		/* c8 ignore next */
 		return ex;
 	}
 }

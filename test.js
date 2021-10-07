@@ -97,7 +97,7 @@ describe( "GetLatestVersion (Input)", () => {
 		it( 'should throw if in file is not specified', async () => {
 			const pluginOptions = { in: {} };
 			const { plugin } = setupPlugin( pluginOptions );
-			await assert.rejects( plugin.getLatestVersion(), Error );
+			await assert.rejects( plugin.getLatestVersion(), new Error( "Missing 'file' property in 'in' options" ) );
 		} );
 
 		it( 'should throw if in file cannot be read', async () => {
@@ -498,7 +498,7 @@ describe( "Bump (Output)", () => {
 		it( 'should throw if there are unknown placeholders', async ( testDir ) => {
 			const pluginOptions = { out: { file: testDir+'/versions.txt', replace: '{{foo}}.{{bar}}' } };
 			const { plugin } = setupPlugin( pluginOptions );
-			await assert.rejects( plugin.bump( '1.2.3' ), Error );
+			await assert.rejects( plugin.bump( '1.2.3' ), new Error( "Unknown placeholder encountered: {{foo}}" ) );
 		} );
 
 		it( 'should write literal curly brace to file', async ( testDir ) => {
