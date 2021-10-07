@@ -8,7 +8,7 @@ This changelog follows the [Keep a Changelog](https://keepachangelog.com) format
 ---
 
 
-## Unreleased ##
+## [3.0.0] - 2021-10-08 ##
 
 ### Added ###
 - Support for placeholders in the search patterns.
@@ -135,6 +135,7 @@ Initial release.
 
 
 
+[3.0.0]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/3.0.0
 [2.0.0]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/2.0.0
 [1.2.6]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/1.2.6
 [1.2.5]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/1.2.5
