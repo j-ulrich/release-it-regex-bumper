@@ -1,0 +1,66 @@
+{
+	"plugins": [
+		"security"
+	],
+	"extends": [
+		"eslint:recommended",
+		"plugin:security/recommended"
+	],
+	"parserOptions": {
+		"ecmaVersion": 2017,
+		"sourceType": "script",
+		"ecmaFeatures": {
+			"jsx": false,
+			"experimentalObjectRestSpread": false
+		}
+	},
+	"env": {
+		"node": true,
+		"commonjs": true
+	},
+	"rules": {
+		"indent": [
+			"error",
+			"tab"
+		],
+		"quotes": [
+			"error",
+			"single",
+			{
+				"avoidEscape": true
+			}
+		],
+		"semi": [
+			"error"
+		],
+		"complexity": [
+			"warn",
+			8
+		],
+		"no-mixed-spaces-and-tabs": [
+			"error",
+			"smart-tabs"
+		],
+		"new-cap": [
+			"error",
+			{
+				"capIsNew": true,
+				"capIsNewExceptions": [
+					"XRegExp"
+				]
+			}
+		],
+		"no-magic-numbers": [
+			"error",
+			{
+				"ignore": [
+					0,
+					1,
+					-1
+				],
+				"enforceConst": true
+			}
+		],
+		"security/detect-non-literal-fs-filename": "off"
+	}
+}
