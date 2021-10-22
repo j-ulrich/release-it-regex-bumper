@@ -3,7 +3,14 @@ const assert = require( 'assert' ).strict;
 const util = require( 'util' );
 const glob = require( 'fast-glob' );
 const chalk = require( 'chalk' );
-const _ = require( 'lodash' );
+const _ = {
+	isEmpty: require( 'lodash/isEmpty' ),
+	isNil: require( 'lodash/isNil' ),
+	isNull: require( 'lodash/isNull' ),
+	isString: require( 'lodash/isString' ),
+	isFunction: require( 'lodash/isFunction' ),
+	castArray: require( 'lodash/castArray' )
+};
 const XRegExp = require( 'xregexp' );
 const semver = require( 'semver' );
 const { Plugin } = require( 'release-it' );
@@ -16,7 +23,7 @@ const readFile = util.promisify( fs.readFile );
 const writeFile = util.promisify( fs.writeFile );
 
 const semanticVersionRegex = XRegExp( /(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:-(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(?:\+[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*)?/ );
-const placeholderRegex = XRegExp( /\{\{(?<placeholder>(?:[a-z][a-z0-9_]*|\{))(?::(?<format>.*))?\}\}/ig );
+const placeholderRegex = XRegExp( '\\{\\{(?<placeholder>(?:[a-z][a-z0-9_]*|\\{))(?::(?<format>.*))?\\}\\}', 'ig' );
 
 const prereleasePrefix = '-';
 const buildPrefix = '+';
@@ -124,7 +131,7 @@ function parseInOptions( options ) {
 	const { file, encoding } = options;
 	const { searchRegex, flags, versionCaptureGroup } = parseSearchOptions( options.search );
 	if ( !file ) {
-		throw new Error( `Missing 'file' property in 'in' options` );
+		throw new Error( "Missing 'file' property in 'in' options" );
 	}
 	return { file, encoding, searchRegex, flags, versionCaptureGroup };
 }
@@ -149,20 +156,26 @@ function extractVersion( content, versionRegex, versionCaptureGroup ) {
 		throw new Error( 'Could not extract version from file' );
 	}
 	if ( !_.isNil( versionCaptureGroup ) ) {
-		if( match.hasOwnProperty( versionCaptureGroup ) ) {
+		if( hasOwnProperty( match, versionCaptureGroup ) ) {
+			// object injection mitigated by checking hasOwnProperty()
+			// eslint-disable-next-line security/detect-object-injection
 			return match[ versionCaptureGroup ];
 		}
 	}
 	else {
-		if ( match.hasOwnProperty( 'version' ) ) {
+		if ( hasOwnProperty( match, 'version' ) ) {
 			return match[ 'version' ];
 		}
-		if ( match.hasOwnProperty( 1 ) ) {
+		if ( hasOwnProperty( match, 1 ) ) {
 			return match[ 1 ];
 		}
 	}
 
 	return match[ 0 ];
+}
+
+function hasOwnProperty( obj, prop ) {
+	return Object.prototype.hasOwnProperty.call( obj, prop );
 }
 
 function parseOutOptions( options ) {
@@ -262,7 +275,7 @@ function prepareSearch( searchRegEx, context ) {
 	const placeholderMap = {
 		'now': ( format ) => {
 			if( _.isNil( format ) ) {
-				throw new Error( `Missing required parameter 'format' for placeholder {{now}}` );
+				throw new Error( "Missing required parameter 'format' for placeholder {{now}}" );
 			}
 			return XRegExp.escape( dateFormat( context.executionTime, format ) );
 		},
@@ -276,9 +289,9 @@ function prepareSearch( searchRegEx, context ) {
 			'minor': parsedVer.minor,
 			'patch': parsedVer.patch,
 			'prerelease': XRegExp.escape( parsedVer.prerelease.join( '.' ) ),
-			'prefixedPrerelease': parsedVer.prerelease.length > 0 ? XRegExp.escape( prereleasePrefix + parsedVer.prerelease.join( '.' ) ) : "",
+			'prefixedPrerelease': parsedVer.prerelease.length > 0 ? XRegExp.escape( prereleasePrefix + parsedVer.prerelease.join( '.' ) ) : '',
 			'build': XRegExp.escape( parsedVer.build.join( '.' ) ),
-			'prefixedBuild': parsedVer.build.length > 0 ? XRegExp.escape( buildPrefix + parsedVer.build.join( '.' ) ) : "",
+			'prefixedBuild': parsedVer.build.length > 0 ? XRegExp.escape( buildPrefix + parsedVer.build.join( '.' ) ) : '',
 			'versionWithoutBuild': XRegExp.escape( parsedVer.version ),
 			'versionWithoutPrerelease': XRegExp.escape( `${parsedVer.major}.${parsedVer.minor}.${parsedVer.patch}` ),
 
@@ -292,22 +305,30 @@ function prepareSearch( searchRegEx, context ) {
 		Object.assign( placeholderMap, { 'newVersion': XRegExp.escape( context.version ) } );
 	}
 
+	wrapSearchPatternPlaceholders( placeholderMap );
+	const replacedPattern = replacePlaceholders( pattern, placeholderMap );
+	return XRegExp( replacedPattern, searchRegEx.xregexp.flags || undefined );
+}
+
+function wrapSearchPatternPlaceholders( placeholderMap ) {
 	for( const placeholder of Object.keys( placeholderMap ) ) {
+		// object injection mitigated for placeholderMap since placeholder is from Object.keys( placeholderMap )
+		// eslint-disable-next-line security/detect-object-injection
 		const replacement = placeholderMap[ placeholder ];
 		if( _.isFunction( replacement ) ) {
+			// eslint-disable-next-line security/detect-object-injection
 			placeholderMap[ placeholder ] = ( ...args ) => {
 				return wrapInRegexGroup( replacement( ...args ) );
 			};
 			continue;
 		}
+		// eslint-disable-next-line security/detect-object-injection
 		placeholderMap[ placeholder ] = wrapInRegexGroup( replacement );
 	}
-	const replacedPattern = replacePlaceholders( pattern, placeholderMap );
-	return XRegExp( replacedPattern, searchRegEx.xregexp.flags || undefined );
 }
 
 function wrapInRegexGroup( pattern ) {
-	return  `(?:${pattern})`;
+	return `(?:${pattern})`;
 }
 
 function replaceVersion( content, searchRegex, replace, context ) {
@@ -344,9 +365,11 @@ function prepareReplacement( replace, context ) {
 function replacePlaceholders( template, placeholderMap ) {
 	placeholderMap = Object.assign( {}, placeholderMap, { '{': '{' } );
 	return XRegExp.replace( template, placeholderRegex, ( match, placeholder, format ) => {
-		if ( !placeholderMap.hasOwnProperty( placeholder ) ) {
+		if ( !hasOwnProperty( placeholderMap, placeholder ) ) {
 			throw new Error( `Unknown placeholder encountered: {{${placeholder}}}` );
 		}
+		// object injection mitigated by checking hasOwnProperty()
+		// eslint-disable-next-line security/detect-object-injection
 		const replacement = placeholderMap[ placeholder ];
 		if ( _.isFunction( replacement ) ) {
 			if ( _.isString( format ) ) {
@@ -361,6 +384,7 @@ function replacePlaceholders( template, placeholderMap ) {
 
 function optionalRequire( packageName ) {
 	try {
+		// eslint-disable-next-line security/detect-non-literal-require
 		return require( packageName );
 	}
 	/* c8 ignore next 4 */
@@ -390,12 +414,13 @@ class LineCounter {
 	}
 
 	columnOfIndex( index ) {
-		const line = this.lineOfIndex( index );
-		assert( line >= 1 );
-		if ( line === 1 ) {
+		const lineNumber = this.lineOfIndex( index );
+		assert( lineNumber >= 1 );
+		if ( lineNumber === 1 ) {
 			return index;
 		}
-		const previousLineEndIndex = this.lineEndIndex[ line - 2 ];
+		const previousLineNumber = lineNumber - 1;
+		const previousLineEndIndex = this.lineEndIndex[ previousLineNumber - 1 ];
 		return index - previousLineEndIndex;
 	}
 }
