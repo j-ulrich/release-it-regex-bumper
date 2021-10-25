@@ -277,6 +277,8 @@ The `out.search.pattern` also supports a set of placeholders (since version 3.0.
   does not have a build part, it is omitted (matching empty string).
 - `{{versionWithoutBuild}}` is matching the current version without the build part.
 - `{{versionWithoutPrerelease}}` is matching the current version without the prerelease and build parts.
+- `{{tag}}` is matching the current VCS tag (before the bump).
+- `{{newVersion}}` is matching the new version (after the increment).
 - `{{semver}}` is matching any version string complying to the semantic versioning specification (meaning at least
   "major.minor.patch").
 - `{{now:<format>}}` is matching the current timestamp in a format specified by the `<format>` parameter.
