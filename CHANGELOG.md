@@ -8,6 +8,16 @@ This changelog follows the [Keep a Changelog](https://keepachangelog.com) format
 ---
 
 
+## Unreleased ##
+
+### Fixed ###
+- Several code quality issues.
+- Improved documentation and added missing documentation.
+
+
+---
+
+
 ## [3.0.0] - 2021-10-08 ##
 
 ### Added ###
@@ -16,7 +26,7 @@ This changelog follows the [Keep a Changelog](https://keepachangelog.com) format
 
 ### Changed ###
 - It is now possible to set just the `search.flags` or `search.pattern` in the global `search` options, in
-  `out.search` options and `in.search` options.
+  `out.search` options and `in.search` options. The other property is then using its default value.
 
 #### Breaking Changes ####
 - Patterns like `{{version}}` in the search pattern were previously matching literally but now they have a special
