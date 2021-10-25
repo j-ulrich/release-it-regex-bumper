@@ -8,7 +8,7 @@ This changelog follows the [Keep a Changelog](https://keepachangelog.com) format
 ---
 
 
-## Unreleased ##
+## [3.0.1] - 2021-10-26 ##
 
 ### Changed ###
 - Updated dev dependencies to be able to test against Node.js 16.x.
@@ -148,6 +148,7 @@ Initial release.
 
 
 
+[3.0.1]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/3.0.1
 [3.0.0]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/3.0.0
 [2.0.0]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/2.0.0
 [1.2.6]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/1.2.6
