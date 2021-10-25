@@ -10,6 +10,9 @@ This changelog follows the [Keep a Changelog](https://keepachangelog.com) format
 
 ## Unreleased ##
 
+### Changed ###
+- Updated dev dependencies to be able to test against Node.js 16.x.
+
 ### Fixed ###
 - Several code quality issues.
 - Improved documentation and added missing documentation.
