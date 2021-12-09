@@ -1,3 +1,5 @@
+'use strict';
+
 const fs = require( 'fs' );
 const assert = require( 'assert' ).strict;
 const util = require( 'util' );
@@ -22,6 +24,7 @@ const diff = optionalRequire( 'diff' );
 const readFile = util.promisify( fs.readFile );
 const writeFile = util.promisify( fs.writeFile );
 
+// eslint-disable-next-line security/detect-unsafe-regex
 const semanticVersionRegex = XRegExp( /(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:-(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(?:\+[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*)?/ );
 const placeholderRegex = XRegExp( '\\{\\{(?<placeholder>(?:[a-z][a-z0-9_]*|\\{))(?::(?<format>.*))?\\}\\}', 'ig' );
 
@@ -37,36 +40,53 @@ const defaultReplace = '{{version}}';
 
 class RegExBumper extends Plugin {
 
-	constructor(...args) {
-		super(...args);
-		this.setContext({executionTime: new Date()});
+	constructor( ...args ) {
+		super( ...args );
+		this.setContext( { executionTime: new Date() } );
 	}
 
 	async getLatestVersion() {
 
 		const { in: inOptions, search: globalSearchOptions, encoding: globalEncoding } = this.options;
 		if ( _.isNil( inOptions ) ) {
-			return;
+			return undefined;
 		}
 
 		const context = Object.assign( {}, this.getContext(), this.config.contextOptions );
 
-		const { searchRegex: globalSearchRegex, flags: globalSearchFlags, versionCaptureGroup: globalVersionCaptureGroup } = parseSearchOptions.call( this, globalSearchOptions );
-		const { file, encoding, searchRegex, flags: searchFlags, versionCaptureGroup } = parseInOptions.call( this, inOptions );
+		const {
+			searchRegex: globalSearchRegex,
+			flags: globalSearchFlags,
+			versionCaptureGroup: globalVersionCaptureGroup
+		} = parseSearchOptions( globalSearchOptions );
+		const {
+			file,
+			encoding,
+			searchRegex,
+			flags: searchFlags,
+			versionCaptureGroup
+		} = parseInOptions( inOptions );
 
 		const effectiveEncoding = firstNotNil( encoding, globalEncoding, defaultEncoding );
 		const fileContent = await readFile( file, { encoding: effectiveEncoding } );
-		const effectiveSearchRegex = mergeSearchRegExes( [searchRegex, globalSearchRegex, defaultSearchRegex], [searchFlags, globalSearchFlags] );
+		const effectiveSearchRegex = mergeSearchRegExes( [ searchRegex, globalSearchRegex, defaultSearchRegex ],
+		                                                 [ searchFlags, globalSearchFlags ] );
 		const replacedSearchRegex = prepareSearch( effectiveSearchRegex, context );
-		const version = await extractVersion.call( this, fileContent, replacedSearchRegex,
-			firstNotNil( versionCaptureGroup, globalVersionCaptureGroup, defaultVersionCaptureGroup ) );
+		const version = await extractVersion( fileContent, replacedSearchRegex,
+		                                      firstNotNil( versionCaptureGroup, globalVersionCaptureGroup,
+		                                                   defaultVersionCaptureGroup ) );
 		return version;
 	}
 
 
 	async bump( version ) {
 
-		const { out: outOptions, search: globalSearchOptions, replace: globalReplace, encoding: globalEncoding } = this.options;
+		const {
+			out: outOptions,
+			search: globalSearchOptions,
+			replace: globalReplace,
+			encoding: globalEncoding
+		} = this.options;
 		const { isDryRun } = this.config;
 		if ( _.isNil( outOptions ) ) {
 			return;
@@ -76,15 +96,20 @@ class RegExBumper extends Plugin {
 			context.version = version;
 		}
 
-		const { searchRegex: globalSearchRegex, flags: globalSearchFlags } = parseSearchOptions.call( this, globalSearchOptions );
+		const {
+			searchRegex: globalSearchRegex,
+			flags: globalSearchFlags
+		} = parseSearchOptions.call( this, globalSearchOptions );
 		const expandedOutOptions = await expandOutOptionFiles.call( this, parseOutOptions.call( this, outOptions ) );
 
-		for ( const outOptions of expandedOutOptions ) {
+		/* eslint-disable no-await-in-loop */
+		for ( const outOption of expandedOutOptions ) {
 
-			const { files, encoding, searchRegex, flags: searchFlags, replace } = outOptions;
+			const { files, encoding, searchRegex, flags: searchFlags, replace } = outOption;
 
 			const effectiveEncoding = firstNotNil( encoding, globalEncoding, defaultEncoding );
-			const effectiveSearchRegex = mergeSearchRegExes( [searchRegex, globalSearchRegex, defaultSearchRegex], [searchFlags, globalSearchFlags] );
+			const effectiveSearchRegex = mergeSearchRegExes( [ searchRegex, globalSearchRegex, defaultSearchRegex ],
+			                                                 [ searchFlags, globalSearchFlags ] );
 			const effectiveReplacement = firstNotNil( replace, globalReplace, defaultReplace );
 
 			const replacedSearchRegex = prepareSearch( effectiveSearchRegex, context );
@@ -96,26 +121,81 @@ class RegExBumper extends Plugin {
 				const fileContent = await readFile( file, { encoding: effectiveEncoding } );
 
 				if ( isDryRun ) {
-					loadDiff.call( this );
+					this.loadDiff();
 					if ( this.diff ) {
-						const processedFileContent = replaceVersion.call( this, fileContent, replacedSearchRegex, effectiveReplacement, context );
-						await diffAndReport.call( this, fileContent, processedFileContent, file );
+						const processedFileContent = replaceVersion( fileContent, replacedSearchRegex,
+						                                                  effectiveReplacement, context );
+						await this.diffAndReport( fileContent, processedFileContent, file );
 						continue;
 					}
-					await searchAndReport.call( this, fileContent, replacedSearchRegex, file );
+					await this.searchAndReport( fileContent, replacedSearchRegex, file );
 					continue;
 				}
 
-				const processedFileContent = replaceVersion.call( this, fileContent, replacedSearchRegex, effectiveReplacement, context );
+				const processedFileContent = replaceVersion( fileContent, replacedSearchRegex,
+				                                             effectiveReplacement, context );
 
-				if ( processedFileContent == fileContent ) {
-					warnNoFileChange.call( this, file );
+				if ( processedFileContent === fileContent ) {
+					this.warnNoFileChange( file );
 				}
 				else {
 					await writeFile( file, processedFileContent, effectiveEncoding );
 				}
 			}
 		}
+		/* eslint-enable no-await-in-loop */
+	}
+
+
+	loadDiff() {
+		if ( !diff || diff instanceof Error ) {
+			this.log.info( 'Optional "diff" package not available' );
+			this.log.verbose( 'Exception was:', diff );
+		}
+		this.diff = diff;
+	}
+
+	diffAndReport( oldContent, newContent, filePath ) {
+		const { isDryRun } = this.config;
+		const diffResult = this.diff.structuredPatch( filePath, filePath, oldContent, newContent, undefined, undefined,
+													  { context: 0 } );
+
+		if ( _.isEmpty( diffResult.hunks ) ) {
+			this.warnNoFileChange( filePath );
+		}
+		diffResult.hunks.forEach( hunk => {
+			this.log.exec( `Replacing at line ${hunk.oldStart}:\n` + hunk.lines.map( line => {
+				const lineText = '\t' + line;
+				if ( line.startsWith( '-' ) ) {
+					return chalk.red( lineText );
+				}
+				if ( line.startsWith( '+' ) ) {
+					return chalk.green( lineText );
+				}
+				return lineText;
+			} ).join( '\n' ), { isDryRun } );
+		} );
+
+	}
+
+	searchAndReport( content, searchRegex, filePath ) {
+		const { isDryRun } = this.config;
+		let foundMatch = false;
+		const lineCounter = new LineCounter( content );
+		XRegExp.forEach( content, searchRegex, ( match ) => {
+			const matchText = match[ 0 ];
+			const matchIndex = searchRegex.lastIndex - matchText.length;
+			this.log.exec( `Replacing match at line ${lineCounter.lineOfIndex( matchIndex )}, `
+						   + `column ${lineCounter.columnOfIndex( matchIndex )}:\n\t` + matchText, { isDryRun } );
+			foundMatch = true;
+		} );
+		if ( !foundMatch ) {
+			this.warnNoFileChange( filePath );
+		}
+	}
+
+	warnNoFileChange( filePath ) {
+		this.log.warn( `File "${filePath}" did not change!` );
 	}
 
 }
@@ -146,7 +226,7 @@ function parseSearchOptions( options ) {
 		return { searchRegex, versionCaptureGroup };
 	}
 	const { pattern, flags, versionCaptureGroup } = options;
-	const searchRegex = _.isNil(pattern) ? pattern : XRegExp( pattern, _.isNull( flags ) ? undefined : flags );
+	const searchRegex = _.isNil( pattern ) ? pattern : XRegExp( pattern, _.isNull( flags ) ? undefined : flags );
 	return { searchRegex, flags, versionCaptureGroup };
 }
 
@@ -156,7 +236,7 @@ function extractVersion( content, versionRegex, versionCaptureGroup ) {
 		throw new Error( 'Could not extract version from file' );
 	}
 	if ( !_.isNil( versionCaptureGroup ) ) {
-		if( hasOwnProperty( match, versionCaptureGroup ) ) {
+		if ( hasOwnProperty( match, versionCaptureGroup ) ) {
 			// object injection mitigated by checking hasOwnProperty()
 			// eslint-disable-next-line security/detect-object-injection
 			return match[ versionCaptureGroup ];
@@ -179,20 +259,20 @@ function hasOwnProperty( obj, prop ) {
 }
 
 function parseOutOptions( options ) {
-	return _.castArray( options ).map( options => {
-		if ( _.isString( options ) ) {
+	return _.castArray( options ).map( option => {
+		if ( _.isString( option ) ) {
 			return {
-				files: [ options ],
+				files: [ option ],
 				encoding: null,
 				searchRegex: null,
 				replace: null,
 			};
 		}
-		const { encoding, replace } = options;
-		const { searchRegex, flags } = parseSearchOptions( options.search );
-		const files = options.files ? _.castArray( options.files ) : [];
-		if( options.file ) {
-			files.unshift( options.file );
+		const { encoding, replace } = option;
+		const { searchRegex, flags } = parseSearchOptions( option.search );
+		const files = option.files ? _.castArray( option.files ) : [];
+		if ( option.file ) {
+			files.unshift( option.file );
 		}
 		return { files, encoding, searchRegex, flags, replace };
 	} );
@@ -215,55 +295,6 @@ async function expandOutOptionFiles( options ) {
 	return options;
 }
 
-function loadDiff() {
-	if ( !diff || diff instanceof Error ) {
-		this.log.info( 'Optional "diff" package not available' );
-		this.log.verbose( 'Exception was:', diff );
-	}
-	this.diff = diff;
-}
-
-function diffAndReport( oldContent, newContent, filePath ) {
-	const { isDryRun } = this.config;
-	const diffResult = this.diff.structuredPatch( filePath, filePath, oldContent, newContent, undefined, undefined, { context: 0 } );
-
-	if ( _.isEmpty( diffResult.hunks ) ) {
-		warnNoFileChange.call( this, filePath );
-	}
-	diffResult.hunks.forEach( hunk => {
-		this.log.exec( `Replacing at line ${hunk.oldStart}:\n` + hunk.lines.map( line => {
-			const lineText = '\t' + line;
-			if ( line.startsWith( '-' ) ) {
-				return chalk.red( lineText );
-			}
-			if ( line.startsWith( '+' ) ) {
-				return chalk.green( lineText );
-			}
-			return lineText;
-		} ).join( '\n' ), { isDryRun } );
-	} );
-
-}
-
-function searchAndReport( content, searchRegex, filePath ) {
-	const { isDryRun } = this.config;
-	let foundMatch = false;
-	const lineCounter = new LineCounter( content );
-	XRegExp.forEach( content, searchRegex, ( match ) => {
-		const matchText = match[ 0 ];
-		const matchIndex = searchRegex.lastIndex - matchText.length;
-		this.log.exec( `Replacing match at line ${lineCounter.lineOfIndex( matchIndex )}, column ${lineCounter.columnOfIndex( matchIndex )}:\n\t` + matchText, { isDryRun } );
-		foundMatch = true;
-	} );
-	if ( !foundMatch ) {
-		warnNoFileChange.call( this, filePath );
-	}
-}
-
-function warnNoFileChange( filePath ) {
-	this.log.warn( `File "${filePath}" did not change!` );
-}
-
 function mergeSearchRegExes( regExCandidates, flagCandidates ) {
 	const searchRegEx = firstNotNil( ...regExCandidates );
 	const flags = firstNotNil( ...flagCandidates );
@@ -274,7 +305,7 @@ function prepareSearch( searchRegEx, context ) {
 	const pattern = searchRegEx.xregexp.source;
 	const placeholderMap = {
 		'now': ( format ) => {
-			if( _.isNil( format ) ) {
+			if ( _.isNil( format ) ) {
 				throw new Error( "Missing required parameter 'format' for placeholder {{now}}" );
 			}
 			return XRegExp.escape( dateFormat( context.executionTime, format ) );
@@ -282,16 +313,19 @@ function prepareSearch( searchRegEx, context ) {
 		'semver': `${semanticVersionRegex.xregexp.source || semanticVersionRegex.source}`
 	};
 	const parsedVer = semver.parse( context.latestVersion );
-	if( parsedVer ) {
+	if ( parsedVer ) {
 		Object.assign( placeholderMap, {
 			'version': XRegExp.escape( parsedVer.raw ),
 			'major': parsedVer.major,
 			'minor': parsedVer.minor,
 			'patch': parsedVer.patch,
 			'prerelease': XRegExp.escape( parsedVer.prerelease.join( '.' ) ),
-			'prefixedPrerelease': parsedVer.prerelease.length > 0 ? XRegExp.escape( prereleasePrefix + parsedVer.prerelease.join( '.' ) ) : '',
+			'prefixedPrerelease': parsedVer.prerelease.length > 0 ? XRegExp.escape( prereleasePrefix +
+			                                                                        parsedVer.prerelease.join( '.' ) )
+			                                                      : '',
 			'build': XRegExp.escape( parsedVer.build.join( '.' ) ),
-			'prefixedBuild': parsedVer.build.length > 0 ? XRegExp.escape( buildPrefix + parsedVer.build.join( '.' ) ) : '',
+			'prefixedBuild': parsedVer.build.length > 0 ? XRegExp.escape( buildPrefix + parsedVer.build.join( '.' ) )
+			                                            : '',
 			'versionWithoutBuild': XRegExp.escape( parsedVer.version ),
 			'versionWithoutPrerelease': XRegExp.escape( `${parsedVer.major}.${parsedVer.minor}.${parsedVer.patch}` ),
 
@@ -311,11 +345,11 @@ function prepareSearch( searchRegEx, context ) {
 }
 
 function wrapSearchPatternPlaceholders( placeholderMap ) {
-	for( const placeholder of Object.keys( placeholderMap ) ) {
+	for ( const placeholder of Object.keys( placeholderMap ) ) {
 		// object injection mitigated for placeholderMap since placeholder is from Object.keys( placeholderMap )
 		// eslint-disable-next-line security/detect-object-injection
 		const replacement = placeholderMap[ placeholder ];
-		if( _.isFunction( replacement ) ) {
+		if ( _.isFunction( replacement ) ) {
 			// eslint-disable-next-line security/detect-object-injection
 			placeholderMap[ placeholder ] = ( ...args ) => {
 				return wrapInRegexGroup( replacement( ...args ) );
@@ -332,7 +366,7 @@ function wrapInRegexGroup( pattern ) {
 }
 
 function replaceVersion( content, searchRegex, replace, context ) {
-	const processedReplace = prepareReplacement.call( this, replace, context );
+	const processedReplace = prepareReplacement( replace, context );
 	const processedContent = XRegExp.replace( content, searchRegex, processedReplace );
 	return processedContent;
 }
@@ -345,7 +379,9 @@ function prepareReplacement( replace, context ) {
 		'minor': parsedVer.minor,
 		'patch': parsedVer.patch,
 		'prerelease': parsedVer.prerelease.join( '.' ),
-		'prefixedPrerelease': parsedVer.prerelease.length > 0 ? prereleasePrefix + parsedVer.prerelease.join( '.' ) : '',
+		'prefixedPrerelease': parsedVer.prerelease.length > 0 ?
+		                                                        prereleasePrefix + parsedVer.prerelease.join( '.' )
+		                                                      : '',
 		'build': parsedVer.build.join( '.' ),
 		'prefixedBuild': parsedVer.build.length > 0 ? buildPrefix + parsedVer.build.join( '.' ) : '',
 		'versionWithoutBuild': parsedVer.version,
@@ -353,7 +389,7 @@ function prepareReplacement( replace, context ) {
 		'latestVersion': context.latestVersion || '',
 		'latestTag': context.latestTag || '',
 		'now': ( format ) => {
-			if( _.isNil( format ) ) {
+			if ( _.isNil( format ) ) {
 				return dateFormatIso( context.executionTime );
 			}
 			return dateFormat( context.executionTime, format );
@@ -408,6 +444,7 @@ class LineCounter {
 	}
 
 	lineOfIndex( index ) {
+		// eslint-disable-next-line no-extra-parens
 		const arrayIndex = this.lineEndIndex.findIndex( lineEndIndex => ( index <= lineEndIndex ) );
 		assert( arrayIndex >= 0 );
 		return arrayIndex + 1;
