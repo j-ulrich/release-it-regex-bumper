@@ -49,9 +49,10 @@
 		"diff": "^3.0.0 || ^4.0.0"
 	},
 	"devDependencies": {
+		"@j-ulrich/eslint-config": "^1.0.0",
 		"bron": "^1.1.0",
 		"c8": "^7.3.0",
-		"eslint": "^8.0.1",
+		"eslint": "^8.6.0",
 		"eslint-plugin-security": "^1.4.0",
 		"mock-fs": "^5.1.1",
 		"release-it": "^14.0.0",
