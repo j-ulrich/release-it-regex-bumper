@@ -44,7 +44,7 @@
 		"xregexp": "^4.3.0"
 	},
 	"peerDependencies": {
-		"release-it": "15 - 16"
+		"release-it": "15.0.0-esm.3 - 16"
 	},
 	"optionalDependencies": {
 		"diff": "^3.0.0 || ^4.0.0"
