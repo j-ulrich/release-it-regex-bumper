@@ -16,6 +16,9 @@ Support for release-it 15.x.
 #### Breaking Changes ####
 - [[#6]] Switched to ESModules to support release-it 15.x. This drops support for release-it < 15.x and Node.js < 15.x.
 
+### Security ###
+- Updated node-fetch dependency to remove vulnerability CVE-2022-0235.
+
 
 ---
 
