@@ -3,8 +3,8 @@
 		"@j-ulrich"
 	],
 	"parserOptions": {
-		"ecmaVersion": 2017,
-		"sourceType": "script",
+		"ecmaVersion": 2020,
+		"sourceType": "module",
 		"ecmaFeatures": {
 			"jsx": false,
 			"experimentalObjectRestSpread": false
@@ -12,7 +12,7 @@
 	},
 	"env": {
 		"node": true,
-		"commonjs": true
+		"es6": true
 	},
 	"rules": {
 		"security/detect-non-literal-fs-filename": "off"

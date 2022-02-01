@@ -8,6 +8,17 @@ This changelog follows the [Keep a Changelog](https://keepachangelog.com) format
 ---
 
 
+## Unreleased ##
+
+### Changed ###
+
+#### Breaking Changes ####
+- [[#6]] Switched to ESModules to support release-it 15.x.
+
+
+---
+
+
 ## [3.0.1] - 2021-10-26 ##
 
 ### Changed ###
@@ -162,5 +173,6 @@ Initial release.
 [1.1.0]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/1.1.0
 [1.0.0]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/1.0.0
 
+[#6]: https://github.com/j-ulrich/release-it-regex-bumper/issues/6
 [#2]: https://github.com/j-ulrich/release-it-regex-bumper/issues/2
 [#1]: https://github.com/j-ulrich/release-it-regex-bumper/issues/1

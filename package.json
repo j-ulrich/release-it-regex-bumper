@@ -3,9 +3,10 @@
 	"version": "3.0.1",
 	"description": "Regular expression based version read/write plugin for release-it",
 	"main": "index.js",
+	"type": "module",
 	"scripts": {
-		"test": "npx bron test.js",
-		"test+coverage": "npx c8 npx bron test.js",
+		"test": "node --experimental-loader=testdouble  ./node_modules/ava/entrypoints/cli.mjs --serial",
+		"test+coverage": "npx c8 node --experimental-loader=testdouble  ./node_modules/ava/entrypoints/cli.mjs --serial",
 		"lint": "npx eslint .",
 		"release": "npx release-it"
 	},
@@ -43,23 +44,22 @@
 		"xregexp": "^4.3.0"
 	},
 	"peerDependencies": {
-		"release-it": "11 - 15"
+		"release-it": "15 - 16"
 	},
 	"optionalDependencies": {
 		"diff": "^3.0.0 || ^4.0.0"
 	},
 	"devDependencies": {
 		"@j-ulrich/eslint-config": "^1.0.0",
-		"bron": "^1.1.0",
+		"ava": "^4.0.1",
 		"c8": "^7.3.0",
 		"eslint": "^8.6.0",
 		"eslint-plugin-security": "^1.4.0",
-		"mock-fs": "^5.1.1",
-		"release-it": "^14.0.0",
-		"rewiremock": "^3.14.3",
-		"sinon": "^9.0.3"
+		"release-it": "^15.0.0-esm.4",
+		"temp": "^0.9.4",
+		"testdouble": "^3.16.4"
 	},
 	"engines": {
-		"node": ">=10.12.0"
+		"node": ">=15.0.0"
 	}
 }
