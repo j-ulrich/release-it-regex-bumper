@@ -9,11 +9,12 @@ This changelog follows the [Keep a Changelog](https://keepachangelog.com) format
 
 
 ## Unreleased ##
+Support for release-it 15.x.
 
 ### Changed ###
 
 #### Breaking Changes ####
-- [[#6]] Switched to ESModules to support release-it 15.x.
+- [[#6]] Switched to ESModules to support release-it 15.x. This drops support for release-it < 15.x and Node.js < 15.x.
 
 
 ---
