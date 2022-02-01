@@ -14,7 +14,9 @@ Support for release-it 15.x.
 ### Changed ###
 
 #### Breaking Changes ####
-- [[#6]] Switched to ESModules to support release-it 15.x. This drops support for release-it < 15.x and Node.js < 15.x.
+- [[#6]] Switched to ESModules to support release-it 15.x.
+  This removes support for release-it < 15.x, Node.js < 12.20 and Node.js 13.x.
+  When using release-it 14.x or earlier, use release-it-regex-bumper 3.x or earlier.
 
 ### Security ###
 - Updated node-fetch dependency to remove vulnerability CVE-2022-0235.
