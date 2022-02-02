@@ -19,7 +19,7 @@ Support for release-it 15.x.
   When using release-it 14.x or earlier, use release-it-regex-bumper 3.x or earlier.
 
 ### Security ###
-- Updated node-fetch dependency to remove vulnerability CVE-2022-0235.
+- Updated node-fetch dependency to remove vulnerability CVE-2022-0235 and GHSA-64g7-mvw6-v9qj.
 
 
 ---
