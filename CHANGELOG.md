@@ -8,6 +8,15 @@ This changelog follows the [Keep a Changelog](https://keepachangelog.com) format
 ---
 
 
+## Unreleased ##
+
+### Security ###
+- Updated dependencies to remove vulnerabilities CVE-2022-0235 and GHSA-64g7-mvw6-v9qj.
+
+
+---
+
+
 ## [3.0.1] - 2021-10-26 ##
 
 ### Changed ###
