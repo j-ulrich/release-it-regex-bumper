@@ -18,7 +18,8 @@ below for details.
 
 # Installation #
 
-> ⚠️ **Note:** Version 4.x of release-it-regex-bumper requires version 15.x or later of release-it.
+> ⚠️ **Note:**  
+> Version 4.x of release-it-regex-bumper requires version 15.x or later of release-it.
 > When you are using release-it version 14.x or earlier, then use release-it-regex-bumper version 3.x or earlier.
 
 ```
