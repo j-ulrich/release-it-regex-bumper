@@ -421,6 +421,15 @@ encodings are the ones supported by Node's `fs` module.
 
 If this option is not defined or set to `null`, the default value is used.
 
+## Tips ##
+
+### Disable Output via Command-Line Parameter ###
+To completely disable changing any files by the plugin, you can use the command-line parameter `--no-plugins.@j-ulrich/release-it-regex-bumper.out`.
+For example:
+```
+npx release-it --no-plugins.@j-ulrich/release-it-regex-bumper.out
+```
+
 
 # License #
 
