@@ -8,7 +8,7 @@
 				{
 					"files": [ "README.md", "LICENSE" ],
 					"search": {
-						"pattern": "((?:\\\\)?[Cc])opyright (.*?)(\\d+-)?(\\d+)",
+						"pattern": "\\b([Cc])opyright (.*?)(\\d{4}-)?(\\d{4})",
 						"flags": "g"
 					},
 					"replace": "$1opyright $2${3}{{now:yyyy}}"
