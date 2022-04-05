@@ -3,6 +3,9 @@
 	"version": "3.0.1",
 	"description": "Regular expression based version read/write plugin for release-it",
 	"main": "index.js",
+	"files": [
+		"index.js"
+	],
 	"scripts": {
 		"test": "npx bron test.js",
 		"test+coverage": "npx c8 npx bron test.js",

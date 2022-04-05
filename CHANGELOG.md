@@ -10,6 +10,9 @@ This changelog follows the [Keep a Changelog](https://keepachangelog.com) format
 
 ## [Unreleased] ##
 
+### Changed ###
+- Removed unnecessary files from npm package.
+
 ### Security ###
 - Updated dependencies to remove vulnerabilities CVE-2022-0235, CVE-2021-44906 and GHSA-64g7-mvw6-v9qj in dev
   dependencies.
