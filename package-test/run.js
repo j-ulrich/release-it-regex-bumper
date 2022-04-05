@@ -1,3 +1,4 @@
+/* eslint-disable security/detect-child-process */
 'use strict';
 
 const temp = require( 'temp' );
