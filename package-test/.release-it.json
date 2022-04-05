@@ -1,0 +1,15 @@
+{
+	"git": {
+		"commit": "false",
+		"tag": "false",
+		"push": "false"
+	},
+	"npm": {
+		"publish": "false"
+	},
+	"plugins": {
+		"@j-ulrich/release-it-regex-bumper": {
+			"out": "version.txt"
+		}
+	}
+}

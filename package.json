@@ -61,7 +61,8 @@
 		"mock-fs": "^5.1.1",
 		"release-it": "^14.0.0",
 		"rewiremock": "^3.14.3",
-		"sinon": "^9.0.3"
+		"sinon": "^9.0.3",
+		"temp": "^0.9.4"
 	},
 	"engines": {
 		"node": ">=10.12.0"

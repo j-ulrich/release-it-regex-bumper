@@ -12,7 +12,8 @@
 	},
 	"env": {
 		"node": true,
-		"commonjs": true
+		"commonjs": true,
+		"es6": true
 	},
 	"rules": {
 		"security/detect-non-literal-fs-filename": "off"
