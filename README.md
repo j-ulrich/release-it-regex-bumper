@@ -433,6 +433,6 @@ npx release-it --no-plugins.@j-ulrich/release-it-regex-bumper.out
 
 # License #
 
-Copyright (c) 2020-2021 Jochen Ulrich
+Copyright (c) 2020-2022 Jochen Ulrich
 
 Licensed under [MIT license](LICENSE).
