@@ -2,6 +2,10 @@
 	"hooks": {
 		"before:init": "npm test"
 	},
+	"github": {
+		"release": true,
+		"releaseName": "${version}"
+	},
 	"plugins": {
 		"./index.js": {
 			"out": [
