@@ -471,16 +471,17 @@ describe( 'Bump (Output)', () => {
 		it( 'should write date to file', async ( testDir ) => {
 			const pluginOptions = { out: { file: testDir + '/copyright.txt', search: '\\d{4}', replace: '{{now}}' } };
 			const { plugin } = setupPlugin( pluginOptions );
+			const beforeTime = new Date();
 			await plugin.bump( '1.2.3' );
-			const writeTime = new Date();
+			const afterTime = new Date();
 			const fileContent = await readFile( testDir + '/copyright.txt' );
 			const fileContentMatch = /^Copyright \(c\) (.+) Foo Bar$/.exec( fileContent );
 			assert( fileContentMatch );
 			assert( fileContentMatch[ 1 ] );
 			const parsedDate = dateFns.parseISO( fileContentMatch[ 1 ] );
 			assert( dateFns.isValid( parsedDate ) );
-			const dateThresholdSeconds = 5;
-			assert( dateFns.differenceInSeconds( writeTime, parsedDate ) < dateThresholdSeconds );
+			assert( dateFns.differenceInSeconds( beforeTime, parsedDate ) <= 1 );
+			assert( dateFns.differenceInSeconds( parsedDate, afterTime ) <= 1 );
 		} );
 
 		it( 'should write date to file using format', async ( testDir ) => {
@@ -677,7 +678,8 @@ describe( 'End-to-End', () => {
 			skip( '`latestTag` is not available in tests before release-it 13.5.8' );
 		}
 		const pluginOptions = { in: testDir + '/VERSION', out: { file: testDir + '/versions.txt', replace: '{{latestTag}}' } };
-		await runPlugin( pluginOptions );
+		const { plugin } = setupPlugin( pluginOptions, { latestTag: '1.0.1' } );
+		await runTasks( plugin );
 		assert.equal( readFile( testDir + '/versions.txt' ), 'some: 1.0.1\nthis: 1.0.1\nother: 2.0.0\n' );
 	} );
 
