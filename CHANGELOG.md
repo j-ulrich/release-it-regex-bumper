@@ -178,4 +178,6 @@ Initial release.
 [#2]: https://github.com/j-ulrich/release-it-regex-bumper/issues/2
 [#1]: https://github.com/j-ulrich/release-it-regex-bumper/issues/1
 
+<!--lint ignore no-unused-definitions -->
+
 [unreleased]: https://github.com/j-ulrich/release-it-regex-bumper/compare/3.0.2...main
