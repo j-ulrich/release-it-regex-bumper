@@ -1,10 +1,12 @@
 /* eslint-disable security/detect-child-process */
-'use strict';
 
-const temp = require( 'temp' );
-const childProcess = require( 'child_process' );
-const path = require( 'path' );
-const fs = require( 'fs' );
+import * as temp from 'temp';
+import { execSync } from 'child_process';
+import { dirname, join as pathJoin } from 'path';
+import { copyFileSync } from 'fs';
+import { fileURLToPath } from 'url';
+
+const __dirname = dirname( fileURLToPath( import.meta.url ) );
 
 const originalCwd = process.cwd();
 temp.track();
@@ -20,17 +22,17 @@ function main() {
 	copyTestPackageFile( 'version.txt' );
 
 	exec( 'npm install' );
-	exec( `npm install "${path.join( __dirname, '..' )}"` );
+	exec( `npm install "${pathJoin( __dirname, '..' )}"` );
 	exec( 'npx release-it --dry-run --no.git --no.npm --ci' );
 }
 
 function copyTestPackageFile( fileName ) {
-	fs.copyFileSync( path.join( __dirname, fileName ), path.join( tempDir, fileName ) );
+	copyFileSync( pathJoin( __dirname, fileName ), pathJoin( tempDir, fileName ) );
 }
 
 function exec( command ) {
 	console.log( '>', command );
-	childProcess.execSync( command, { stdio: 'inherit' } );
+	execSync( command, { stdio: 'inherit' } );
 }
 
 try {
