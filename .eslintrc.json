@@ -19,6 +19,6 @@
 		"no-shadow": [ "warn", {
 			"builtinGlobals": true,
 			"allow": [ "hasOwnProperty", "__dirname", "__filename" ]
-		} ],
+		} ]
 	}
 }

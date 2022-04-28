@@ -21,6 +21,7 @@ Support for release-it 15.x.
 ### Security ###
 - Updated node-fetch dependency to remove vulnerability CVE-2022-0235 and GHSA-64g7-mvw6-v9qj.
 
+
 ---
 
 
