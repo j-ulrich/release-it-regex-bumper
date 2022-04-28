@@ -21,6 +21,17 @@ Support for release-it 15.x.
 ### Security ###
 - Updated node-fetch dependency to remove vulnerability CVE-2022-0235 and GHSA-64g7-mvw6-v9qj.
 
+---
+
+
+## [3.0.2] - 2022-04-06 ##
+
+### Changed ###
+- Removed unnecessary files from npm package.
+
+### Security ###
+- Updated dev dependencies to remove vulnerabilities CVE-2022-0235, CVE-2021-44906 and GHSA-64g7-mvw6-v9qj.
+
 
 ---
 
@@ -165,6 +176,7 @@ Initial release.
 
 
 
+[3.0.2]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/3.0.2
 [3.0.1]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/3.0.1
 [3.0.0]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/3.0.0
 [2.0.0]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/2.0.0
@@ -182,3 +194,7 @@ Initial release.
 [#6]: https://github.com/j-ulrich/release-it-regex-bumper/issues/6
 [#2]: https://github.com/j-ulrich/release-it-regex-bumper/issues/2
 [#1]: https://github.com/j-ulrich/release-it-regex-bumper/issues/1
+
+<!--lint ignore no-unused-definitions-->
+
+[unreleased]: https://github.com/j-ulrich/release-it-regex-bumper/compare/3.0.2...main

@@ -2,28 +2,29 @@
 	"hooks": {
 		"before:init": "npm test"
 	},
+	"github": {
+		"release": true,
+		"releaseName": "${version}"
+	},
 	"plugins": {
 		"./index.js": {
 			"out": [
 				{
 					"files": [ "README.md", "LICENSE" ],
 					"search": {
-						"pattern": "((?:\\\\)?[Cc])opyright (.*?)(\\d+-)?(\\d+)",
+						"pattern": "\\b([Cc])opyright (.*?)(\\d{4}-)?(\\d{4})",
 						"flags": "g"
 					},
 					"replace": "$1opyright $2${3}{{now:yyyy}}"
-				},
-				{
-					"file": "CHANGELOG.md",
-					"search": "Unreleased",
-					"replace": "[{{version}}] - {{now:yyyy-MM-dd}}"
-				},
-				{
-					"file": "CHANGELOG.md",
-					"search": "(\\[{{version}}\\]: http)",
-					"replace": "[{{version}}]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/{{version}}\n$1"
 				}
 			]
+		},
+		"@release-it/keep-a-changelog": {
+			"head": "main",
+			"addVersionUrl": true,
+			"versionUrlFormats": {
+				"versionUrl": "{repositoryUrl}/releases/tag/{tagName}"
+			}
 		}
 	}
 }

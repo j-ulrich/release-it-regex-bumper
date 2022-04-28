@@ -1,9 +1,12 @@
 {
 	"name": "@j-ulrich/release-it-regex-bumper",
-	"version": "3.0.1",
+	"version": "3.0.2",
 	"description": "Regular expression based version read/write plugin for release-it",
 	"main": "index.js",
 	"type": "module",
+	"files": [
+		"index.js"
+	],
 	"scripts": {
 		"test": "node --experimental-loader=testdouble  ./node_modules/ava/entrypoints/cli.mjs --serial",
 		"test+coverage": "npx c8 node --experimental-loader=testdouble  ./node_modules/ava/entrypoints/cli.mjs --serial",
@@ -51,6 +54,7 @@
 	},
 	"devDependencies": {
 		"@j-ulrich/eslint-config": "^1.0.0",
+		"@release-it/keep-a-changelog": "^2.5.0",
 		"ava": "^4.0.1",
 		"c8": "^7.3.0",
 		"eslint": "^8.6.0",
