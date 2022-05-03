@@ -15,7 +15,7 @@ Support for release-it 15.x.
 
 #### Breaking Changes ####
 - [[#6]] Switched to ESModules to support release-it 15.x.
-  This removes support for release-it < 15.x, Node.js < 12.20 and Node.js 13.x.
+  This removes support for release-it < 15 and Node.js < 14.9.
   When using release-it 14.x or earlier, use release-it-regex-bumper 3.x or earlier.
 
 ### Security ###
@@ -65,6 +65,7 @@ Support for release-it 15.x.
   meaning (see documentation of `in.search.pattern` and `out.search.pattern`). Use `{{{}}` to insert a curly brace in
   the pattern to avoid the interpretation as placeholder. For example, use `{{{}}{version}}` to match `{{version}}`
   literally.
+
 
 ---
 
