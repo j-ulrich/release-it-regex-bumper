@@ -8,7 +8,7 @@ This changelog follows the [Keep a Changelog](https://keepachangelog.com) format
 ---
 
 
-## [Unreleased] ##
+## [4.0.0] - 2022-05-03 ##
 Support for release-it 15.x.
 
 ### Changed ###
@@ -178,6 +178,7 @@ Initial release.
 
 
 
+[4.0.0]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/4.0.0
 [3.0.2]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/3.0.2
 [3.0.1]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/3.0.1
 [3.0.0]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/3.0.0
@@ -199,4 +200,4 @@ Initial release.
 
 <!--lint ignore no-unused-definitions-->
 
-[unreleased]: https://github.com/j-ulrich/release-it-regex-bumper/compare/3.0.2...main
+[unreleased]: https://github.com/j-ulrich/release-it-regex-bumper/compare/4.0.0...main
