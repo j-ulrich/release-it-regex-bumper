@@ -2,10 +2,11 @@
   "name": "release-it-regex-bumper-package-test",
   "version": "1.0.0",
   "description": "Tests the packaging of release-it-regex-bumper",
+  "type": "module",
   "author": "",
   "private": true,
   "license": "MIT",
   "dependencies": {
-    "release-it": "^14.14.0"
+    "release-it": "^15.0.0"
   }
 }

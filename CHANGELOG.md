@@ -8,6 +8,23 @@ This changelog follows the [Keep a Changelog](https://keepachangelog.com) format
 ---
 
 
+## Unreleased ##
+Support for release-it 15.x.
+
+### Changed ###
+
+#### Breaking Changes ####
+- [[#6]] Switched to ESModules to support release-it 15.x.
+  This removes support for release-it < 15 and Node.js < 14.9.
+  When using release-it 14.x or earlier, use release-it-regex-bumper 3.x or earlier.
+
+### Security ###
+- Updated node-fetch dependency to remove vulnerability CVE-2022-0235 and GHSA-64g7-mvw6-v9qj.
+
+
+---
+
+
 ## [3.0.2] - 2022-04-06 ##
 
 ### Changed ###
@@ -48,6 +65,7 @@ This changelog follows the [Keep a Changelog](https://keepachangelog.com) format
   meaning (see documentation of `in.search.pattern` and `out.search.pattern`). Use `{{{}}` to insert a curly brace in
   the pattern to avoid the interpretation as placeholder. For example, use `{{{}}{version}}` to match `{{version}}`
   literally.
+
 
 ---
 
@@ -175,6 +193,7 @@ Initial release.
 [1.1.0]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/1.1.0
 [1.0.0]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/1.0.0
 
+[#6]: https://github.com/j-ulrich/release-it-regex-bumper/issues/6
 [#2]: https://github.com/j-ulrich/release-it-regex-bumper/issues/2
 [#1]: https://github.com/j-ulrich/release-it-regex-bumper/issues/1
 

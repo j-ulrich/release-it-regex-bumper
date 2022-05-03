@@ -1,28 +1,19 @@
-'use strict';
 
-const fs = require( 'fs' );
-const assert = require( 'assert' ).strict;
-const util = require( 'util' );
-const glob = require( 'fast-glob' );
-const chalk = require( 'chalk' );
-const _ = {
-	isEmpty: require( 'lodash/isEmpty' ),
-	isNil: require( 'lodash/isNil' ),
-	isNull: require( 'lodash/isNull' ),
-	isString: require( 'lodash/isString' ),
-	isFunction: require( 'lodash/isFunction' ),
-	castArray: require( 'lodash/castArray' ),
-};
-const XRegExp = require( 'xregexp' );
-const semver = require( 'semver' );
-const { Plugin } = require( 'release-it' );
-const dateFormat = require( 'date-fns/format' );
-const dateFormatIso = require( 'date-fns/formatISO' );
-const diff = optionalRequire( 'diff' );
+import { readFile as fsReadFile, writeFile as fsWriteFile } from 'fs';
+import { strict as assert } from 'assert';
+import { promisify } from 'util';
+import glob from 'fast-glob';
+import chalk from 'chalk';
+import _ from 'lodash';
+import XRegExp from 'xregexp';
+import semver from 'semver';
+import { Plugin } from 'release-it';
+import dateFormat from 'date-fns/format/index.js';
+import dateFormatIso from 'date-fns/formatISO/index.js';
 
 
-const readFile = util.promisify( fs.readFile );
-const writeFile = util.promisify( fs.writeFile );
+const readFile = promisify( fsReadFile );
+const writeFile = promisify( fsWriteFile );
 
 const semanticVersionRegex = XRegExp(
 	// eslint-disable-next-line security/detect-unsafe-regex
@@ -40,7 +31,7 @@ const defaultReplace = '{{version}}';
 
 
 
-class RegExBumper extends Plugin {
+export default class RegExBumper extends Plugin {
 
 	constructor( ...args ) {
 		super( ...args );
@@ -120,7 +111,7 @@ class RegExBumper extends Plugin {
 				const fileContent = await readFile( file, { encoding: effectiveEncoding } );
 
 				if ( isDryRun ) {
-					this.loadDiff();
+					await this.loadDiff();
 					if ( this.diff ) {
 						const processedFileContent = replaceVersion( fileContent, replacedSearchRegex,
 						                                             effectiveReplacement, context );
@@ -149,12 +140,21 @@ class RegExBumper extends Plugin {
 		/* eslint-enable no-await-in-loop */
 	}
 
-	loadDiff() {
-		if ( !diff || diff instanceof Error ) {
-			this.log.info( 'Optional "diff" package not available' );
-			this.log.verbose( 'Exception was:', diff );
+	async loadDiff() {
+		if ( this.diff ) {
+			return;
 		}
-		this.diff = diff;
+		try {
+			const diff = await import( 'diff' );
+			if ( !diff || !diff.structuredPatch ) {
+				throw new Error( 'diff module no available' );
+			}
+			this.diff = diff;
+		}
+		catch ( e ) {
+			this.log.info( 'Optional "diff" package not available' );
+			this.log.verbose( 'Exception was:', e );
+		}
 	}
 
 	diffAndReport( oldContent, newContent, filePath ) {
@@ -430,18 +430,6 @@ function replacePlaceholders( template, placeholderMap ) {
 	} );
 }
 
-function optionalRequire( packageName ) {
-	try {
-		// eslint-disable-next-line security/detect-non-literal-require
-		return require( packageName );
-	}
-	/* c8 ignore next 4 */
-	/* rewiremock can't simulate the absence of a package so we can't test this case */
-	catch ( ex ) {
-		return ex;
-	}
-}
-
 function firstNotNil( ...args ) {
 	return args.find( ( ele ) => !_.isNil( ele ) );
 }
@@ -474,4 +462,3 @@ class LineCounter {
 	}
 }
 
-module.exports = RegExBumper;
