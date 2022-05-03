@@ -7,6 +7,6 @@
   "private": true,
   "license": "MIT",
   "dependencies": {
-    "release-it": "^15.0.0-esm.3"
+    "release-it": "^15.0.0"
   }
 }

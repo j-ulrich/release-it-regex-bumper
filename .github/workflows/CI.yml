@@ -31,7 +31,7 @@ jobs:
 
         strategy:
             matrix:
-                release-it-version: [ ^15.0.0-esm.3 ]
+                release-it-version: [ 15.x ]
 
         steps:
         - uses: actions/checkout@v2
