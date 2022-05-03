@@ -2,7 +2,7 @@
 
 > Regular expression based version read/write plugin for release-it
 
-![CI](https://github.com/j-ulrich/release-it-regex-bumper/workflows/CI/badge.svg)
+[![CI](https://github.com/j-ulrich/release-it-regex-bumper/actions/workflows/CI.yml/badge.svg)](https://github.com/j-ulrich/release-it-regex-bumper/actions/workflows/CI.yml)
 [![Test Coverage](https://app.codacy.com/project/badge/Coverage/bf3c6e8740a9472b9acd7dac231adf4e)](https://www.codacy.com/gh/j-ulrich/release-it-regex-bumper/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=j-ulrich/release-it-regex-bumper&amp;utm_campaign=Badge_Coverage)
 [![Code Quality](https://app.codacy.com/project/badge/Grade/bf3c6e8740a9472b9acd7dac231adf4e)](https://www.codacy.com/gh/j-ulrich/release-it-regex-bumper/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=j-ulrich/release-it-regex-bumper&amp;utm_campaign=Badge_Grade)
 
