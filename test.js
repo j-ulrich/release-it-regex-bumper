@@ -635,11 +635,7 @@ describe( 'Bump (Output)', () => {
 		it( 'should warn in dry run without diff if out file would not change', async ( t, testDir ) => {
 			const pluginOptions = { out: testDir + '/unrelated.txt' };
 			testdouble.replaceEsm( 'diff', null, null );
-			const { plugin, container } = await setupPlugin( pluginOptions, { 'dry-run': true } );
-			await t.notThrowsAsync( async () => {
-				await plugin.bump( '1.2.3' );
-			} );
-			t.deepEqual( readFile( testDir + '/unrelated.txt' ), 'nothing to see here.' );
+			const container = await testDryRunBump( t, testDir, pluginOptions );
 			t.assert( container.log.warn.called, 'no warnings were logged' );
 			assertLogMessage( t, container.log.warn, /\/unrelated\.txt" did not change/, 'warning regarding unchanged file was not logged' );
 		} );
