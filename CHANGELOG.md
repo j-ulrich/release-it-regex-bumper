@@ -8,7 +8,7 @@ This changelog follows the [Keep a Changelog](https://keepachangelog.com) format
 ---
 
 
-## [Unreleased]
+## [4.1.0] - 2022-05-04
 
 ### Added ###
 - Support for diff version 5
@@ -192,6 +192,7 @@ Initial release.
 
 
 
+[4.1.0]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/4.1.0
 [4.0.0]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/4.0.0
 [3.0.2]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/3.0.2
 [3.0.1]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/3.0.1
@@ -214,4 +215,4 @@ Initial release.
 
 <!--lint ignore no-unused-definitions-->
 
-[unreleased]: https://github.com/j-ulrich/release-it-regex-bumper/compare/4.0.0...main
+[unreleased]: https://github.com/j-ulrich/release-it-regex-bumper/compare/4.1.0...main
