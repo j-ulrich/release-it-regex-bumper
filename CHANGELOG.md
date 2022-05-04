@@ -8,6 +8,20 @@ This changelog follows the [Keep a Changelog](https://keepachangelog.com) format
 ---
 
 
+## [Unreleased]
+
+### Added ###
+- Support for diff version 5
+
+### Changed ###
+- Updated dependencies to new major versions:
+  - Chalk version 5
+  - XRegExp version 5
+
+
+---
+
+
 ## [4.0.0] - 2022-05-03 ##
 Support for release-it 15.x.
 
