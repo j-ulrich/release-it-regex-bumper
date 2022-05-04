@@ -250,15 +250,20 @@ function extractVersion( content, versionRegex, versionCaptureGroup ) {
 		throw new Error( 'Could not extract version from file' );
 	}
 	if ( !_.isNil( versionCaptureGroup ) ) {
-		if ( hasOwnProperty( match, versionCaptureGroup ) ) {
+		if ( typeof versionCaptureGroup === 'number' && hasOwnProperty( match, versionCaptureGroup ) ) {
 			// object injection mitigated by checking hasOwnProperty()
 			// eslint-disable-next-line security/detect-object-injection
 			return match[versionCaptureGroup];
 		}
+		if ( match.groups && hasOwnProperty( match.groups, versionCaptureGroup ) ) {
+			// object injection mitigated by checking hasOwnProperty()
+			// eslint-disable-next-line security/detect-object-injection
+			return match.groups[versionCaptureGroup];
+		}
 	}
 	else {
-		if ( hasOwnProperty( match, 'version' ) ) {
-			return match['version'];
+		if ( match.groups && hasOwnProperty( match.groups, 'version' ) ) {
+			return match.groups.version;
 		}
 		if ( hasOwnProperty( match, 1 ) ) {
 			return match[1];
