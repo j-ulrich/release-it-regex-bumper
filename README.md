@@ -329,7 +329,7 @@ The template string also supports a set of placeholders:
 - `{{prerelease}}` is replaced by the prerelease part of the new version or an empty string if the version does not
   have a prerelease part.    
   Since: 1.2.0
-- `{{prefixedPrerelease}}` is replaced by a dash ('-') followed by the prerelease part of the new version or and empty
+- `{{prefixedPrerelease}}` is replaced by a dash ('-') followed by the prerelease part of the new version or an empty
   string if the version does not have a prerelease part.    
   Since: 3.0.0
 - `{{build}}` is replaced by the build part of the new version or an empty string if the version does not have a
