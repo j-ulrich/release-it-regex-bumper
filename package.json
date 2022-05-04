@@ -47,7 +47,7 @@
 		"xregexp": "^5.0.0"
 	},
 	"peerDependencies": {
-		"release-it": "15 - 16"
+		"release-it": "15"
 	},
 	"optionalDependencies": {
 		"diff": "3 - 5"
