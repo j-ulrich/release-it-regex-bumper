@@ -10,6 +10,9 @@ This changelog follows the [Keep a Changelog](https://keepachangelog.com) format
 
 ## [Unreleased]
 
+### Fixed ###
+- Running tests with release-it 15.1.3 or later.
+
 ### Security ###
 - Update dependencies to remove several vulnerabilities.
 

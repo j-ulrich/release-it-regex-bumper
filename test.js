@@ -4,7 +4,7 @@ import _ from 'lodash';
 import * as dateFns from 'date-fns';
 import test from 'ava';
 import * as temp from 'temp';
-import { factory, runTasks } from 'release-it/test/util';
+import { factory, runTasks } from 'release-it/test/util/index.js';
 import path from 'path';
 import * as testdouble from 'testdouble';
 
