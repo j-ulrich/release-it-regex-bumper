@@ -8,6 +8,15 @@ This changelog follows the [Keep a Changelog](https://keepachangelog.com) format
 ---
 
 
+## [Unreleased]
+
+### Security ###
+- Update dependencies to remove several vulnerabilities.
+
+
+---
+
+
 ## [4.1.0] - 2022-05-04
 
 ### Added ###
