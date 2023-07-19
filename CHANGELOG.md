@@ -7,6 +7,16 @@ This changelog follows the [Keep a Changelog](https://keepachangelog.com) format
 
 ---
 
+## Unreleased ##
+Support for release-it 16.x.
+
+### Changed ###
+
+#### Breaking Changes ####
+- [[#9]] Increased peer dependency to release-it to version 16.x
+
+---
+
 
 ## [4.1.1] - 2022-07-26
 

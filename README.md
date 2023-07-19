@@ -19,8 +19,8 @@ below for details.
 # Installation #
 
 > ⚠️ **Note:**  
-> Version 4 and later of release-it-regex-bumper require version 15 or later of release-it.   
-> When you are using release-it version 14.x or earlier, then use release-it-regex-bumper version 3.x or earlier.
+> Version 5 and later of release-it-regex-bumper require version 16 or later of release-it.   
+> When you are using release-it version 15.x or earlier, then use release-it-regex-bumper version 4.x or earlier.
 
 ```
 npm install --save-dev @j-ulrich/release-it-regex-bumper
