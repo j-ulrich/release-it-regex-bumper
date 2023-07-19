@@ -47,19 +47,19 @@
 		"xregexp": "^5.0.0"
 	},
 	"peerDependencies": {
-		"release-it": "15"
+		"release-it": "16"
 	},
 	"optionalDependencies": {
 		"diff": "3 - 5"
 	},
 	"devDependencies": {
 		"@j-ulrich/eslint-config": "^1.0.0",
-		"@release-it/keep-a-changelog": "^3.0.0",
+		"@release-it/keep-a-changelog": "^4.0.0",
 		"ava": "^4.0.1",
 		"c8": "^7.3.0",
 		"eslint": "^8.6.0",
 		"eslint-plugin-security": "^1.4.0",
-		"release-it": "^15.0.0",
+		"release-it": "^16.0.0",
 		"sinon": "^13.0.2",
 		"temp": "^0.9.4",
 		"testdouble": "^3.16.4"
