@@ -7,7 +7,7 @@ This changelog follows the [Keep a Changelog](https://keepachangelog.com) format
 
 ---
 
-## Unreleased ##
+## [Unreleased] ##
 Support for release-it 16.x.
 
 ### Changed ###
