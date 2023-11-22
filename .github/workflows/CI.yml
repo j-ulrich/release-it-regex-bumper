@@ -6,40 +6,29 @@ name: CI
 on: [ push, pull_request ]
 
 jobs:
-    compatibility-test-node:
-        name: Test Node Version Compatibility
+    compatibility-test:
+        name: Test Compatibility with different Node and release-it versions
         runs-on: ubuntu-latest
 
         strategy:
             matrix:
-                node-version: [ 14.x ]
+                versions:
+                    - node: 16.x
+                      releaseIt: 16
+                    - node: 18.x
+                      releaseIt: 17
+                    - node: 20.x
+                      releaseIt: 17
 
         steps:
-        - uses: actions/checkout@v2
-        - name: Use Node.js ${{ matrix.node-version }}
-          uses: actions/setup-node@v1
+        - uses: actions/checkout@v4
+        - name: Use Node.js v${{ matrix.versions.node }}
+          uses: actions/setup-node@v4
           with:
-              node-version: ${{ matrix.node-version }}
+              node-version: ${{ matrix.versions.node }}
         - run: npm ci
-        - run: npm install release-it
-        - run: npm run build --if-present
-        - run: npm run test
-
-    compatibility-test-release:
-        name: Test Release-it Version Compatibility
-        runs-on: ubuntu-latest
-
-        strategy:
-            matrix:
-                release-it-version: [ 16.x ]
-
-        steps:
-        - uses: actions/checkout@v2
-        - uses: actions/setup-node@v1
-          with:
-              node-version: 16.x
-        - run: npm ci
-        - run: npm install release-it@${{ matrix.release-it-version }}
+        - name: Install release-it v${{ matrix.versions.releaseIt }}
+          run: npm install release-it@${{ matrix.versions.releaseIt }}
         - run: npm run build --if-present
         - run: npm run test
 
@@ -48,10 +37,10 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
-        - uses: actions/checkout@v2
-        - uses: actions/setup-node@v1
+        - uses: actions/checkout@v4
+        - uses: actions/setup-node@v4
           with:
-              node-version: 16.x
+              node-version: 18.x
         - run: npm ci
         - run: npm install release-it
         - run: npm run build --if-present
@@ -68,10 +57,10 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
-        - uses: actions/checkout@v2
-        - uses: actions/setup-node@v1
+        - uses: actions/checkout@v4
+        - uses: actions/setup-node@v4
           with:
-              node-version: 16.x
+              node-version: 18.x
         - run: npm ci
         - run: npm run lint
 
@@ -80,9 +69,9 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
-        - uses: actions/checkout@v2
-        - uses: actions/setup-node@v1
+        - uses: actions/checkout@v4
+        - uses: actions/setup-node@v4
           with:
-              node-version: 16.x
+              node-version: 18.x
         - run: npm ci
         - run: node package-test/run.js
