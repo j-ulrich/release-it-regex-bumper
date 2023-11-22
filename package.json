@@ -47,7 +47,7 @@
 		"xregexp": "^5.0.0"
 	},
 	"peerDependencies": {
-		"release-it": "15 || 16 || 17"
+		"release-it": "16 || 17"
 	},
 	"optionalDependencies": {
 		"diff": "3 - 5"
@@ -65,6 +65,6 @@
 		"testdouble": "^3.16.4"
 	},
 	"engines": {
-		"node": ">=14.9"
+		"node": ">=16"
 	}
 }

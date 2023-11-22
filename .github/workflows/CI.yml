@@ -13,8 +13,6 @@ jobs:
         strategy:
             matrix:
                 versions:
-                    - node: ^14.9
-                      releaseIt: 15
                     - node: 16.x
                       releaseIt: 16
                     - node: 18.x
