@@ -7,6 +7,6 @@
   "private": true,
   "license": "MIT",
   "dependencies": {
-    "release-it": "^15.0.0"
+    "release-it": "^17.0.0"
   }
 }
