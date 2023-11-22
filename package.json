@@ -8,8 +8,8 @@
 		"index.js"
 	],
 	"scripts": {
-		"test": "node --loader=testdouble ./node_modules/ava/entrypoints/cli.mjs --serial",
-		"test+coverage": "npx c8 node --loader=testdouble ./node_modules/ava/entrypoints/cli.mjs --serial",
+		"test": "node --experimental-loader=testdouble ./node_modules/ava/entrypoints/cli.mjs --serial",
+		"test+coverage": "npx c8 node --experimental-loader=testdouble ./node_modules/ava/entrypoints/cli.mjs --serial",
 		"lint": "npx eslint .",
 		"release": "npx release-it"
 	},
@@ -55,12 +55,12 @@
 	"devDependencies": {
 		"@j-ulrich/eslint-config": "^1.0.0",
 		"@release-it/keep-a-changelog": "^5.0.0",
-		"ava": "^4.0.1",
-		"c8": "^7.3.0",
+		"ava": "^5.3.1",
+		"c8": "^8.0.1",
 		"eslint": "^8.6.0",
 		"eslint-plugin-security": "^1.4.0",
 		"release-it": "^17.0.0",
-		"sinon": "^13.0.2",
+		"sinon": "^17.0.1",
 		"temp": "^0.9.4",
 		"testdouble": "^3.16.4"
 	},
