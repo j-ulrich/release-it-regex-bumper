@@ -8,8 +8,8 @@
 		"index.js"
 	],
 	"scripts": {
-		"test": "node --experimental-loader=testdouble  ./node_modules/ava/entrypoints/cli.mjs --serial",
-		"test+coverage": "npx c8 node --experimental-loader=testdouble  ./node_modules/ava/entrypoints/cli.mjs --serial",
+		"test": "node --loader=testdouble ./node_modules/ava/entrypoints/cli.mjs --serial",
+		"test+coverage": "npx c8 node --loader=testdouble ./node_modules/ava/entrypoints/cli.mjs --serial",
 		"lint": "npx eslint .",
 		"release": "npx release-it"
 	},
