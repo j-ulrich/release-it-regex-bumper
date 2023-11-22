@@ -7,6 +7,17 @@ This changelog follows the [Keep a Changelog](https://keepachangelog.com) format
 
 ---
 
+
+## [Unreleased] ##
+
+### Added ###
+
+- [#11] Support for release-it version 17.x.
+
+
+---
+
+
 ## [5.0.0] - 2023-07-20 ##
 Support for release-it 16.x.
 
@@ -14,6 +25,7 @@ Support for release-it 16.x.
 
 #### Breaking Changes ####
 - [[#9]] Increased peer dependency to release-it to version 16.x
+
 
 ---
 
