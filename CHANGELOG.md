@@ -12,7 +12,7 @@ This changelog follows the [Keep a Changelog](https://keepachangelog.com) format
 
 ### Added ###
 
-- [#11] Support for release-it version 17.x.
+- [[#11]] Support for release-it version 17.x.
 
 
 ---
@@ -246,6 +246,8 @@ Initial release.
 [1.1.0]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/1.1.0
 [1.0.0]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/1.0.0
 
+[#11]: https://github.com/j-ulrich/release-it-regex-bumper/issues/11
+[#9]: https://github.com/j-ulrich/release-it-regex-bumper/issues/9
 [#6]: https://github.com/j-ulrich/release-it-regex-bumper/issues/6
 [#2]: https://github.com/j-ulrich/release-it-regex-bumper/issues/2
 [#1]: https://github.com/j-ulrich/release-it-regex-bumper/issues/1
