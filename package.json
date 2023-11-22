@@ -10,6 +10,7 @@
 	"scripts": {
 		"test": "node --experimental-loader=testdouble ./node_modules/ava/entrypoints/cli.mjs --serial",
 		"test+coverage": "npx c8 node --experimental-loader=testdouble ./node_modules/ava/entrypoints/cli.mjs --serial",
+		"test-packaging": "node package-test/run.js",
 		"lint": "npx eslint .",
 		"release": "npx release-it"
 	},
