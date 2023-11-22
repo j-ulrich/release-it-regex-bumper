@@ -30,7 +30,7 @@ Support for release-it 16.x.
 ---
 
 
-## [4.1.1] - 2022-07-26
+## [4.1.1] - 2022-07-26 ##
 
 ### Fixed ###
 - Running tests with release-it 15.1.3 or later.
@@ -42,7 +42,7 @@ Support for release-it 16.x.
 ---
 
 
-## [4.1.0] - 2022-05-04
+## [4.1.0] - 2022-05-04 ##
 
 ### Added ###
 - Support for diff version 5
