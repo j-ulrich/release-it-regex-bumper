@@ -8,6 +8,16 @@ This changelog follows the [Keep a Changelog](https://keepachangelog.com) format
 ---
 
 
+## [Unreleased]
+
+### Fixed ###
+
+- Running the tests with Node.js version 22 or later.
+
+
+---
+
+
 ## [5.1.0] - 2023-11-23 ##
 
 ### Added ###
