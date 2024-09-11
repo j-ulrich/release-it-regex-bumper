@@ -4,7 +4,7 @@ import * as os from 'os';
 import chalk from 'chalk';
 
 const nodeVersion = process.versions.node.split( /[.+-]/ ).map( section => {
-	const numericSection = parseInt( section );
+	const numericSection = parseInt( section, 10 );
 	if ( isNaN( numericSection ) || String( numericSection ) !== section ) {
 		return section;
 	}
