@@ -10,6 +10,10 @@ This changelog follows the [Keep a Changelog](https://keepachangelog.com) format
 
 ## [Unreleased]
 
+### Added ###
+
+- [[#14]] Support for release-it version 18.x.
+
 ### Fixed ###
 
 - Running the tests with Node.js version 22 or later.
