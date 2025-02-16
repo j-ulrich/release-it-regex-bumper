@@ -4,6 +4,13 @@ This is the changelog of the release-it-regex-bumper plugin.
 This project adheres to [Semantic Versioning](https://semver.org).
 This changelog follows the [Keep a Changelog](https://keepachangelog.com) format.
 
+---
+
+## [Unreleased]
+
+### Security ###
+- Update dependencies to remove vulnerability.
+
 
 ---
 
@@ -11,11 +18,9 @@ This changelog follows the [Keep a Changelog](https://keepachangelog.com) format
 ## [5.2.0] - 2025-01-09
 
 ### Added ###
-
 - [[#14]] Support for release-it version 18.x.
 
 ### Fixed ###
-
 - Running the tests with Node.js version 22 or later.
 
 
@@ -25,7 +30,6 @@ This changelog follows the [Keep a Changelog](https://keepachangelog.com) format
 ## [5.1.0] - 2023-11-23 ##
 
 ### Added ###
-
 - [[#11]] Support for release-it version 17.x.
 
 
