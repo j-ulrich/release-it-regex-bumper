@@ -8,6 +8,9 @@ This changelog follows the [Keep a Changelog](https://keepachangelog.com) format
 
 ## [Unreleased]
 
+### Added ###
+- Support for release-it version 19.x.
+
 ### Security ###
 - Update dependencies to remove vulnerability.
 

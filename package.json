@@ -48,7 +48,7 @@
 		"xregexp": "^5.0.0"
 	},
 	"peerDependencies": {
-		"release-it": "16 || 17 || 18"
+		"release-it": "16 || 17 || 18 || 19"
 	},
 	"optionalDependencies": {
 		"diff": "3 - 5"
