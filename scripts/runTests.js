@@ -1,4 +1,3 @@
-import * as process from 'process';
 import * as childProcess from 'child_process';
 import * as os from 'os';
 import chalk from 'chalk';

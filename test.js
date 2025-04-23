@@ -596,7 +596,8 @@ describe( 'Bump (Output)', () => {
 		it( 'should report all changes', async ( t, testDir ) => {
 			const pluginOptions = { search: { pattern: '([0-9.]+)', flags: 'g' }, out: [ testDir + '/versions.txt', testDir + '/VERSION' ] };
 			const container = await testDryRunBump( t, testDir, pluginOptions );
-			t.deepEqual( container.log.exec.mock.callCount(), 2, 'unexpected number of diffs were logged' );
+			const expectedNumberOfDiffLogMessages = 2;
+			t.deepEqual( container.log.exec.mock.callCount(), expectedNumberOfDiffLogMessages, 'unexpected number of diffs were logged' );
 			assertLogMessage( t, container.log.info, /Updating .*\/versions.txt/ );
 			assertLogMessage( t, container.log.exec, /-some: 1\.0\.0/ );
 			assertLogMessage( t, container.log.exec, /\+some: 1\.2\.3/ );
@@ -623,7 +624,8 @@ describe( 'Bump (Output)', () => {
 			await plugin.bump( '1.2.3' );
 			t.deepEqual( readFile( testDir + '/versions.txt' ), 'some: 1.0.0\nthis: 1.0.1\nother: 2.0.0\n' );
 			t.deepEqual( readFile( testDir + '/VERSION' ), '1.0.1' );
-			t.deepEqual( container.log.exec.mock.callCount(), 4, 'unexpected number of diffs were logged' );
+			const expectedNumberOfDiffLogMessages = 4;
+			t.deepEqual( container.log.exec.mock.callCount(), expectedNumberOfDiffLogMessages, 'unexpected number of diffs were logged' );
 			assertLogMessage( t, container.log.info, /Updating .*\/versions.txt/ );
 			assertLogMessage( t, container.log.exec, /.*line 1[\s\S]*1\.0\.0/ );
 			assertLogMessage( t, container.log.exec, /.*line 2[\s\S]*1\.0\.1/ );
