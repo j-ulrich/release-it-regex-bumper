@@ -92,7 +92,20 @@ const assertLogMessage = ( t, logType, messageRegEx, failMessage ) => {
 	if ( _.isNil( failMessage ) ) {
 		failMessage = 'Log output did not match ' + messageRegEx;
 	}
-	t.assert( logType.mock.calls.findIndex( call => messageRegEx.test( call.arguments[ 0 ] ) ) > -1, failMessage );
+	if ( logType.mock ) {
+		t.assert( logType.mock.calls.findIndex( call => messageRegEx.test( call.arguments[ 0 ] ) ) > -1, failMessage );
+	}
+	else {
+		t.assert( logType.args.findIndex( args => messageRegEx.test( args[ 0 ] ) ) > -1, failMessage );
+
+	}
+};
+
+const getLogCallCount = ( logType ) => {
+	if ( logType.mock ) {
+		return logType.mock.callCount();
+	}
+	return logType.args.length;
 };
 
 
@@ -277,7 +290,7 @@ describe( 'Bump (Output)', () => {
 			await plugin.bump( '1.2.3' );
 		} );
 		t.deepEqual( readFile( testDir + '/unrelated.txt' ), 'nothing to see here.' );
-		t.assert( container.log.warn.mock.callCount() === 1, 'No warning was logged' );
+		t.deepEqual( getLogCallCount( container.log.warn ), 1, 'No warning was logged' );
 		assertLogMessage( t, container.log.warn, /\/unrelated\.txt" did not change/, 'warning regarding unchanged file was not logged' );
 	} );
 
@@ -587,8 +600,8 @@ describe( 'Bump (Output)', () => {
 		it( 'should not write', async ( t, testDir ) => {
 			const pluginOptions = { out: testDir + '/versions.txt' };
 			const container = await testDryRunBump( t, testDir, pluginOptions );
-			t.deepEqual( container.log.warn.mock.callCount(), 0, `Unexpected warnings: ${container.log.warn.args}` );
-			t.deepEqual( container.log.exec.mock.callCount(), 1, 'no diff was logged' );
+			t.deepEqual( getLogCallCount( container.log.warn ), 0, `Unexpected warnings: ${container.log.warn.args}` );
+			t.deepEqual( getLogCallCount( container.log.exec ), 1, 'no diff was logged' );
 			assertLogMessage( t, container.log.exec, /-some: 1\.0\.0/ );
 			assertLogMessage( t, container.log.exec, /\+some: 1\.2\.3/ );
 		} );
@@ -597,7 +610,7 @@ describe( 'Bump (Output)', () => {
 			const pluginOptions = { search: { pattern: '([0-9.]+)', flags: 'g' }, out: [ testDir + '/versions.txt', testDir + '/VERSION' ] };
 			const container = await testDryRunBump( t, testDir, pluginOptions );
 			const expectedNumberOfDiffLogMessages = 2;
-			t.deepEqual( container.log.exec.mock.callCount(), expectedNumberOfDiffLogMessages, 'unexpected number of diffs were logged' );
+			t.deepEqual( getLogCallCount( container.log.exec ), expectedNumberOfDiffLogMessages, 'unexpected number of diffs were logged' );
 			assertLogMessage( t, container.log.info, /Updating .*\/versions.txt/ );
 			assertLogMessage( t, container.log.exec, /-some: 1\.0\.0/ );
 			assertLogMessage( t, container.log.exec, /\+some: 1\.2\.3/ );
@@ -613,7 +626,7 @@ describe( 'Bump (Output)', () => {
 		it( 'should warn in dry run if out file would not change', async ( t, testDir ) => {
 			const pluginOptions = { out: testDir + '/unrelated.txt' };
 			const container = await testDryRunBump( t, testDir, pluginOptions );
-			t.deepEqual( container.log.warn.mock.callCount(), 1, 'no warnings were logged' );
+			t.deepEqual( getLogCallCount( container.log.warn ), 1, 'no warnings were logged' );
 			assertLogMessage( t, container.log.warn, /\/unrelated\.txt" did not change/, 'warning regarding unchanged file was not logged' );
 		} );
 
@@ -625,7 +638,7 @@ describe( 'Bump (Output)', () => {
 			t.deepEqual( readFile( testDir + '/versions.txt' ), 'some: 1.0.0\nthis: 1.0.1\nother: 2.0.0\n' );
 			t.deepEqual( readFile( testDir + '/VERSION' ), '1.0.1' );
 			const expectedNumberOfDiffLogMessages = 4;
-			t.deepEqual( container.log.exec.mock.callCount(), expectedNumberOfDiffLogMessages, 'unexpected number of diffs were logged' );
+			t.deepEqual( getLogCallCount( container.log.exec ), expectedNumberOfDiffLogMessages, 'unexpected number of diffs were logged' );
 			assertLogMessage( t, container.log.info, /Updating .*\/versions.txt/ );
 			assertLogMessage( t, container.log.exec, /.*line 1[\s\S]*1\.0\.0/ );
 			assertLogMessage( t, container.log.exec, /.*line 2[\s\S]*1\.0\.1/ );
@@ -638,7 +651,7 @@ describe( 'Bump (Output)', () => {
 			const pluginOptions = { out: testDir + '/unrelated.txt' };
 			await testdouble.replaceEsm( 'diff', null, null );
 			const container = await testDryRunBump( t, testDir, pluginOptions );
-			t.deepEqual( container.log.warn.mock.callCount(), 1, 'no warnings were logged' );
+			t.deepEqual( getLogCallCount( container.log.warn ), 1, 'no warnings were logged' );
 			assertLogMessage( t, container.log.warn, /\/unrelated\.txt" did not change/, 'warning regarding unchanged file was not logged' );
 		} );
 

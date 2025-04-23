@@ -60,7 +60,7 @@
 		"c8": "^8.0.1",
 		"eslint": "^8.6.0",
 		"eslint-plugin-security": "^1.4.0",
-		"release-it": "^19.0.0",
+		"release-it": "^19.0.1",
 		"sinon": "^17 || ^18",
 		"temp": "^0.9.4",
 		"testdouble": "^3.16.4"
