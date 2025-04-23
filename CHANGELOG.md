@@ -4,7 +4,9 @@ This is the changelog of the release-it-regex-bumper plugin.
 This project adheres to [Semantic Versioning](https://semver.org).
 This changelog follows the [Keep a Changelog](https://keepachangelog.com) format.
 
+
 ---
+
 
 ## [Unreleased]
 
