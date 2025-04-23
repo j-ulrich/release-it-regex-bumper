@@ -8,7 +8,7 @@ This changelog follows the [Keep a Changelog](https://keepachangelog.com) format
 ---
 
 
-## [Unreleased]
+## [5.3.0] - 2025-04-24
 
 ### Added ###
 - Support for release-it version 19.x.
@@ -249,6 +249,7 @@ Initial release.
 
 
 
+[5.3.0]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/5.3.0
 [5.2.0]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/5.2.0
 [5.1.0]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/5.1.0
 [5.0.0]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/5.0.0
@@ -278,4 +279,4 @@ Initial release.
 
 <!--lint ignore no-unused-definitions-->
 
-[unreleased]: https://github.com/j-ulrich/release-it-regex-bumper/compare/5.2.0...main
+[unreleased]: https://github.com/j-ulrich/release-it-regex-bumper/compare/5.3.0...main
