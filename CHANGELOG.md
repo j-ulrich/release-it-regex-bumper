@@ -8,6 +8,15 @@ This changelog follows the [Keep a Changelog](https://keepachangelog.com) format
 ---
 
 
+## [Unreleased]
+
+### Security ###
+- Update dependencies to remove vulnerabilities.
+
+
+---
+
+
 ## [5.3.0] - 2025-04-24
 
 ### Added ###
