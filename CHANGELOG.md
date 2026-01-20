@@ -8,7 +8,7 @@ This changelog follows the [Keep a Changelog](https://keepachangelog.com) format
 ---
 
 
-## [Unreleased]
+## [5.3.1] - 2026-01-21
 
 ### Security ###
 - Update dependencies to remove vulnerabilities.
@@ -258,6 +258,7 @@ Initial release.
 
 
 
+[5.3.1]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/5.3.1
 [5.3.0]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/5.3.0
 [5.2.0]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/5.2.0
 [5.1.0]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/5.1.0
@@ -288,4 +289,4 @@ Initial release.
 
 <!--lint ignore no-unused-definitions-->
 
-[unreleased]: https://github.com/j-ulrich/release-it-regex-bumper/compare/5.3.0...main
+[unreleased]: https://github.com/j-ulrich/release-it-regex-bumper/compare/5.3.1...main
