@@ -10,6 +10,9 @@ This changelog follows the [Keep a Changelog](https://keepachangelog.com) format
 
 ## [Unreleased]
 
+### Added ###
+- Support for release-it version 20.x.
+
 ### Changed ###
 - Updated date-fns to version 3.0.0 or later.
 
