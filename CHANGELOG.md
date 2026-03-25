@@ -8,6 +8,18 @@ This changelog follows the [Keep a Changelog](https://keepachangelog.com) format
 ---
 
 
+## [Unreleased]
+
+### Changed ###
+- Updated date-fns to version 3.0.0 or later.
+
+### Security ###
+- Update dependencies to remove vulnerabilities.
+
+
+---
+
+
 ## [5.3.1] - 2026-01-21
 
 ### Security ###

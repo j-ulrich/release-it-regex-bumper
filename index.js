@@ -8,8 +8,7 @@ import _ from 'lodash';
 import XRegExp from 'xregexp';
 import semver from 'semver';
 import { Plugin } from 'release-it';
-import dateFormat from 'date-fns/format/index.js';
-import dateFormatIso from 'date-fns/formatISO/index.js';
+import { format as dateFormat, formatISO as dateFormatISO } from 'date-fns';
 
 
 const readFile = promisify( fsReadFile );
@@ -408,7 +407,7 @@ function prepareReplacement( replace, context ) {
 		latestTag: context.latestTag || '',
 		now: ( format ) => {
 			if ( _.isNil( format ) ) {
-				return dateFormatIso( context.executionTime );
+				return dateFormatISO( context.executionTime );
 			}
 			return dateFormat( context.executionTime, format );
 		},
