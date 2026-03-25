@@ -25,9 +25,9 @@ jobs:
                       releaseIt: 19
 
         steps:
-        - uses: actions/checkout@v4
+        - uses: actions/checkout@v6
         - name: Use Node.js v${{ matrix.versions.node }}
-          uses: actions/setup-node@v4
+          uses: actions/setup-node@v6
           with:
               node-version: ${{ matrix.versions.node }}
         - run: npm ci
@@ -41,8 +41,8 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
-        - uses: actions/checkout@v4
-        - uses: actions/setup-node@v4
+        - uses: actions/checkout@v6
+        - uses: actions/setup-node@v6
           with:
               node-version: 22.x
         - run: npm ci
@@ -61,8 +61,8 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
-        - uses: actions/checkout@v4
-        - uses: actions/setup-node@v4
+        - uses: actions/checkout@v6
+        - uses: actions/setup-node@v6
           with:
               node-version: 22.x
         - run: npm ci
@@ -73,8 +73,8 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
-        - uses: actions/checkout@v4
-        - uses: actions/setup-node@v4
+        - uses: actions/checkout@v6
+        - uses: actions/setup-node@v6
           with:
               node-version: 22.x
         - run: npm ci
