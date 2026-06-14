@@ -28,6 +28,12 @@ const defaultSearchRegex = XRegExp( '{{semver}}' );
 const defaultVersionCaptureGroup = null;
 const defaultReplace = '{{version}}';
 
+const StrictMode = {
+	Off: 'off',
+	Warn: 'warn',
+	Error: 'error',
+};
+
 
 
 export default class RegExBumper extends Plugin {
@@ -74,6 +80,7 @@ export default class RegExBumper extends Plugin {
 			search: globalSearchOptions,
 			replace: globalReplace,
 			encoding: globalEncoding,
+			strict: globalStrict,
 		} = this.options;
 		const { isDryRun } = this.config;
 		if ( _.isNil( outOptions ) ) {
@@ -92,7 +99,7 @@ export default class RegExBumper extends Plugin {
 
 		/* eslint-disable no-await-in-loop */
 		for ( const outOption of expandedOutOptions ) {
-			const { files, encoding, searchRegex, flags: searchFlags, replace } = outOption;
+			const { files, encoding, searchRegex, flags: searchFlags, replace, strict } = outOption;
 
 			const effectiveEncoding = firstNotNil( encoding, globalEncoding, defaultEncoding );
 			const effectiveSearchRegex = mergeSearchRegExes(
@@ -109,15 +116,19 @@ export default class RegExBumper extends Plugin {
 
 				const fileContent = await readFile( file, { encoding: effectiveEncoding } );
 
+				const strictMode = firstNotNil( strict, globalStrict );
+
 				if ( isDryRun ) {
 					await this.loadDiff();
+					const processedFileContent = replaceVersion( fileContent, replacedSearchRegex,
+					                                             effectiveReplacement, context );
+					this.evaluateFileChanges( fileContent, processedFileContent,
+					                          replacedSearchRegex, strictMode, file );
 					if ( this.diff ) {
-						const processedFileContent = replaceVersion( fileContent, replacedSearchRegex,
-						                                             effectiveReplacement, context );
-						await this.diffAndReport( fileContent, processedFileContent, file );
+						await this.diffAndReport( fileContent, processedFileContent, strictMode, file );
 						continue;
 					}
-					await this.searchAndReport( fileContent, replacedSearchRegex, file );
+					await this.searchAndReport( fileContent, processedFileContent, replacedSearchRegex, file );
 					continue;
 				}
 
@@ -128,10 +139,8 @@ export default class RegExBumper extends Plugin {
 					context
 				);
 
-				if ( processedFileContent === fileContent ) {
-					this.warnNoFileChange( file );
-				}
-				else {
+				if ( this.evaluateFileChanges( fileContent, processedFileContent,
+					                           replacedSearchRegex, strictMode, file ) ) {
 					await writeFile( file, processedFileContent, effectiveEncoding );
 				}
 			}
@@ -164,9 +173,6 @@ export default class RegExBumper extends Plugin {
 			}
 		);
 
-		if ( _.isEmpty( diffResult.hunks ) ) {
-			this.warnNoFileChange( filePath );
-		}
 		diffResult.hunks.forEach( ( hunk ) => {
 			this.log.exec(
 				`Replacing at line ${hunk.oldStart}:\n` +
@@ -187,9 +193,8 @@ export default class RegExBumper extends Plugin {
 		} );
 	}
 
-	searchAndReport( content, searchRegex, filePath ) {
+	searchAndReport( content, processedContent, searchRegex ) {
 		const { isDryRun } = this.config;
-		let foundMatch = false;
 		const lineCounter = new LineCounter( content );
 		XRegExp.forEach( content, searchRegex, ( match ) => {
 			const matchText = match[0];
@@ -200,11 +205,27 @@ export default class RegExBumper extends Plugin {
 					matchText,
 				{ isDryRun }
 			);
-			foundMatch = true;
 		} );
-		if ( !foundMatch ) {
-			this.warnNoFileChange( filePath );
+	}
+
+	evaluateFileChanges( originalFileContent, processedFileContent, searchRegex, strictMode, filePath ) {
+		const fileChanged = originalFileContent !== processedFileContent;
+		if ( fileChanged ) {
+			return fileChanged;
 		}
+		if ( strictMode && strictMode !== StrictMode.Off ) {
+			const match = XRegExp.match( originalFileContent, searchRegex, 'one' );
+			if ( match === null ) {
+				const message = `No matches found in file "${filePath}"!`;
+				if ( strictMode === StrictMode.Error ) {
+					throw new Error( message );
+				}
+				this.log.warn( message );
+				return fileChanged;
+			}
+		}
+		this.warnNoFileChange( filePath );
+		return fileChanged;
 	}
 
 	warnNoFileChange( filePath ) {

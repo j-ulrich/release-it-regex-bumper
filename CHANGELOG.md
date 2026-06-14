@@ -10,6 +10,9 @@ This changelog follows the [Keep a Changelog](https://keepachangelog.com) format
 
 ## [Unreleased]
 
+### Added ###
+- [[#16]] Strict mode
+
 ### Security ###
 - Update dependencies to remove vulnerabilities.
 
