@@ -23,17 +23,17 @@ const placeholderRegex = XRegExp( '\\{\\{(?<placeholder>(?:[a-z][a-z0-9_]*|\\{))
 const prereleasePrefix = '-';
 const buildPrefix = '+';
 
-const defaultEncoding = 'utf-8';
-const defaultSearchRegex = XRegExp( '{{semver}}' );
-const defaultVersionCaptureGroup = null;
-const defaultReplace = '{{version}}';
-
 const StrictMode = {
 	Off: 'off',
 	Warn: 'warn',
 	Error: 'error',
 };
 
+const defaultEncoding = 'utf-8';
+const defaultSearchRegex = XRegExp( '{{semver}}' );
+const defaultVersionCaptureGroup = null;
+const defaultReplace = '{{version}}';
+const defaultStrictMode = true;
 
 
 export default class RegExBumper extends Plugin {
@@ -107,6 +107,7 @@ export default class RegExBumper extends Plugin {
 				[ searchFlags, globalSearchFlags ]
 			);
 			const effectiveReplacement = firstNotNil( replace, globalReplace, defaultReplace );
+			const effectiveStrictMode = firstNotNil( strict, globalStrict, defaultStrictMode );
 
 			const replacedSearchRegex = prepareSearch( effectiveSearchRegex, context );
 
@@ -116,16 +117,14 @@ export default class RegExBumper extends Plugin {
 
 				const fileContent = await readFile( file, { encoding: effectiveEncoding } );
 
-				const strictMode = firstNotNil( strict, globalStrict );
-
 				if ( isDryRun ) {
 					await this.loadDiff();
 					const processedFileContent = replaceVersion( fileContent, replacedSearchRegex,
 					                                             effectiveReplacement, context );
 					this.evaluateFileChanges( fileContent, processedFileContent,
-					                          replacedSearchRegex, strictMode, file );
+					                          replacedSearchRegex, effectiveStrictMode, file );
 					if ( this.diff ) {
-						await this.diffAndReport( fileContent, processedFileContent, strictMode, file );
+						await this.diffAndReport( fileContent, processedFileContent, effectiveStrictMode, file );
 						continue;
 					}
 					await this.searchAndReport( fileContent, processedFileContent, replacedSearchRegex, file );
@@ -140,7 +139,7 @@ export default class RegExBumper extends Plugin {
 				);
 
 				if ( this.evaluateFileChanges( fileContent, processedFileContent,
-					                           replacedSearchRegex, strictMode, file ) ) {
+					                           replacedSearchRegex, effectiveStrictMode, file ) ) {
 					await writeFile( file, processedFileContent, effectiveEncoding );
 				}
 			}
@@ -307,13 +306,13 @@ function parseOutOptions( options ) {
 				replace: null,
 			};
 		}
-		const { encoding, replace } = option;
+		const { encoding, replace, strict } = option;
 		const { searchRegex, flags } = parseSearchOptions( option.search );
 		const files = option.files ? _.castArray( option.files ) : [];
 		if ( option.file ) {
 			files.unshift( option.file );
 		}
-		return { files, encoding, searchRegex, flags, replace };
+		return { files, encoding, searchRegex, flags, replace, strict };
 	} );
 }
 

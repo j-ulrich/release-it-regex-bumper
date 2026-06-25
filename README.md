@@ -73,7 +73,7 @@ example, the pattern `\d+` needs to be written as `"\\d+"` inside JSON.
 
 ### `in` ###
 
-**Type:** `string|object`    
+**Type:** `string | object`    
 **Default:** `null`
 
 The `in` option defines where and how to read the current version. If this option is defined and not
@@ -102,7 +102,7 @@ If this option is `null` or not defined, the [global `encoding`](#encoding) opti
 
 ### `in.search` ###
 
-**Type:** `string|object`    
+**Type:** `string | object`    
 **Default:** `null`
 
 Defines the regular expression to find the version inside the `in.file`.
@@ -147,7 +147,7 @@ If this option is `null` or not defined, the [global `search.flags`](#searchflag
 
 ### `in.search.versionCaptureGroup` ###
 
-**Type:** `integer|string`    
+**Type:** `integer | string`    
 **Default:** `null`
 
 Defines the capture group from the `in.search.pattern` which matches the version. If the
@@ -165,7 +165,7 @@ capturing group with index 1 is used if it exists. Else the whole match is used.
 
 ### `out` ###
 
-**Type:** `string|object|array<string|object>`    
+**Type:** `string | object | array<string | object>`    
 **Default:** `null`
 
 The `out` option defines where and how to write the new version. If defined and not `null`, the
@@ -208,7 +208,7 @@ If both, this option and `out.files` are given, both are processed.
 
 ### `out.files` ###
 
-**Type:** `string|array<string>`    
+**Type:** `string | array<string>`    
 **Default:** `null` but either this option or `out.file` (or both) must contain a value    
 **Since:** 1.1.0
 
@@ -241,7 +241,7 @@ If this option is `null` or not defined, the [global `encoding`](#encoding) opti
 
 ### `out.search` ###
 
-**Type:** `string|object`    
+**Type:** `string | object`    
 **Default:** `null`
 
 Defines the regular expression to find the text which is replaced with the new version inside
@@ -357,9 +357,25 @@ The template string also supports a set of placeholders:
 The placeholders are replaced before the template string is used in the search and replace and thus
 before the capturing group references are replaced.
 
+### `out.strict` ###
+
+**Type:** `boolean | "off" | "warn" | "error"`    
+**Default:** `null`
+
+Defines if an output file without a match should issue a warning or even raise an exception.
+
+If this option is `false` or `"off"`, no warning or error is raised when there is no match of the search pattern in an output file.
+
+If this option is `true` or `"warn", a warning is logged if there is no match of the search pattern in an output file.
+
+If this options is `"error"`, an `Error` is thrown if there is no match of the search pattern in an output file.
+
+If this option is `null` or not defined, the [global `strict`](#strict) is used.
+
+
 ### `search` ###
 
-**Type:** `string|object`    
+**Type:** `string | object`    
 **Default:** An object with the default values as described below.
 
 Defines the default regular expression to be used when no `in.search` or `out.search` is given.
@@ -396,7 +412,7 @@ The default flags for the search pattern which are used when `in.search.flags` o
 
 ### `search.versionCaptureGroup` ###
 
-**Type:** `integer|string`    
+**Type:** `integer | string`    
 **Default:** `null`
 
 Defines the default capture group which is used when `in.search.versionCaptureGroup` is `null` or
@@ -422,6 +438,15 @@ If this option is not defined or set to `null`, the default value is used.
 
 The default encoding used when `in.encoding` or `out.encoding` is `null` or not defined. The supported
 encodings are the ones supported by Node's `fs` module.
+
+If this option is not defined or set to `null`, the default value is used.
+
+### `strict` ###
+
+**Type:** `boolean | "off" | "warn" | "error"`    
+**Default:** `true`
+
+The default strict mode used when `out.strict` is `null` or not defined.
 
 If this option is not defined or set to `null`, the default value is used.
 
