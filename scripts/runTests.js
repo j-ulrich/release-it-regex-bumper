@@ -48,7 +48,6 @@ if ( matchExpressions.length > 0 ) {
 		parameters.push( '--match' );
 		parameters.push( matchExpr );
 	} );
-	parameters.push( ...matchExpressions );
 }
 const matchEqualParams = process.argv.filter( param => param.startsWith( '--match=' ) );
 if ( matchEqualParams.length > 0 ) {
