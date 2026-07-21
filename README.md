@@ -362,13 +362,13 @@ before the capturing group references are replaced.
 **Type:** `boolean | "off" | "warn" | "error"`    
 **Default:** `null`
 
-Defines if an output file without a match should issue a warning or even raise an exception.
+Defines if an output file without a search pattern match should issue an explicit warning or even raise an exception.
 
-If this option is `false` or `"off"`, no warning or error is raised when there is no match of the search pattern in an output file.
+If this option is `true` or `"warn", a warning is logged if the search pattern was not found in an output file.
 
-If this option is `true` or `"warn", a warning is logged if there is no match of the search pattern in an output file.
+If this options is `"error"`, an `Error` is thrown and the release is aborted if there is no match of the search pattern in an output file.
 
-If this options is `"error"`, an `Error` is thrown if there is no match of the search pattern in an output file.
+If this option is `false` or `"off"`, a warning is stilled logged because the output file was not changed. However, this could mean that either the search pattern did not match or that the inserted replacement was the same as the existing content.
 
 If this option is `null` or not defined, the [global `strict`](#strict) is used.
 
