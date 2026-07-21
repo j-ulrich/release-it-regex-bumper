@@ -127,7 +127,7 @@ export default class RegExBumper extends Plugin {
 						await this.diffAndReport( fileContent, processedFileContent, effectiveStrictMode, file );
 						continue;
 					}
-					await this.searchAndReport( fileContent, processedFileContent, replacedSearchRegex, file );
+					await this.searchAndReport( fileContent, replacedSearchRegex );
 					continue;
 				}
 
@@ -192,7 +192,7 @@ export default class RegExBumper extends Plugin {
 		} );
 	}
 
-	searchAndReport( content, processedContent, searchRegex ) {
+	searchAndReport( content, searchRegex ) {
 		const { isDryRun } = this.config;
 		const lineCounter = new LineCounter( content );
 		XRegExp.forEach( content, searchRegex, ( match ) => {
