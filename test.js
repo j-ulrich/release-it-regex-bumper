@@ -665,12 +665,21 @@ describe( 'Bump (Output)', () => {
 			assertNoMatchesWarning( 'versions.txt', t, container );
 		} );
 
-		it( 'should throw if there was no match and global strict is "error"', async ( t, testDir ) => {
-			const pluginOptions = { out: { file: testDir + '/versions.txt', search: 'not-in-file' }, strict: 'error' };
+		it( 'should throw if there was no match and global strict is "errorIfNoMatch"', async ( t, testDir ) => {
+			const pluginOptions = { out: { file: testDir + '/versions.txt', search: 'not-in-file' }, strict: 'errorIfNoMatch' };
 			const { plugin } = await setupPlugin( pluginOptions );
 			await t.throwsAsync( async () => {
 				await plugin.bump( '1.2.3' );
 			}, { message: /No matches found in file ".*\/versions.txt"!/ } );
+			t.deepEqual( readFile( testDir + '/versions.txt' ), originalVersionTxtContent );
+		} );
+
+		it( 'should throw if file did not change and global strict is "errorIfNoChange"', async ( t, testDir ) => {
+			const pluginOptions = { out: { file: testDir + '/versions.txt', search: '1\\.0\\.1' }, strict: 'errorIfNoChange' };
+			const { plugin } = await setupPlugin( pluginOptions );
+			await t.throwsAsync( async () => {
+				await plugin.bump( '1.0.1' );
+			}, { message: /File ".*\/versions.txt" did not change!/ } );
 			t.deepEqual( readFile( testDir + '/versions.txt' ), originalVersionTxtContent );
 		} );
 
@@ -707,7 +716,7 @@ describe( 'Bump (Output)', () => {
 			} );
 
 			it( 'should throw if out config increases strict mode', async ( t, testDir ) => {
-				const pluginOptions = { out: { file: testDir + '/versions.txt', search: 'not-in-file', strict: 'error' }, strict: true };
+				const pluginOptions = { out: { file: testDir + '/versions.txt', search: 'not-in-file', strict: 'errorIfNoMatch' }, strict: true };
 				const { plugin } = await setupPlugin( pluginOptions );
 				await t.throwsAsync( async () => {
 					await plugin.bump( '1.2.3' );

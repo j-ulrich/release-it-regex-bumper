@@ -359,14 +359,16 @@ before the capturing group references are replaced.
 
 ### `out.strict` ###
 
-**Type:** `boolean | "off" | "warn" | "error"`    
+**Type:** `boolean | "off" | "warn" | "errorIfNoMatch" | "errorIfNoChange"`    
 **Default:** `null`
 
 Defines if an output file without a search pattern match should issue an explicit warning or even raise an exception.
 
 If this option is `true` or `"warn", a warning is logged if the search pattern was not found in an output file or if the file was not changed by this output configuration.
 
-If this options is `"error"`, an `Error` is thrown and the release is aborted if there is no match of the search pattern in an output file.
+If this options is `"errorIfNoMatch"`, an `Error` is thrown and the release is aborted if there is no match of the search pattern in an output file.
+
+If this options is `"errorIfNoChange"`, an `Error` is thrown and the release is aborted if the output file was not changed by this output configuration.
 
 If this option is `false` or `"off"`, no warning is logged if the search pattern did not match or the file did not change.
 

@@ -26,7 +26,8 @@ const buildPrefix = '+';
 const StrictMode = {
 	Off: 'off',
 	Warn: 'warn',
-	Error: 'error',
+	ErrorIfNoMatch: 'errorIfNoMatch',
+	ErrorIfNoChange: 'errorIfNoChange',
 };
 
 const defaultEncoding = 'utf-8';
@@ -216,13 +217,17 @@ export default class RegExBumper extends Plugin {
 			const match = XRegExp.match( originalFileContent, searchRegex, 'one' );
 			if ( match === null ) {
 				const message = `No matches found in file "${filePath}"!`;
-				if ( strictMode === StrictMode.Error ) {
+				if ( strictMode === StrictMode.ErrorIfNoMatch || strictMode === StrictMode.ErrorIfNoChange ) {
 					throw new Error( message );
 				}
 				this.log.warn( message );
 				return fileChanged;
 			}
-			this.log.warn( `File "${filePath}" did not change!` );
+			const message = `File "${filePath}" did not change!`;
+			if ( strictMode === StrictMode.ErrorIfNoChange ) {
+				throw new Error( message );
+			}
+			this.log.warn( message );
 		}
 		return fileChanged;
 	}
