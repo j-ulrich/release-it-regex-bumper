@@ -222,13 +222,9 @@ export default class RegExBumper extends Plugin {
 				this.log.warn( message );
 				return fileChanged;
 			}
+			this.log.warn( `File "${filePath}" did not change!` );
 		}
-		this.warnNoFileChange( filePath );
 		return fileChanged;
-	}
-
-	warnNoFileChange( filePath ) {
-		this.log.warn( `File "${filePath}" did not change!` );
 	}
 
 }

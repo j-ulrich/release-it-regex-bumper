@@ -109,6 +109,43 @@ const getLogCallCount = ( logType ) => {
 	return logType.args.length;
 };
 
+const getLogArgs = ( logType ) => {
+	if ( logType.mock ) {
+		return logType.mock.calls.map( call => call.arguments );
+	}
+	return logType.args;
+};
+
+const assertNoWarnings = ( t, container ) => {
+	if ( getLogCallCount( container.log.warn ) > 0 ) {
+		t.fail( 'Unexpected warning(s) were logged:\n' + jsonStringify( getLogArgs( container.log.warn ) ) );
+	}
+};
+
+const assertNoErrors = ( t, container ) => {
+	if ( getLogCallCount( container.log.error ) > 0 ) {
+		t.fail( 'Unexpected error(s) were logged:\n' + jsonStringify( getLogArgs( container.log.error ) ) );
+	}
+};
+
+const assertNoMatchesWarning = ( fileName, t, container ) => {
+	t.deepEqual( getLogCallCount( container.log.warn ), 1, 'No warning was logged' );
+	// eslint-disable-next-line security/detect-non-literal-regexp
+	assertLogMessage( t, container.log.warn, new RegExp( `No matches found in file ".*\\/${_.escapeRegExp( fileName )}"!` ), 'warning regarding no match in file was not logged' );
+};
+
+const assertNoChangeWarning = ( fileName, t, container ) => {
+	t.deepEqual( getLogCallCount( container.log.warn ), 1, 'No warning was logged' );
+	// eslint-disable-next-line security/detect-non-literal-regexp
+	assertLogMessage( t, container.log.warn, new RegExp( `File ".*\\/${_.escapeRegExp( fileName )}" did not change!` ), 'warning regarding unchanged file was not logged' );
+};
+
+
+const DEFAULT_INDENTATION = 4;
+function jsonStringify( obj, indentation = DEFAULT_INDENTATION ) {
+	return JSON.stringify( obj, null, indentation );
+}
+
 
 //####### GetLatestVersion (Input) Tests #######
 
@@ -261,9 +298,11 @@ describe( 'GetLatestVersion (Input)', () => {
 describe( 'Bump (Output)', () => {
 
 	const testBump = async ( t, testDir, pluginOptions, expectedContent, newVersion = '1.2.3' ) => {
-		const { plugin } = await setupPlugin( pluginOptions );
+		const { plugin, container } = await setupPlugin( pluginOptions );
 		await plugin.bump( newVersion );
 		t.deepEqual( readFile( testDir + '/versions.txt' ), expectedContent );
+		assertNoWarnings( t, container );
+		assertNoErrors( t, container );
 	};
 
 	it( 'should write version to file', async ( t, testDir ) => {
@@ -283,18 +322,6 @@ describe( 'Bump (Output)', () => {
 			await plugin.bump( '1.2.3' );
 		} );
 	} );
-
-	it( 'should warn if out file did not change', async ( t, testDir ) => {
-		const pluginOptions = { out: testDir + '/unrelated.txt', strict: false };
-		const { plugin, container } = await setupPlugin( pluginOptions );
-		await t.notThrowsAsync( async () => {
-			await plugin.bump( '1.2.3' );
-		} );
-		t.deepEqual( readFile( testDir + '/unrelated.txt' ), 'nothing to see here.' );
-		t.deepEqual( getLogCallCount( container.log.warn ), 1, 'No warning was logged' );
-		assertLogMessage( t, container.log.warn, /\/unrelated\.txt" did not change/, 'warning regarding unchanged file was not logged' );
-	} );
-
 
 	const testBumpThisVersion = async ( t, testDir, pluginOptions ) => {
 		await testBump( t, testDir, pluginOptions, 'some: 1.0.0\nthis: 1.2.3\nother: 2.0.0\n' );
@@ -480,7 +507,10 @@ describe( 'Bump (Output)', () => {
 			const pluginOptions = { latestVersion: '1.0.1', out: { file: testDir + '/versions.txt',
 				search: '{{newVersion}}' } };
 			writeFile( testDir + '/versions.txt', 'some: 1.0.0\nthis: 1.2.3\nother: 2.0.0\n' );
-			await testBumpThisVersion( t, testDir, pluginOptions );
+			const { plugin, container } = await setupPlugin( pluginOptions );
+			await plugin.bump( '1.2.3' );
+			t.deepEqual( readFile( testDir + '/versions.txt' ), 'some: 1.0.0\nthis: 1.2.3\nother: 2.0.0\n' );
+			assertNoChangeWarning( 'versions.txt', t, container );
 		} );
 
 		it( 'should find the tag', async ( t, testDir ) => {
@@ -601,29 +631,38 @@ describe( 'Bump (Output)', () => {
 			return container;
 		};
 
-		const assertNoMatchesLogMessage = ( t, container ) => {
-			t.deepEqual( getLogCallCount( container.log.warn ), 1, 'No warning was logged' );
-			assertLogMessage( t, container.log.warn, /No matches found in file ".*\/versions.txt"!/ );
-		};
-
-		const assertNoChangeLogMessage = ( t, container ) => {
-			t.deepEqual( getLogCallCount( container.log.warn ), 1, 'No warning was logged' );
-			assertLogMessage( t, container.log.warn, /File ".*\/versions.txt" did not change!/ );
+		const testBumpWithoutChange = async ( t, testDir, globalStrictMode, outConfigStrictMode ) => {
+			const pluginOptions = { out: { file: testDir + '/versions.txt', search: '1\\.0\\.1' } };
+			if ( globalStrictMode !== undefined ) {
+				pluginOptions.strict = globalStrictMode;
+			}
+			if ( outConfigStrictMode !== undefined ) {
+				pluginOptions.out.strict = outConfigStrictMode;
+			}
+			const { plugin, container } = await setupPlugin( pluginOptions );
+			await plugin.bump( '1.0.1' );
+			t.deepEqual( readFile( testDir + '/versions.txt' ), originalVersionTxtContent );
+			return container;
 		};
 
 		it( 'should warn if there was no match and global strict is true', async ( t, testDir ) => {
 			const container = await testBumpWithoutMatch( t, testDir, true );
-			assertNoMatchesLogMessage( t, container );
+			assertNoMatchesWarning( 'versions.txt', t, container );
+		} );
+
+		it( 'should warn if there was no change and global strict is true', async ( t, testDir ) => {
+			const container = await testBumpWithoutChange( t, testDir, true );
+			assertNoChangeWarning( 'versions.txt', t, container );
 		} );
 
 		it( 'should warn if there was no match and out config strict is true', async ( t, testDir ) => {
 			const container = await testBumpWithoutMatch( t, testDir, undefined, true );
-			assertNoMatchesLogMessage( t, container );
+			assertNoMatchesWarning( 'versions.txt', t, container );
 		} );
 
 		it( 'should warn if there was no match and global strict is "warn"', async ( t, testDir ) => {
 			const container = await testBumpWithoutMatch( t, testDir, 'warn' );
-			assertNoMatchesLogMessage( t, container );
+			assertNoMatchesWarning( 'versions.txt', t, container );
 		} );
 
 		it( 'should throw if there was no match and global strict is "error"', async ( t, testDir ) => {
@@ -637,34 +676,34 @@ describe( 'Bump (Output)', () => {
 
 		it( 'should not warn if there was no match and global strict is false', async ( t, testDir ) => {
 			const container = await testBumpWithoutMatch( t, testDir, false );
-			assertNoChangeLogMessage( t, container );
+			assertNoWarnings( t, container );
 		} );
 
 		it( 'should not warn if there was no match and out config strict is false', async ( t, testDir ) => {
 			const container = await testBumpWithoutMatch( t, testDir, undefined, false );
-			assertNoChangeLogMessage( t, container );
+			assertNoWarnings( t, container );
 		} );
 
 		it( 'should not warn if there was no match and global strict is "off"', async ( t, testDir ) => {
 			const container = await testBumpWithoutMatch( t, testDir, 'off' );
-			assertNoChangeLogMessage( t, container );
+			assertNoWarnings( t, container );
 		} );
 
 		describe( 'override', () => {
 
 			it( 'should warn if out config enables strict', async ( t, testDir ) => {
 				const container = await testBumpWithoutMatch( t, testDir, false, true );
-				assertNoMatchesLogMessage( t, container );
+				assertNoMatchesWarning( 'versions.txt', t, container );
 			} );
 
 			it( 'should warn if out config reduces strict mode', async ( t, testDir ) => {
 				const container = await testBumpWithoutMatch( t, testDir, 'error', true );
-				assertNoMatchesLogMessage( t, container );
+				assertNoMatchesWarning( 'versions.txt', t, container );
 			} );
 
 			it( 'should not warn if out config disables strict', async ( t, testDir ) => {
 				const container = await testBumpWithoutMatch( t, testDir, true, false );
-				assertNoChangeLogMessage( t, container );
+				assertNoWarnings( t, container );
 			} );
 
 			it( 'should throw if out config increases strict mode', async ( t, testDir ) => {
@@ -719,36 +758,63 @@ describe( 'Bump (Output)', () => {
 			assertLogMessage( t, container.log.exec, /\+1\.2\.3/ );
 		} );
 
-		it( 'should warn in dry run if out file would not change', async ( t, testDir ) => {
-			const pluginOptions = { out: testDir + '/unrelated.txt', strict: false };
+		it( 'should warn if there was no match in file', async ( t, testDir ) => {
+			const pluginOptions = { out: testDir + '/unrelated.txt' };
 			const container = await testDryRunBump( t, testDir, pluginOptions );
-			t.deepEqual( getLogCallCount( container.log.warn ), 1, 'no warnings were logged' );
-			assertLogMessage( t, container.log.warn, /\/unrelated\.txt" did not change/, 'warning regarding unchanged file was not logged' );
+			assertNoMatchesWarning( 'unrelated.txt', t, container );
 		} );
 
-		it( 'should report all changes in dry run without diff', async ( t, testDir ) => {
-			const pluginOptions = { search: { pattern: '([0-9.]+)', flags: 'g' }, out: [ testDir + '/versions.txt', testDir + '/VERSION' ] };
-			await testdouble.replaceEsm( 'diff', null, null );
+		it( 'should warn if out file would not change', async ( t, testDir ) => {
+			const pluginOptions = { out: testDir + '/VERSION' };
 			const { plugin, container } = await setupPlugin( pluginOptions, { 'dry-run': true } );
-			await plugin.bump( '1.2.3' );
+			await t.notThrowsAsync( async () => {
+				await plugin.bump( '1.0.1' );
+			} );
 			t.deepEqual( readFile( testDir + '/versions.txt' ), originalVersionTxtContent );
 			t.deepEqual( readFile( testDir + '/VERSION' ), '1.0.1' );
-			const expectedNumberOfDiffLogMessages = 4;
-			t.deepEqual( getLogCallCount( container.log.exec ), expectedNumberOfDiffLogMessages, 'unexpected number of diffs were logged' );
-			assertLogMessage( t, container.log.info, /Updating .*\/versions.txt/ );
-			assertLogMessage( t, container.log.exec, /.*line 1[\s\S]*1\.0\.0/ );
-			assertLogMessage( t, container.log.exec, /.*line 2[\s\S]*1\.0\.1/ );
-			assertLogMessage( t, container.log.exec, /.*line 3[\s\S]*2\.0\.0/ );
-			assertLogMessage( t, container.log.info, /Updating .*\/VERSION/ );
-			assertLogMessage( t, container.log.exec, /.*line 1[\s\S]*1\.0\.1/ );
+			t.deepEqual( readFile( testDir + '/unrelated.txt' ), 'nothing to see here.' );
+			assertNoChangeWarning( 'VERSION', t, container );
 		} );
 
-		it( 'should warn in dry run without diff if out file would not change', async ( t, testDir ) => {
-			const pluginOptions = { out: testDir + '/unrelated.txt', strict: false };
-			await testdouble.replaceEsm( 'diff', null, null );
-			const container = await testDryRunBump( t, testDir, pluginOptions );
-			t.deepEqual( getLogCallCount( container.log.warn ), 1, 'no warnings were logged' );
-			assertLogMessage( t, container.log.warn, /\/unrelated\.txt" did not change/, 'warning regarding unchanged file was not logged' );
+		describe( 'without diff', () => {
+
+			it( 'should report all changes', async ( t, testDir ) => {
+				const pluginOptions = { search: { pattern: '([0-9.]+)', flags: 'g' }, out: [ testDir + '/versions.txt', testDir + '/VERSION' ] };
+				await testdouble.replaceEsm( 'diff', null, null );
+				const { plugin, container } = await setupPlugin( pluginOptions, { 'dry-run': true } );
+				await plugin.bump( '1.2.3' );
+				t.deepEqual( readFile( testDir + '/versions.txt' ), originalVersionTxtContent );
+				t.deepEqual( readFile( testDir + '/VERSION' ), '1.0.1' );
+				const expectedNumberOfDiffLogMessages = 4;
+				t.deepEqual( getLogCallCount( container.log.exec ), expectedNumberOfDiffLogMessages, 'unexpected number of diffs were logged' );
+				assertLogMessage( t, container.log.info, /Updating .*\/versions.txt/ );
+				assertLogMessage( t, container.log.exec, /.*line 1[\s\S]*1\.0\.0/ );
+				assertLogMessage( t, container.log.exec, /.*line 2[\s\S]*1\.0\.1/ );
+				assertLogMessage( t, container.log.exec, /.*line 3[\s\S]*2\.0\.0/ );
+				assertLogMessage( t, container.log.info, /Updating .*\/VERSION/ );
+				assertLogMessage( t, container.log.exec, /.*line 1[\s\S]*1\.0\.1/ );
+			} );
+
+			it( 'should warn if there was no match in file', async ( t, testDir ) => {
+				const pluginOptions = { out: testDir + '/unrelated.txt' };
+				await testdouble.replaceEsm( 'diff', null, null );
+				const container = await testDryRunBump( t, testDir, pluginOptions );
+				assertNoMatchesWarning( 'unrelated.txt', t, container );
+			} );
+
+			it( 'should warn if out file would not change', async ( t, testDir ) => {
+				const pluginOptions = { out: testDir + '/VERSION' };
+				await testdouble.replaceEsm( 'diff', null, null );
+				const { plugin, container } = await setupPlugin( pluginOptions, { 'dry-run': true } );
+				await t.notThrowsAsync( async () => {
+					await plugin.bump( '1.0.1' );
+				} );
+				t.deepEqual( readFile( testDir + '/versions.txt' ), originalVersionTxtContent );
+				t.deepEqual( readFile( testDir + '/VERSION' ), '1.0.1' );
+				t.deepEqual( readFile( testDir + '/unrelated.txt' ), 'nothing to see here.' );
+				assertNoChangeWarning( 'VERSION', t, container );
+			} );
+
 		} );
 
 	} );
