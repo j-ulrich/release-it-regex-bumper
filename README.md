@@ -445,7 +445,7 @@ If this option is not defined or set to `null`, the default value is used.
 
 ### `strict` ###
 
-**Type:** `boolean | "off" | "warn" | "error"`    
+**Type:** `boolean | "off" | "warn" | "errorIfNoMatch" | "errorIfNoChange"`    
 **Default:** `true`
 
 The default strict mode used when `out.strict` is `null` or not defined.
