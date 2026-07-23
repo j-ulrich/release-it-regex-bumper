@@ -368,7 +368,7 @@ If this option is `true` or `"warn", a warning is logged if the search pattern w
 
 If this options is `"errorIfNoMatch"`, an `Error` is thrown and the release is aborted if there was no match of the search pattern in an output file. If there was a match but the file did not change, a warning is logged.
 
-If this options is `"errorIfNoChange"`, an `Error` is thrown and the release is aborted either if an output file was not changed by this output configuration or if there was no match of the search pattern in an output file.
+If this options is `"errorIfNoChange"`, an `Error` is thrown and the release is aborted if either an output file was not changed by this output configuration or there was no match of the search pattern in an output file.
 
 If this option is `false` or `"off"`, no warning is logged if the search pattern did not match or the file did not change.
 
