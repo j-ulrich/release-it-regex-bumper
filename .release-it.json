@@ -18,7 +18,7 @@
 					"replace": "$1opyright $2${3}{{now:yyyy}}"
 				}
 			],
-			"strict": "error"
+			"strict": "errorIfNoMatch"
 		},
 		"@release-it/keep-a-changelog": {
 			"head": "main",
