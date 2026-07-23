@@ -362,13 +362,13 @@ before the capturing group references are replaced.
 **Type:** `boolean | "off" | "warn" | "errorIfNoMatch" | "errorIfNoChange"`    
 **Default:** `null`
 
-Defines if an output file without a search pattern match should issue an explicit warning or even raise an exception.
+Defines the behavior if an output file was not changed by this output configuration or if the search pattern did not match in an output file.
 
-If this option is `true` or `"warn", a warning is logged if the search pattern was not found in an output file or if the file was not changed by this output configuration.
+If this option is `true` or `"warn", a warning is logged if the search pattern was not found in an output file or if a file was not changed by this output configuration.
 
-If this options is `"errorIfNoMatch"`, an `Error` is thrown and the release is aborted if there is no match of the search pattern in an output file.
+If this options is `"errorIfNoMatch"`, an `Error` is thrown and the release is aborted if there was no match of the search pattern in an output file. If there was a match but the file did not change, a warning is logged.
 
-If this options is `"errorIfNoChange"`, an `Error` is thrown and the release is aborted if the output file was not changed by this output configuration.
+If this options is `"errorIfNoChange"`, an `Error` is thrown and the release is aborted either if an output file was not changed by this output configuration or if there was no match of the search pattern in an output file.
 
 If this option is `false` or `"off"`, no warning is logged if the search pattern did not match or the file did not change.
 
