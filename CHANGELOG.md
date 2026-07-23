@@ -11,7 +11,7 @@ This changelog follows the [Keep a Changelog](https://keepachangelog.com) format
 ## [Unreleased]
 
 ### Added ###
-- [[#16]] Strict mode
+- [[#16]] Strict mode to configure warning and error behavior.
 
 ### Security ###
 - Update dependencies to remove vulnerabilities.
