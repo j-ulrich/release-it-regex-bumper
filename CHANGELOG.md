@@ -8,7 +8,7 @@ This changelog follows the [Keep a Changelog](https://keepachangelog.com) format
 ---
 
 
-## [Unreleased]
+## [5.5.0] - 2026-07-26
 
 ### Added ###
 - [[#16]] Strict mode to configure warning and error behavior.
@@ -285,6 +285,7 @@ Initial release.
 
 
 
+[5.5.0]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/5.5.0
 [5.4.0]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/5.4.0
 [5.3.1]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/5.3.1
 [5.3.0]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/5.3.0
@@ -317,4 +318,4 @@ Initial release.
 
 <!--lint ignore no-unused-definitions-->
 
-[Unreleased]: https://github.com/j-ulrich/release-it-regex-bumper/compare/5.4.0...main
+[Unreleased]: https://github.com/j-ulrich/release-it-regex-bumper/compare/5.5.0...main
