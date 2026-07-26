@@ -8,6 +8,15 @@ This changelog follows the [Keep a Changelog](https://keepachangelog.com) format
 ---
 
 
+## [Unreleased]
+
+### Added ###
+- Support for release-it version 21.x.
+
+
+---
+
+
 ## [5.5.0] - 2026-07-26
 
 ### Added ###
@@ -310,6 +319,8 @@ Initial release.
 [1.1.0]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/1.1.0
 [1.0.0]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/1.0.0
 
+[#16]: https://github.com/j-ulrich/release-it-regex-bumper/issues/16
+[#14]: https://github.com/j-ulrich/release-it-regex-bumper/issues/14
 [#11]: https://github.com/j-ulrich/release-it-regex-bumper/issues/11
 [#9]: https://github.com/j-ulrich/release-it-regex-bumper/issues/9
 [#6]: https://github.com/j-ulrich/release-it-regex-bumper/issues/6

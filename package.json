@@ -48,19 +48,19 @@
 		"xregexp": "^5.0.0"
 	},
 	"peerDependencies": {
-		"release-it": "16 || 17 || 18 || 19 || 20"
+		"release-it": "16 || 17 || 18 || 19 || 20 || 21"
 	},
 	"optionalDependencies": {
 		"diff": "3 - 8"
 	},
 	"devDependencies": {
 		"@j-ulrich/eslint-config": "^1.0.0",
-		"@release-it/keep-a-changelog": "^7.0.0",
+		"@release-it/keep-a-changelog": "^8.0.0",
 		"ava": "^7.0.0",
 		"c8": "^11.0.0",
 		"eslint": "^8.6.0",
 		"eslint-plugin-security": "^1.4.0",
-		"release-it": "^20.0.0",
+		"release-it": "^21.0.0",
 		"sinon": "^21.0.3",
 		"temp": "^0.9.4",
 		"testdouble": "^3.20.2"
