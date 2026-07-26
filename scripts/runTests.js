@@ -38,6 +38,26 @@ if ( process.argv.indexOf( '--coverage' ) > 0 ) {
 	parameters.unshift( 'c8', 'node' );
 }
 
+const matchExpressions = process.argv.map(
+	( param, index, args ) => param === '--match' && index < args.length - 1
+		? args[index + 1]
+		: null )
+	.filter( param => !!param );
+if ( matchExpressions.length > 0 ) {
+	matchExpressions.forEach( matchExpr => {
+		parameters.push( '--match' );
+		parameters.push( matchExpr );
+	} );
+}
+const matchEqualParams = process.argv.filter( param => param.startsWith( '--match=' ) );
+if ( matchEqualParams.length > 0 ) {
+	parameters.push( ...matchEqualParams );
+}
+
+if ( process.argv.indexOf( '--watch' ) > 0 ) {
+	parameters.push( '--watch' );
+}
+
 console.info( 'Starting tests...' );
 console.debug( chalk.dim( '  Command line: ', executable, parameters.join( ' ' ) ) );
 console.info( '' );

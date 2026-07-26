@@ -23,11 +23,18 @@ const placeholderRegex = XRegExp( '\\{\\{(?<placeholder>(?:[a-z][a-z0-9_]*|\\{))
 const prereleasePrefix = '-';
 const buildPrefix = '+';
 
+const StrictMode = {
+	Off: 'off',
+	Warn: 'warn',
+	ErrorIfNoMatch: 'errorIfNoMatch',
+	ErrorIfNoChange: 'errorIfNoChange',
+};
+
 const defaultEncoding = 'utf-8';
 const defaultSearchRegex = XRegExp( '{{semver}}' );
 const defaultVersionCaptureGroup = null;
 const defaultReplace = '{{version}}';
-
+const defaultStrictMode = true;
 
 
 export default class RegExBumper extends Plugin {
@@ -74,6 +81,7 @@ export default class RegExBumper extends Plugin {
 			search: globalSearchOptions,
 			replace: globalReplace,
 			encoding: globalEncoding,
+			strict: globalStrict,
 		} = this.options;
 		const { isDryRun } = this.config;
 		if ( _.isNil( outOptions ) ) {
@@ -92,7 +100,7 @@ export default class RegExBumper extends Plugin {
 
 		/* eslint-disable no-await-in-loop */
 		for ( const outOption of expandedOutOptions ) {
-			const { files, encoding, searchRegex, flags: searchFlags, replace } = outOption;
+			const { files, encoding, searchRegex, flags: searchFlags, replace, strict } = outOption;
 
 			const effectiveEncoding = firstNotNil( encoding, globalEncoding, defaultEncoding );
 			const effectiveSearchRegex = mergeSearchRegExes(
@@ -100,6 +108,7 @@ export default class RegExBumper extends Plugin {
 				[ searchFlags, globalSearchFlags ]
 			);
 			const effectiveReplacement = firstNotNil( replace, globalReplace, defaultReplace );
+			const effectiveStrictMode = firstNotNil( strict, globalStrict, defaultStrictMode );
 
 			const replacedSearchRegex = prepareSearch( effectiveSearchRegex, context );
 
@@ -111,13 +120,15 @@ export default class RegExBumper extends Plugin {
 
 				if ( isDryRun ) {
 					await this.loadDiff();
+					const processedFileContent = replaceVersion( fileContent, replacedSearchRegex,
+					                                             effectiveReplacement, context );
+					this.evaluateFileChanges( fileContent, processedFileContent,
+					                          replacedSearchRegex, effectiveStrictMode, file );
 					if ( this.diff ) {
-						const processedFileContent = replaceVersion( fileContent, replacedSearchRegex,
-						                                             effectiveReplacement, context );
-						await this.diffAndReport( fileContent, processedFileContent, file );
+						await this.diffAndReport( fileContent, processedFileContent, effectiveStrictMode, file );
 						continue;
 					}
-					await this.searchAndReport( fileContent, replacedSearchRegex, file );
+					await this.searchAndReport( fileContent, replacedSearchRegex );
 					continue;
 				}
 
@@ -128,10 +139,8 @@ export default class RegExBumper extends Plugin {
 					context
 				);
 
-				if ( processedFileContent === fileContent ) {
-					this.warnNoFileChange( file );
-				}
-				else {
+				if ( this.evaluateFileChanges( fileContent, processedFileContent,
+					                           replacedSearchRegex, effectiveStrictMode, file ) ) {
 					await writeFile( file, processedFileContent, effectiveEncoding );
 				}
 			}
@@ -164,9 +173,6 @@ export default class RegExBumper extends Plugin {
 			}
 		);
 
-		if ( _.isEmpty( diffResult.hunks ) ) {
-			this.warnNoFileChange( filePath );
-		}
 		diffResult.hunks.forEach( ( hunk ) => {
 			this.log.exec(
 				`Replacing at line ${hunk.oldStart}:\n` +
@@ -187,9 +193,8 @@ export default class RegExBumper extends Plugin {
 		} );
 	}
 
-	searchAndReport( content, searchRegex, filePath ) {
+	searchAndReport( content, searchRegex ) {
 		const { isDryRun } = this.config;
-		let foundMatch = false;
 		const lineCounter = new LineCounter( content );
 		XRegExp.forEach( content, searchRegex, ( match ) => {
 			const matchText = match[0];
@@ -200,15 +205,31 @@ export default class RegExBumper extends Plugin {
 					matchText,
 				{ isDryRun }
 			);
-			foundMatch = true;
 		} );
-		if ( !foundMatch ) {
-			this.warnNoFileChange( filePath );
-		}
 	}
 
-	warnNoFileChange( filePath ) {
-		this.log.warn( `File "${filePath}" did not change!` );
+	evaluateFileChanges( originalFileContent, processedFileContent, searchRegex, strictMode, filePath ) {
+		const fileChanged = originalFileContent !== processedFileContent;
+		if ( fileChanged ) {
+			return fileChanged;
+		}
+		if ( strictMode && strictMode !== StrictMode.Off ) {
+			const match = XRegExp.match( originalFileContent, searchRegex, 'one' );
+			if ( match === null ) {
+				const message = `No matches found in file "${filePath}"!`;
+				if ( strictMode === StrictMode.ErrorIfNoMatch || strictMode === StrictMode.ErrorIfNoChange ) {
+					throw new Error( message );
+				}
+				this.log.warn( message );
+				return fileChanged;
+			}
+			const message = `File "${filePath}" did not change!`;
+			if ( strictMode === StrictMode.ErrorIfNoChange ) {
+				throw new Error( message );
+			}
+			this.log.warn( message );
+		}
+		return fileChanged;
 	}
 
 }
@@ -286,13 +307,13 @@ function parseOutOptions( options ) {
 				replace: null,
 			};
 		}
-		const { encoding, replace } = option;
+		const { encoding, replace, strict } = option;
 		const { searchRegex, flags } = parseSearchOptions( option.search );
 		const files = option.files ? _.castArray( option.files ) : [];
 		if ( option.file ) {
 			files.unshift( option.file );
 		}
-		return { files, encoding, searchRegex, flags, replace };
+		return { files, encoding, searchRegex, flags, replace, strict };
 	} );
 }
 
