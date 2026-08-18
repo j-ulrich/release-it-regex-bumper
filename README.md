@@ -52,6 +52,21 @@ For example:
 }
 ```
 
+Or using dynamic configuration:
+
+```ts
+import { Config as ReleaseItConfig } from "release-it";
+import { Configuration as RegexBumperConfig } from "@j-ulrich/release-it-regex-bumper";
+
+return {
+  plugins: {
+    "@j-ulrich/release-it-regex-bumper": {
+
+    } satisfies RegexBumperConfig
+  }
+} satisfies ReleaseItConfig;
+```
+
 For a more complex example, see [here](https://gitlab.com/julrich/MockNetworkAccessManager/-/blob/main/.release-it.json).
 
 

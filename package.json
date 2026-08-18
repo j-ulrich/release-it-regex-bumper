@@ -7,10 +7,12 @@
 	"files": [
 		"index.js"
 	],
+	"types": "index.d.ts",
 	"scripts": {
 		"test": "node ./scripts/runTests.js",
 		"test+coverage": "node ./scripts/runTests.js --coverage",
 		"test-packaging": "node package-test/run.js",
+		"test-types": "npx ava --config type-tests/ava.config.js",
 		"lint": "npx eslint .",
 		"release": "npx release-it"
 	},

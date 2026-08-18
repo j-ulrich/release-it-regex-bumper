@@ -5,7 +5,10 @@ This project adheres to [Semantic Versioning](https://semver.org).
 This changelog follows the [Keep a Changelog](https://keepachangelog.com) format.
 
 
----
+## [Unreleased]
+
+### Added ###
+- [[18]] Type declarations for the configuration.
 
 
 ## [5.6.0] - 2026-07-27
@@ -13,8 +16,6 @@ This changelog follows the [Keep a Changelog](https://keepachangelog.com) format
 ### Added ###
 - Support for release-it version 21.x.
 
-
----
 
 
 ## [5.5.0] - 2026-07-26
@@ -25,8 +26,6 @@ This changelog follows the [Keep a Changelog](https://keepachangelog.com) format
 ### Security ###
 - Update dependencies to remove vulnerabilities.
 
-
----
 
 
 ## [5.4.0] - 2026-03-26
@@ -41,16 +40,12 @@ This changelog follows the [Keep a Changelog](https://keepachangelog.com) format
 - Update dependencies to remove vulnerabilities.
 
 
----
-
 
 ## [5.3.1] - 2026-01-21
 
 ### Security ###
 - Update dependencies to remove vulnerabilities.
 
-
----
 
 
 ## [5.3.0] - 2025-04-24
@@ -62,8 +57,6 @@ This changelog follows the [Keep a Changelog](https://keepachangelog.com) format
 - Update dependencies to remove vulnerabilities.
 
 
----
-
 
 ## [5.2.0] - 2025-01-09
 
@@ -74,16 +67,12 @@ This changelog follows the [Keep a Changelog](https://keepachangelog.com) format
 - Running the tests with Node.js version 22 or later.
 
 
----
-
 
 ## [5.1.0] - 2023-11-23 ##
 
 ### Added ###
 - [[#11]] Support for release-it version 17.x.
 
-
----
 
 
 ## [5.0.0] - 2023-07-20 ##
@@ -95,8 +84,6 @@ Support for release-it 16.x.
 - [[#9]] Increased peer dependency to release-it to version 16.x
 
 
----
-
 
 ## [4.1.1] - 2022-07-26 ##
 
@@ -106,8 +93,6 @@ Support for release-it 16.x.
 ### Security ###
 - Update dependencies to remove several vulnerabilities.
 
-
----
 
 
 ## [4.1.0] - 2022-05-04 ##
@@ -120,8 +105,6 @@ Support for release-it 16.x.
   - Chalk version 5
   - XRegExp version 5
 
-
----
 
 
 ## [4.0.0] - 2022-05-03 ##
@@ -138,8 +121,6 @@ Support for release-it 15.x.
 - Updated node-fetch dependency to remove vulnerability CVE-2022-0235 and GHSA-64g7-mvw6-v9qj.
 
 
----
-
 
 ## [3.0.2] - 2022-04-06 ##
 
@@ -149,8 +130,6 @@ Support for release-it 15.x.
 ### Security ###
 - Updated dev dependencies to remove vulnerabilities CVE-2022-0235, CVE-2021-44906 and GHSA-64g7-mvw6-v9qj.
 
-
----
 
 
 ## [3.0.1] - 2021-10-26 ##
@@ -162,8 +141,6 @@ Support for release-it 15.x.
 - Several code quality issues.
 - Improved documentation and added missing documentation.
 
-
----
 
 
 ## [3.0.0] - 2021-10-08 ##
@@ -183,8 +160,6 @@ Support for release-it 15.x.
   literally.
 
 
----
-
 
 ## [2.0.0] - 2021-04-22 ##
 
@@ -197,16 +172,12 @@ Support for release-it 15.x.
   See also https://git.io/fxCyr.
 
 
----
-
 
 ## [1.2.6] - 2021-04-22 ##
 
 ### Fixed ###
 - Version declaration of release-it peerDependency was too strict since older versions are supported as well.
 
-
----
 
 
 ## [1.2.5] - 2021-04-16 ##
@@ -215,16 +186,12 @@ Support for release-it 15.x.
 - [[#2]] Declared release-it as a peerDependency instead of a regular dependency.
 
 
----
-
 
 ## [1.2.4] - 2021-04-07 ##
 
 ### Fixed ###
 - Reverted unnecessary increase of dependency requirements in package.json.
 
-
----
 
 
 ## [1.2.3] - 2021-04-07 ##
@@ -233,16 +200,12 @@ Support for release-it 15.x.
 - Updated dependencies to remove vulnerability CVE-2020-28498.
 
 
----
-
 
 ## [1.2.2] - 2021-04-07 ##
 
 ### Security ###
 - Updated dependencies to remove vulnerability CVE-2020-7774.
 
-
----
 
 
 ## [1.2.1] - 2020-01-29 ##
@@ -255,8 +218,6 @@ Support for release-it 15.x.
 - Updated dependencies to remove low severity vulnerability CVE-2020-7788.
 
 
----
-
 
 ## [1.2.0] - 2020-09-10 ##
 
@@ -268,8 +229,6 @@ Support for release-it 15.x.
 - Set maximum supported release-it version.
 
 
----
-
 
 ## [1.1.1] - 2020-09-03 ##
 
@@ -277,16 +236,12 @@ Support for release-it 15.x.
 - Incompatibility with release-it 14.x due to removed `global` property.
 
 
----
-
 
 ## [1.1.0] - 2020-09-02 ##
 
 ### Added ###
 - `out.files` option
 
-
----
 
 
 ## [1.0.0] - 2020-08-28 ##
@@ -320,6 +275,7 @@ Initial release.
 [1.1.0]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/1.1.0
 [1.0.0]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/1.0.0
 
+[#18]: https://github.com/j-ulrich/release-it-regex-bumper/issues/18
 [#16]: https://github.com/j-ulrich/release-it-regex-bumper/issues/16
 [#14]: https://github.com/j-ulrich/release-it-regex-bumper/issues/14
 [#11]: https://github.com/j-ulrich/release-it-regex-bumper/issues/11
