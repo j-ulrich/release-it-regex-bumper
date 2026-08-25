@@ -1,5 +1,4 @@
 import { ObjectEncodingOptions as NodeEncodingOptions } from "node:fs";
-import { Plugin } from "release-it";
 
 export interface InputSearchOptions {
 	pattern: string;
@@ -48,5 +47,8 @@ export interface Configuration {
 	strict?: null | StrictMode;
 }
 
-export default class RegExBumper extends Plugin {
+export default class RegExBumper {
+	constructor({ namespace, options, container }: { namespace: string; options: object; container: object });
+	getLatestVersion(): Promise<string>;
+	bump(version): Promise<void>;
 }
