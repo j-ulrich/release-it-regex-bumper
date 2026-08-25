@@ -8,7 +8,7 @@ This changelog follows the [Keep a Changelog](https://keepachangelog.com) format
 ## [Unreleased]
 
 ### Added ###
-- [[18]] Type declarations for the configuration.
+- [[#18]] Type declarations for the configuration.
 
 
 ## [5.6.0] - 2026-07-27
