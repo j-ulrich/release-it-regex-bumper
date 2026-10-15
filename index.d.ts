@@ -50,5 +50,5 @@ export interface Configuration {
 export default class RegExBumper {
 	constructor({ namespace, options, container }: { namespace: string; options: object; container: object });
 	getLatestVersion(): Promise<string>;
-	bump(version): Promise<void>;
+	bump(version: string): Promise<void>;
 }
