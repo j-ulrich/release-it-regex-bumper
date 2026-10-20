@@ -1,17 +1,16 @@
-import { replace } from "xregexp";
 import type { Configuration } from "../index.js";
 
 const tests = {
 	emptyConfig: {},
 	inputFileOnly: {
-		in: "version.txt"
+		in: "version.txt",
 	},
 	outputFileOnly: {
-		out: "version.txt"
+		out: "version.txt",
 	},
 	inputAndOutputFiles: {
 		in: "version.txt",
-		out: "version.txt"
+		out: "version.txt",
 	},
 	inputWithSearchString: {
 		in: {
@@ -25,8 +24,8 @@ const tests = {
 			search: {
 				pattern: "\\d+\\.\\d+\\.\\d+",
 				flags: "igm",
-				versionCaptureGroup: 0
-			}
+				versionCaptureGroup: 0,
+			},
 		},
 	},
 	allInputOptions: {
@@ -34,7 +33,7 @@ const tests = {
 			file: "version.txt",
 			search: "version:\\s*(\\d+\\.\\d+\\.\\d+)",
 			encoding: "utf8",
-		}
+		},
 	},
 	outputWithSearchString: {
 		out: {
@@ -44,22 +43,28 @@ const tests = {
 	},
 	outputWithSearchObject: {
 		out: {
-			search: "foo",
+			search: {
+				pattern: "foo",
+				flags: "i",
+			},
 			file: "my-file.txt",
-		}
+		},
 	},
 	outputWithSearchObjectAndReplace: {
 		out: {
-			search: "foo",
+			search: {
+				pattern: "foo",
+				flags: "i",
+			},
 			replace: "bar",
 			file: "my-file.txt",
-		}
+		},
 	},
 	outputWithMultipleFiles: {
 		out: {
 			files: ["file1.txt", "file2.txt"],
 			search: "foo",
-		}
+		},
 	},
 	multipleOutputConfigs: {
 		out: [
@@ -74,9 +79,9 @@ const tests = {
 			"file4.txt",
 			{
 				files: ["file5.txt", "file6.txt"],
-				replace: "baz"
-			}
-		]
+				replace: "baz",
+			},
+		],
 	},
 	allOutputOptions: {
 		out: {
@@ -84,25 +89,46 @@ const tests = {
 			search: "version:\\s*(\\d+\\.\\d+\\.\\d+)",
 			replace: "version: {{version}}",
 			encoding: "utf8",
-			strict: "errorIfNoMatch"
-		}
+			strict: "errorIfNoMatch",
+		},
 	},
 	globalSearchString: {
-		search: "<version>"
+		search: "<version>",
 	},
 	globalSearchObject: {
 		search: {
 			pattern: "<version>",
-			flags: "igm"
-		}
+			flags: "igm",
+		},
 	},
 	globalReplace: {
-		replace: "{{version}}"
+		replace: "{{version}}",
 	},
 	globalEncoding: {
-		encoding: "utf8"
+		encoding: "utf8",
 	},
 	globalStrictMode: {
-		strict: "errorIfNoMatch"
-	}
+		strict: "errorIfNoMatch",
+	},
+	complexConfig: {
+		in: {
+			file: "version.txt",
+			search: "version:\\s*(\\d+\\.\\d+\\.\\d+)",
+		},
+		out: [
+			{
+				files: ["file1.txt", "file2.txt"],
+				search: "foo",
+				replace: "bar",
+			},
+			"file3.txt",
+			{
+				file: "file4.txt",
+				replace: "baz",
+				strict: "errorIfNoChange",
+			},
+		],
+		encoding: "utf8",
+		strict: "errorIfNoMatch",
+	},
 } satisfies Record<string, Configuration>;
