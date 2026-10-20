@@ -10,10 +10,13 @@ const nodeVersion = process.versions.node.split( /[.+-]/ ).map( section => {
 	return numericSection;
 } );
 
-let executable = 'node';
+let executable = 'npx';
+if ( os.type().startsWith( 'Windows' ) ) {
+	executable = 'npx.cmd';
+}
 
 const parameters = [
-	'./node_modules/ava/entrypoints/cli.mjs',
+	'ava',
 	'--config',
 	'./.config/ava.js',
 	'--serial' // Needed because the module mocking (`testdouble.replaceEsm()`) cannot run in parallel
@@ -33,10 +36,6 @@ if ( nodeVersion[0] < minimumVersionForRegisterSupport.major ||
 }
 
 if ( process.argv.indexOf( '--coverage' ) > 0 ) {
-	executable = 'npx';
-	if ( os.type().startsWith( 'Windows' ) ) {
-		executable = 'npx.cmd';
-	}
 	parameters.unshift( 'c8', 'node' );
 }
 
