@@ -44,9 +44,6 @@ function typeTest( fileName, expectedError = null ) {
 			t.notThrows( testFunc );
 			return;
 		}
-		/**
-		 *
-		 */
 		const error = t.throws( testFunc );
 		t.regex( error.stdout, expectedError );
 	}
