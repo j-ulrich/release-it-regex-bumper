@@ -1,5 +1,6 @@
 coverage/
 .*
+!.config/
 !.github
 !.gitignore
 !.release-it.json

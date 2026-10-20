@@ -79,3 +79,15 @@ jobs:
               node-version: 22.x
         - run: npm ci
         - run: node package-test/run.js
+
+    type-test:
+        name: Type Test
+        runs-on: ubuntu-latest
+
+        steps:
+        - uses: actions/checkout@v6
+        - uses: actions/setup-node@v6
+          with:
+              node-version: 22.x
+        - run: npm ci
+        - run: npm run test-types

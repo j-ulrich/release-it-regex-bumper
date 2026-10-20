@@ -14,6 +14,8 @@ let executable = 'node';
 
 const parameters = [
 	'./node_modules/ava/entrypoints/cli.mjs',
+	'--config',
+	'./.config/ava.js',
 	'--serial' // Needed because the module mocking (`testdouble.replaceEsm()`) cannot run in parallel
 ];
 

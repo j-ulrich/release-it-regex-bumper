@@ -52,6 +52,29 @@ For example:
 }
 ```
 
+Or using dynamic configuration:
+
+```ts
+import { Config as ReleaseItConfig } from "release-it";
+import { Configuration as RegexBumperConfig } from "@j-ulrich/release-it-regex-bumper";
+
+return {
+    plugins: {
+        "@j-ulrich/release-it-regex-bumper": {
+            in: "path/to/version_file.txt",
+            out: [
+                "path/to/version_file.txt",
+                {
+                    file: "README.md",
+                    search: "Version \\d+\\.\\d+\\.\\d+",
+                    replace: "Version {{versionWithoutPrerelease}}",
+                }
+            ]
+        } satisfies RegexBumperConfig
+    }
+} satisfies ReleaseItConfig;
+```
+
 For a more complex example, see [here](https://gitlab.com/julrich/MockNetworkAccessManager/-/blob/main/.release-it.json).
 
 
