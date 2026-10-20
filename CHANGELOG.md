@@ -5,7 +5,7 @@ This project adheres to [Semantic Versioning](https://semver.org).
 This changelog follows the [Keep a Changelog](https://keepachangelog.com) format.
 
 
-## [Unreleased]
+## [5.7.0] - 2026-10-21
 
 ### Added ###
 - [[#18]] Type declarations for the configuration.
@@ -250,6 +250,7 @@ Initial release.
 
 
 
+[5.7.0]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/5.7.0
 [5.6.0]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/5.6.0
 [5.5.0]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/5.5.0
 [5.4.0]: https://github.com/j-ulrich/release-it-regex-bumper/releases/tag/5.4.0
@@ -287,4 +288,4 @@ Initial release.
 
 <!--lint ignore no-unused-definitions-->
 
-[Unreleased]: https://github.com/j-ulrich/release-it-regex-bumper/compare/5.6.0...main
+[Unreleased]: https://github.com/j-ulrich/release-it-regex-bumper/compare/5.7.0...main
